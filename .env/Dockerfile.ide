@@ -1,0 +1,31 @@
+ARG FROM
+
+FROM $FROM
+
+USER root
+
+RUN apt-get update \
+ && apt-get install -y wget qtcreator clang-8 firefox \
+ && rm -rf /var/lib/apt/lists/*
+
+ARG FIREFOX=/usr/lib/firefox/firefox
+RUN mv ${FIREFOX} ${FIREFOX}_no_flags \
+ && echo "#! /bin/bash" > ${FIREFOX} \
+ && echo "${FIREFOX}_no_flags --no-remote \"\$@\"" >> ${FIREFOX} \
+ && chmod +x ${FIREFOX}
+
+WORKDIR /opt
+
+RUN wget https://download.jetbrains.com/cpp/CLion-2020.2.3.tar.gz \
+ && tar xzf CLion-2020.2.3.tar.gz \
+ && rm CLion-2020.2.3.tar.gz \
+ && rm -rf /opt/clion-2020.2.3/bin/cmake \
+ && rm -rf /opt/clion-2020.2.3/bin/gdb \
+ && rm -rf /opt/clion-2020.2.3/bin/lldb
+
+RUN ln -s /opt/clion-2020.2.3/bin/clion.sh /usr/bin/clion
+
+USER ${IMAGE_USER}
+WORKDIR /home/${IMAGE_USER}
+
+CMD ["bash"]

@@ -1,0 +1,14 @@
+ARG FROM
+
+FROM $FROM
+
+USER root
+
+RUN apt-get update \
+ && apt-get install -y vim gdb valgrind linux-tools-common linux-tools-generic linux-tools-`uname -r` \
+ && rm -rf /var/lib/apt/lists/*
+
+USER ${IMAGE_USER}
+WORKDIR /home/${IMAGE_USER}
+
+CMD ["bash"]

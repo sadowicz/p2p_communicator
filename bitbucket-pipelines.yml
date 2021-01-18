@@ -1,0 +1,13 @@
+image: ddgg/oop_2020:build_v1
+
+pipelines:
+  default:
+    - step:
+        script:
+          - pushd 08_qt_state_machine/
+          -   mkdir build-project && pushd build-project
+          -     qmake ../project
+          -     make -j4 
+          -   popd
+          - popd
+          - .ci/collect_reports.sh
