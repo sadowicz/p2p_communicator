@@ -1,3 +1,3 @@
-# OOP 2020
-
-Execute ```source oop.env``` to load the environment.
+# P2P Comunicator
+---
+[*put description here..*]
