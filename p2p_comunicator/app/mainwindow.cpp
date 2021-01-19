@@ -20,3 +20,13 @@ void MainWindow::on_pbNewContact_clicked()
     addContactWin->show();
     addContactWin->setFixedSize(addContactWin->minimumSize());  // sets size to fixed value, disables resizing
 }
+
+void MainWindow::on_contactAddSuccess()
+{
+
+}
+
+void MainWindow::on_contactAddFailure()
+{
+
+}

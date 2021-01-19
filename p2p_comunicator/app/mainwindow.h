@@ -18,6 +18,8 @@ public:
 
 private slots:
     void on_pbNewContact_clicked();
+    void on_contactAddSuccess();
+    void on_contactAddFailure();
 
 private:
     Ui::MainWindow *ui;

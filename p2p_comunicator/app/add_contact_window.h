@@ -17,6 +17,10 @@ public:
 
 private:
     Ui::AddContactWindow *ui;
+
+signals:
+    void contactAddSuccess();
+    void conactAddFailure();
 };
 
 #endif // ADD_CONTACT_WINDOW_H
