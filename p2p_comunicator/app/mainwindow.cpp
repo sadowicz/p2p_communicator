@@ -7,6 +7,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     addContactWin = new AddContactWindow(this);
+
+    QObject::connect(addContactWin, SIGNAL(contactAddFailure(QString)), this, SLOT(on_error(QString)));
 }
 
 MainWindow::~MainWindow()
@@ -26,7 +28,8 @@ void MainWindow::on_contactAddSuccess()
 
 }
 
-void MainWindow::on_contactAddFailure()
+void MainWindow::on_error(QString errorMessage)
 {
-
+    errWin = new ErrorWindow(this, errorMessage);
+    errWin->show();
 }

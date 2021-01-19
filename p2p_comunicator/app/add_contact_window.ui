@@ -38,39 +38,39 @@
       <number>20</number>
      </property>
      <item row="0" column="0">
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="lbName">
        <property name="text">
         <string>Name</string>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QLineEdit" name="lineEdit"/>
+      <widget class="QLineEdit" name="leName"/>
      </item>
      <item row="1" column="0">
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="lbIP">
        <property name="text">
         <string>IP Address</string>
        </property>
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QLineEdit" name="lineEdit_2"/>
+      <widget class="QLineEdit" name="leIP"/>
      </item>
      <item row="2" column="0">
-      <widget class="QLabel" name="label_3">
+      <widget class="QLabel" name="lbPort">
        <property name="text">
         <string>Port</string>
        </property>
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QLineEdit" name="lineEdit_3"/>
+      <widget class="QLineEdit" name="lePort"/>
      </item>
     </layout>
    </item>
    <item>
-    <widget class="QDialogButtonBox" name="buttonBox">
+    <widget class="QDialogButtonBox" name="bbAddContact">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -87,7 +87,7 @@
  <resources/>
  <connections>
   <connection>
-   <sender>buttonBox</sender>
+   <sender>bbAddContact</sender>
    <signal>accepted()</signal>
    <receiver>AddContactWindow</receiver>
    <slot>accept()</slot>
@@ -103,7 +103,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>buttonBox</sender>
+   <sender>bbAddContact</sender>
    <signal>rejected()</signal>
    <receiver>AddContactWindow</receiver>
    <slot>reject()</slot>
