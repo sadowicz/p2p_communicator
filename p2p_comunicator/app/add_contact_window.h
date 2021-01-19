@@ -24,10 +24,12 @@ private:
 
 signals:
     void contactAddSuccess();
+    void contactAddCancel();
     void contactAddFailure(QString errorMessage);
 
 private slots:
     void on_bbAddContact_accepted();
+    void on_bbAddContact_rejected();
 };
 
 #endif // ADD_CONTACT_WINDOW_H

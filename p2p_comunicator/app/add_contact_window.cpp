@@ -8,6 +8,8 @@ AddContactWindow::AddContactWindow(QWidget *parent) :
     ui->setupUi(this);
     setFixedSize(this->minimumSize());  // sets size to fixed value, disables resizing
 
+    QObject::connect(this, SIGNAL(contactAddSuccess()), parent, SLOT(on_contactAddSuccess()));
+    QObject::connect(this, SIGNAL(contactAddCancel()), parent, SLOT(on_contactAddCancel()));
     QObject::connect(this, SIGNAL(contactAddFailure(QString)), parent, SLOT(on_error(QString)));
 }
 
@@ -49,4 +51,9 @@ void AddContactWindow::on_bbAddContact_accepted()
     }
     else
         emit contactAddFailure(tr("Unable to add contact to contact list.\nInvalid input parameters"));
+}
+
+void AddContactWindow::on_bbAddContact_rejected()
+{
+    emit contactAddCancel();
 }

@@ -9,9 +9,16 @@ ErrorWindow::ErrorWindow(QWidget *parent, QString errorMessage) :
     setFixedSize(this->minimumSize()); // sets fixed window size and disables resizing
     errMsg = errorMessage;
     ui->lbErrorPrompt->setText(errMsg);
+
+    QObject::connect(this, SIGNAL(errorRead()), parent, SLOT(on_errorRead()));
 }
 
 ErrorWindow::~ErrorWindow()
 {
     delete ui;
+}
+
+void ErrorWindow::on_bbErrorPrompt_rejected()
+{
+    emit errorRead();
 }

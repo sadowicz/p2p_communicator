@@ -2,6 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QStateMachine>
+#include <QHistoryState>
+
 #include "add_contact_window.h"
 #include "error_window.h"
 
@@ -17,10 +20,20 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+signals:
+    void contactAdded();
+    void contactAdditionCanceled();
+    void errorCatched();
+    void msgSendable();
+    void msgUnsendable();
+
 private slots:
     void on_pbNewContact_clicked();
     void on_contactAddSuccess();
+    void on_contactAddCancel();
     void on_error(QString errorMessage);
+    void on_errorRead();
+    void on_validateSendable();
 
 private:
     Ui::MainWindow *ui;
