@@ -2,6 +2,7 @@
 #define ADD_CONTACT_WINDOW_H
 
 #include <QDialog>
+#include <QRegularExpression>
 #include <QDebug>
 
 namespace Ui {
