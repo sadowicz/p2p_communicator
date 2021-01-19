@@ -39,5 +39,9 @@ private:
     Ui::MainWindow *ui;
     AddContactWindow *addContactWin;
     ErrorWindow *errWin;
+
+    void assignStatesProperties(QState* Unlocked, QState* Locked, QState* Disconnected, QState* Connected, QState* Sendable);
+    void setStatesTransistions(QState* Unlocked, QState* Locked, QState* Disconnected, QState* Connected, QState* ValidateSendable, QState* Sendable);
+    void setUpStateMachine(QStateMachine* stateMachine, QState* Unlocked, QState* Locked, QHistoryState* History, QState* Disconnected, QState* Connected, QState* ValidateSendable, QState* Sendable);
 };
 #endif // MAINWINDOW_H

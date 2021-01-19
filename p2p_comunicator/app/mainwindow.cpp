@@ -19,6 +19,29 @@ MainWindow::MainWindow(QWidget *parent)
 
     auto Locked = new QState{stateMachine};
 
+    setUpStateMachine(stateMachine, Unlocked, Locked, History, Disconnected, Connected, ValidateSendable, Sendable);
+
+    stateMachine->start();
+}
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
+
+void MainWindow::setUpStateMachine(QStateMachine* stateMachine, QState* Unlocked, QState* Locked, QHistoryState* History,
+                                   QState* Disconnected, QState* Connected, QState* ValidateSendable, QState* Sendable)
+{
+    assignStatesProperties(Unlocked, Locked, Disconnected, Connected, Sendable);
+    setStatesTransistions(Unlocked, Locked, Disconnected, Connected, ValidateSendable, Sendable);
+
+    History->setDefaultState(Disconnected);
+    Unlocked->setInitialState(History);
+    stateMachine->setInitialState(Unlocked);
+}
+
+void MainWindow::assignStatesProperties(QState* Unlocked, QState* Locked, QState* Disconnected, QState* Connected, QState* Sendable)
+{
     Unlocked->assignProperty(ui->pbNewContact, "enabled", true);
     Unlocked->assignProperty(ui->pbSend, "enabled", true);
     Unlocked->assignProperty(ui->pbAttachFile, "enabled", true);
@@ -53,7 +76,10 @@ MainWindow::MainWindow(QWidget *parent)
     Locked->assignProperty(ui->lwContacts, "enabled", false);
     Locked->assignProperty(ui->teChat, "enabled", false);
     Locked->assignProperty(ui->teSend, "enabled", false);
+}
 
+void MainWindow::setStatesTransistions(QState* Unlocked, QState* Locked, QState* Disconnected, QState* Connected, QState* ValidateSendable, QState* Sendable)
+{
     Unlocked->addTransition(ui->pbNewContact, SIGNAL(clicked()), Locked);
 
     Connected->addTransition(ui->teSend, SIGNAL(textChanged()), ValidateSendable);
@@ -67,19 +93,7 @@ MainWindow::MainWindow(QWidget *parent)
     Locked->addTransition(this, SIGNAL(contactAdded()), Connected);
     Locked->addTransition(this, SIGNAL(contactAdditionCanceled()), Unlocked);
     Locked->addTransition(this, SIGNAL(errorCatched()), Unlocked);
-
-    History->setDefaultState(Disconnected);
-    Unlocked->setInitialState(History);
-    stateMachine->setInitialState(Unlocked);
-
-    stateMachine->start();
 }
-
-MainWindow::~MainWindow()
-{
-    delete ui;
-}
-
 
 void MainWindow::on_pbNewContact_clicked()
 {
