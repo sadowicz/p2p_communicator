@@ -6,9 +6,6 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    addContactWin = new AddContactWindow(this);
-
-    QObject::connect(addContactWin, SIGNAL(contactAddFailure(QString)), this, SLOT(on_error(QString)));
 }
 
 MainWindow::~MainWindow()
@@ -19,8 +16,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pbNewContact_clicked()
 {
+    addContactWin = new AddContactWindow(this);
     addContactWin->show();
-    addContactWin->setFixedSize(addContactWin->minimumSize());  // sets size to fixed value, disables resizing
 }
 
 void MainWindow::on_contactAddSuccess()

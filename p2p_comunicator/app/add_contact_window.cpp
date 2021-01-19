@@ -6,6 +6,9 @@ AddContactWindow::AddContactWindow(QWidget *parent) :
     ui(new Ui::AddContactWindow)
 {
     ui->setupUi(this);
+    setFixedSize(this->minimumSize());  // sets size to fixed value, disables resizing
+
+    QObject::connect(this, SIGNAL(contactAddFailure(QString)), parent, SLOT(on_error(QString)));
 }
 
 AddContactWindow::~AddContactWindow()
@@ -20,7 +23,7 @@ bool AddContactWindow::validateForm()
 
     bool isValidIP = validateIP();
 
-    bool isValidPort = (!ui->leName->text().isEmpty() &&
+    bool isValidPort = (!ui->lePort->text().isEmpty() &&
                         ui->lePort->text().toInt() >= 0 &&
                         ui->lePort->text().toInt() <= 65535);
 
@@ -45,5 +48,5 @@ void AddContactWindow::on_bbAddContact_accepted()
         emit contactAddSuccess();
     }
     else
-        emit contactAddFailure(tr("Unable to add contact to contact list"));
+        emit contactAddFailure(tr("Unable to add contact to contact list.\nInvalid input parameters"));
 }
