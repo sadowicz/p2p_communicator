@@ -4,9 +4,9 @@ pipelines:
   default:
     - step:
         script:
-          - pushd 08_qt_state_machine/
-          -   mkdir build-project && pushd build-project
-          -     qmake ../project
+          - pushd .
+          -   mkdir build-p2p_comunicator && pushd build-p2p_comunicator
+          -     qmake ../p2p_comunicator
           -     make -j4 
           -   popd
           - popd
