@@ -2,6 +2,7 @@
 #define ADD_CONTACT_WINDOW_H
 
 #include <QDialog>
+#include <QDebug>
 
 namespace Ui {
 class AddContactWindow;

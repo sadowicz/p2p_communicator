@@ -32,8 +32,8 @@ bool AddContactWindow::validateForm()
 
 bool AddContactWindow::validateIP()
 {
-    QRegularExpression regex{"\\d{1,4}.\\d{1,4}.\\d{1,4}.\\d{1,4}"};
-    return regex.match(ui->leName->text()).hasMatch();
+    QRegularExpression regex{"^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"};
+    return regex.match(ui->leIP->text()).hasMatch();
 }
 
 void AddContactWindow::on_bbAddContact_accepted()
