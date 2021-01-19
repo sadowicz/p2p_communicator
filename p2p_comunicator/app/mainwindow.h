@@ -2,7 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <add_contact_window.h>
+#include "add_contact_window.h"
+#include "error_window.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -24,5 +25,6 @@ private slots:
 private:
     Ui::MainWindow *ui;
     AddContactWindow *addContactWin;
+    ErrorWindow *errWin;
 };
 #endif // MAINWINDOW_H
