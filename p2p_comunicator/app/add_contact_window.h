@@ -30,7 +30,7 @@ signals:
 
 private slots:
     void on_bbAddContact_accepted();
-    void on_bbAddContact_rejected();
+    void on_AddContactWindow_finished(int result);
 };
 
 #endif // ADD_CONTACT_WINDOW_H

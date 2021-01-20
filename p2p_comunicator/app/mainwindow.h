@@ -40,8 +40,17 @@ private:
     AddContactWindow *addContactWin;
     ErrorWindow *errWin;
 
-    void assignStatesProperties(QState* Unlocked, QState* Locked, QState* Disconnected, QState* Connected, QState* Sendable);
-    void setStatesTransistions(QState* Unlocked, QState* Locked, QState* Disconnected, QState* Connected, QState* ValidateSendable, QState* Sendable);
-    void setUpStateMachine(QStateMachine* stateMachine, QState* Unlocked, QState* Locked, QHistoryState* History, QState* Disconnected, QState* Connected, QState* ValidateSendable, QState* Sendable);
+    QStateMachine* stateMachine;
+    QState* Unlocked;
+    QState* Locked;
+    QHistoryState* History;
+    QState* Disconnected;
+    QState* Connected;
+    QState* ValidateSendable;
+    QState* Sendable;
+
+    void assignStatesProperties();
+    void setStatesTransistions();
+    void setUpStateMachine();
 };
 #endif // MAINWINDOW_H
