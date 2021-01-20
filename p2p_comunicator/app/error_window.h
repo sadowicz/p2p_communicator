@@ -19,7 +19,7 @@ signals:
     void errorRead();
 
 private slots:
-    void on_bbErrorPrompt_rejected();
+    void on_ErrorWindow_finished(int result);
 
 private:
     Ui::ErrorWindow *ui;

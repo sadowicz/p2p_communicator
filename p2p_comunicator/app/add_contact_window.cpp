@@ -53,7 +53,8 @@ void AddContactWindow::on_bbAddContact_accepted()
         emit contactAddFailure(tr("Unable to add contact to contact list.\nInvalid input parameters"));
 }
 
-void AddContactWindow::on_bbAddContact_rejected()
+void AddContactWindow::on_AddContactWindow_finished(int result)
 {
-    emit contactAddCancel();
+    if(result == QDialog::Rejected)
+        emit contactAddCancel();
 }

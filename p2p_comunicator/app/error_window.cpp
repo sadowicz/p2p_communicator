@@ -18,7 +18,7 @@ ErrorWindow::~ErrorWindow()
     delete ui;
 }
 
-void ErrorWindow::on_bbErrorPrompt_rejected()
+void ErrorWindow::on_ErrorWindow_finished(int result)
 {
     emit errorRead();
 }
