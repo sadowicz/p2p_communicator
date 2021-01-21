@@ -12,6 +12,8 @@ ErrorWindow::ErrorWindow(QWidget *parent, QString errorMessage) :
     ui->lbErrorPrompt->setText(errMsg);
 
     QObject::connect(this, SIGNAL(errorRead()), parent, SLOT(on_errorRead()));
+
+    storage.load();
 }
 
 ErrorWindow::~ErrorWindow()

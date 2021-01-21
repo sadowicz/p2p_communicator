@@ -12,14 +12,7 @@ AddContactWindow::AddContactWindow(QWidget *parent) :
     QObject::connect(this, SIGNAL(contactAddCancel()), parent, SLOT(on_contactAddCancel()));
     QObject::connect(this, SIGNAL(contactAddFailure(QString)), parent, SLOT(on_error(QString)));
 
-    /*Storage storage{};
-    Contact contact{"example", "127.0.0.1", 8080};
-    contact.addToHistory("wiad1");
-    contact.addToHistory("wiad2");
-    storage.addContact(contact);
-    Contact contact2{"example2", "127.5.0.1", 7080};
-    storage.addContact(contact2);
-    storage.save();*/
+    storage.load();
 }
 
 AddContactWindow::~AddContactWindow()
@@ -58,7 +51,6 @@ void AddContactWindow::on_bbAddContact_accepted()
 
         Contact newContact{ui->leName->text(), ui->leIP->text(), ui->lePort->text().toUInt()};
         storage.addContact(newContact);
-        storage.save();
 
         //if storage successfull:
         emit contactAddSuccess();

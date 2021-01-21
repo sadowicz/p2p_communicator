@@ -61,5 +61,6 @@ void Storage::write(QJsonObject &json) const {
 
 void Storage::addContact(Contact newContact) {
     contacts.append(newContact);
+    save();
 }
 
