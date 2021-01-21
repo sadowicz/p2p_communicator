@@ -19,6 +19,11 @@ private:
 
     QString _validationErrMsg;
 
+    static QString headerErrMsg;
+    static QString nameErrMsg;
+    static QString IPErrMsg;
+    static QString portErrMsg;
+
     void validateName(QString name);
     void validateIP(QString ip);
     void validatePort(QString port);

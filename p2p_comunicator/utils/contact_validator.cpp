@@ -1,8 +1,13 @@
 #include "contact_validator.h"
 
+QString ContactValidator::headerErrMsg = "Unable to add new contact.\n";
+QString ContactValidator::nameErrMsg = "\nInvalid contact name format.";
+QString ContactValidator::IPErrMsg = "\nInvalid IP address format.";
+QString ContactValidator::portErrMsg = "\nInvalid port format.";
+
 ContactValidator::ContactValidator()
 {
-    _validationErrMsg = "Unable to add new contact.\n";
+    _validationErrMsg = ContactValidator::headerErrMsg;
 }
 
 bool ContactValidator::validateContactForm(QString name, QString ip, QString port)
@@ -19,7 +24,7 @@ void ContactValidator::validateName(QString name)
     isValidName = (!name.isEmpty() &&
                     name.length() <= 25);
 
-    if(!isValidName) _validationErrMsg += "\nInvalid contact name format.";
+    if(!isValidName) _validationErrMsg += ContactValidator::nameErrMsg;
 }
 
 void ContactValidator::validateIP(QString ip)
@@ -27,7 +32,7 @@ void ContactValidator::validateIP(QString ip)
     QRegularExpression regex{"^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"};
     isValidIP = regex.match(ip).hasMatch();
 
-    if(!isValidIP) _validationErrMsg += "\nInvalid IP adress format.";
+    if(!isValidIP) _validationErrMsg += ContactValidator::IPErrMsg;
 }
 
 void ContactValidator::validatePort(QString port)
@@ -38,5 +43,5 @@ void ContactValidator::validatePort(QString port)
                    port.toInt() >= 0 &&
                    port.toInt() <= 65535);
 
-    if(!isValidPort) _validationErrMsg += "\nInvalid port adress format.";
+    if(!isValidPort) _validationErrMsg += ContactValidator::portErrMsg;
 }

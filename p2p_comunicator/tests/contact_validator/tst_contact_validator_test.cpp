@@ -29,6 +29,8 @@ private slots:
     void portOutOfRangeReturnFalse();
     void nonNumericPortReturnFalse();
 
+    void validationErrMsgReturnsErrorInfo_data();
+    void validationErrMsgReturnsErrorInfo();
 };
 
 ContactValidatorTest::ContactValidatorTest() {}
@@ -142,6 +144,44 @@ void ContactValidatorTest::nonNumericPortReturnFalse()
     ContactValidator validator{};
 
     QCOMPARE(validator.validateContactForm(QString("Joe Doe"), QString("127.0.0.1"), QString("abcd")), false);
+}
+
+void ContactValidatorTest::validationErrMsgReturnsErrorInfo_data()
+{
+    QTest::addColumn<QString>("name");
+    QTest::addColumn<QString>("ip");
+    QTest::addColumn<QString>("port");
+    QTest::addColumn<QString>("msg");
+
+    QTest::newRow("all invalid") << QString("") << QString("") << QString("")
+                                 << "Unable to add new contact.\n\nInvalid contact name format.\nInvalid IP address format.\nInvalid port format.";
+
+    QTest::newRow("ip, port invalid") << QString("abc") << QString("") << QString("")
+                                      << "Unable to add new contact.\n\nInvalid IP address format.\nInvalid port format.";
+    QTest::newRow("name, port invalid") << QString("") << QString("1.1.1.1") << QString("")
+                                        << "Unable to add new contact.\n\nInvalid contact name format.\nInvalid port format.";
+    QTest::newRow("name, ip invalid") << QString("") << QString("") << QString("1234")
+                                      << "Unable to add new contact.\n\nInvalid contact name format.\nInvalid IP address format.";
+
+    QTest::newRow("port invalid") << QString("abc") << QString("1.1.1.1") << QString("")
+                                  << "Unable to add new contact.\n\nInvalid port format.";
+    QTest::newRow("name invalid") << QString("") << QString("1.1.1.1") << QString("1234")
+                                  << "Unable to add new contact.\n\nInvalid contact name format.";
+    QTest::newRow("ip invalid") << QString("abc") << QString("") << QString("1234")
+                                << "Unable to add new contact.\n\nInvalid IP address format.";
+}
+
+void ContactValidatorTest::validationErrMsgReturnsErrorInfo()
+{
+    ContactValidator validator{};
+
+    QFETCH(QString, name);
+    QFETCH(QString, ip);
+    QFETCH(QString, port);
+    QFETCH(QString, msg);
+
+    validator.validateContactForm(name, ip, port);
+    QCOMPARE(validator.validationErrMsg(), msg);
 }
 
 QTEST_APPLESS_MAIN(ContactValidatorTest)
