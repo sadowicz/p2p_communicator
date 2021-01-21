@@ -17,9 +17,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Contact.cpp \
+    Storage.cpp \
     utils.cpp
 
 HEADERS += \
+    Contact.h \
+    Storage.h \
     utils_global.h \
     utils.h
 
