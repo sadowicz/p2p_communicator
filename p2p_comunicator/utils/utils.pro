@@ -17,9 +17,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    form_validator.cpp \
     utils.cpp
 
 HEADERS += \
+    form_validator.h \
     utils_global.h \
     utils.h
 
