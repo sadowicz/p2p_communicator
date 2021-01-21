@@ -1,4 +1,5 @@
 QT -= gui
+QT += network
 
 TEMPLATE = lib
 DEFINES += UTILS_LIBRARY
@@ -20,14 +21,18 @@ SOURCES += \
     contact_validator.cpp \
     Contact.cpp \
     Storage.cpp \
-    utils.cpp
+    tcp/TCPClient.cpp \
+    tcp/TCPServer.cpp \
+    config/Config.cpp
 
 HEADERS += \
     contact_validator.h \
     Contact.h \
     Storage.h \
-    utils_global.h \
-    utils.h
+    tcp/TCPClient.h \
+    tcp/TCPServer.h \
+    config/Config.h \
+    IOException.h
 
 # Default rules for deployment.
 unix {

@@ -35,5 +35,17 @@ void Contact::addToHistory(QString message) {
     history.append(message);
 }
 
+QString Contact::getName() {
+    return this->name;
+}
+
+QString Contact::getAddress() {
+    return this->address;
+}
+
+int Contact::getPort() {
+    return this->port;
+}
+
 
 
