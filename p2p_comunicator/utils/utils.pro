@@ -18,11 +18,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Contact.cpp \
+    Storage.cpp \
     tcp/tcp_client.cpp \
     tcp/tcp_server.cpp \
     config/config.cpp
 
 HEADERS += \
+    Contact.h \
+    Storage.h \
     tcp/tcp_client.h \
     tcp/tcp_server.h \
     config/config.h \

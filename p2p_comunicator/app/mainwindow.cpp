@@ -7,20 +7,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
     config::init();
     ui->setupUi(this);
+    setUpStateMachine();
 
-    auto stateMachine = new QStateMachine{this};
-
-    auto Unlocked = new QState{stateMachine};
-
-    auto History = new QHistoryState{Unlocked};
-    auto Disconnected = new QState{Unlocked};
-    auto Connected = new QState{Unlocked};
-    auto ValidateSendable = new QState{Unlocked};
-    auto Sendable = new QState{Unlocked};
-
-    auto Locked = new QState{stateMachine};
-
-    setUpStateMachine(stateMachine, Unlocked, Locked, History, Disconnected, Connected, ValidateSendable, Sendable);
+    storage.load();
 
     stateMachine->start();
 }
@@ -30,18 +19,29 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::setUpStateMachine(QStateMachine* stateMachine, QState* Unlocked, QState* Locked, QHistoryState* History,
-                                   QState* Disconnected, QState* Connected, QState* ValidateSendable, QState* Sendable)
+void MainWindow::setUpStateMachine()
 {
-    assignStatesProperties(Unlocked, Locked, Disconnected, Connected, Sendable);
-    setStatesTransistions(Unlocked, Locked, Disconnected, Connected, ValidateSendable, Sendable);
+    stateMachine = new QStateMachine{this};
+
+    Unlocked = new QState{stateMachine};
+
+    History = new QHistoryState{Unlocked};
+    Disconnected = new QState{Unlocked};
+    Connected = new QState{Unlocked};
+    ValidateSendable = new QState{Unlocked};
+    Sendable = new QState{Unlocked};
+
+    Locked = new QState{stateMachine};
+
+    assignStatesProperties();
+    setStatesTransistions();
 
     History->setDefaultState(Disconnected);
     Unlocked->setInitialState(History);
     stateMachine->setInitialState(Unlocked);
 }
 
-void MainWindow::assignStatesProperties(QState* Unlocked, QState* Locked, QState* Disconnected, QState* Connected, QState* Sendable)
+void MainWindow::assignStatesProperties()
 {
     Unlocked->assignProperty(ui->pbNewContact, "enabled", true);
     Unlocked->assignProperty(ui->pbSend, "enabled", true);
@@ -79,7 +79,7 @@ void MainWindow::assignStatesProperties(QState* Unlocked, QState* Locked, QState
     Locked->assignProperty(ui->teSend, "enabled", false);
 }
 
-void MainWindow::setStatesTransistions(QState* Unlocked, QState* Locked, QState* Disconnected, QState* Connected, QState* ValidateSendable, QState* Sendable)
+void MainWindow::setStatesTransistions()
 {
     Unlocked->addTransition(ui->pbNewContact, SIGNAL(clicked()), Locked);
 
