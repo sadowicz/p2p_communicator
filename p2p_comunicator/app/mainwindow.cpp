@@ -8,6 +8,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     setUpStateMachine();
 
+    storage.load();
+
     stateMachine->start();
 }
 

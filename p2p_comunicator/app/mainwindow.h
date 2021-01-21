@@ -8,6 +8,8 @@
 #include "add_contact_window.h"
 #include "error_window.h"
 
+#include "Storage.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -52,5 +54,7 @@ private:
     void assignStatesProperties();
     void setStatesTransistions();
     void setUpStateMachine();
+
+    Storage storage;
 };
 #endif // MAINWINDOW_H

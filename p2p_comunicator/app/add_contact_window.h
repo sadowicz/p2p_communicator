@@ -5,6 +5,8 @@
 #include <QRegularExpression>
 #include <QDebug>
 
+#include "Storage.h"
+
 namespace Ui {
 class AddContactWindow;
 }
@@ -19,6 +21,7 @@ public:
 
 private:
     Ui::AddContactWindow *ui;
+    Storage storage;
 
     bool validateForm();
     bool validateIP();

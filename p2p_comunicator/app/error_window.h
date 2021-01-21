@@ -3,6 +3,8 @@
 
 #include <QDialog>
 
+#include "Storage.h"
+
 namespace Ui {
 class ErrorWindow;
 }
@@ -24,6 +26,7 @@ private slots:
 private:
     Ui::ErrorWindow *ui;
     QString errMsg;
+    Storage storage;
 };
 
 #endif // ERRORWINDOW_H
