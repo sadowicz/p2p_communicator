@@ -19,9 +19,9 @@ private:
 
     QString _validationErrMsg;
 
-    bool validateName(QString name);
-    bool validateIP(QString ip);
-    bool validatePort(QString port);
+    void validateName(QString name);
+    void validateIP(QString ip);
+    void validatePort(QString port);
 };
 
 #endif // CONTACTVALIDATOR_H
