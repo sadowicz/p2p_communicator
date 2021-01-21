@@ -2,9 +2,9 @@
 #define ADD_CONTACT_WINDOW_H
 
 #include <QDialog>
-#include <QRegularExpression>
 #include <QDebug>
 
+#include "contact_validator.h"
 #include "Storage.h"
 
 namespace Ui {
@@ -21,10 +21,9 @@ public:
 
 private:
     Ui::AddContactWindow *ui;
+    ContactValidator* validator;
     Storage storage;
 
-    bool validateForm();
-    bool validateIP();
 
 signals:
     void contactAddSuccess();

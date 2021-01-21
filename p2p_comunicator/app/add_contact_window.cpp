@@ -5,6 +5,8 @@ AddContactWindow::AddContactWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::AddContactWindow)
 {
+    validator = new ContactValidator{};
+
     ui->setupUi(this);
     setFixedSize(this->minimumSize());  // sets size to fixed value, disables resizing
 
@@ -18,34 +20,12 @@ AddContactWindow::AddContactWindow(QWidget *parent) :
 AddContactWindow::~AddContactWindow()
 {
     delete ui;
-}
-
-bool AddContactWindow::validateForm()
-{
-    bool isValidName = (!ui->leName->text().isEmpty() &&
-                        ui->leName->text().length() <= 25);
-
-    bool isValidIP = validateIP();
-
-    bool isValidPort = (!ui->lePort->text().isEmpty() &&
-                        ui->lePort->text().toInt() >= 0 &&
-                        ui->lePort->text().toInt() <= 65535);
-
-    if(!isValidName || !isValidIP || !isValidPort)
-       return false;
-
-    return true;
-}
-
-bool AddContactWindow::validateIP()
-{
-    QRegularExpression regex{"^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"};
-    return regex.match(ui->leIP->text()).hasMatch();
+    delete validator;
 }
 
 void AddContactWindow::on_bbAddContact_accepted()
 {
-    if(validateForm())
+    if(validator->validateContactForm(ui->leName->text(), ui->leIP->text(), ui->lePort->text()))
     {
         // TODO: File Storage
 
@@ -56,7 +36,7 @@ void AddContactWindow::on_bbAddContact_accepted()
         emit contactAddSuccess();
     }
     else
-        emit contactAddFailure(tr("Unable to add contact to contact list.\nInvalid input parameters"));
+        emit contactAddFailure(validator->validationErrMsg());
 }
 
 void AddContactWindow::on_AddContactWindow_finished(int result)
