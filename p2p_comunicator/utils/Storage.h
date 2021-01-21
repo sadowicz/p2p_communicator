@@ -4,8 +4,8 @@
 class Storage
 {
 public:
-    bool load();
-    bool save() const;
+    bool load(); // load contacts from .json file
+    bool save() const;  // save contacts to .json file
 
     void addContact(Contact newContact);
 
