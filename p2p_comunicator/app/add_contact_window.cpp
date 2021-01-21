@@ -1,5 +1,7 @@
 #include "add_contact_window.h"
 #include "ui_add_contact_window.h"
+#include "Contact.h"
+#include "Storage.h"
 
 AddContactWindow::AddContactWindow(QWidget *parent) :
     QDialog(parent),
@@ -46,6 +48,9 @@ void AddContactWindow::on_bbAddContact_accepted()
     if(validateForm())
     {
         // TODO: File Storage
+
+
+
         //if storage successfull:
         emit contactAddSuccess();
     }
