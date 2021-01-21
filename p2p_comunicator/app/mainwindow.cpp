@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "Contact.h"
+#include "Storage.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)

@@ -58,3 +58,8 @@ void Storage::write(QJsonObject &json) const {
     }
     json["contacts"] = contactsArray;
 }
+
+void Storage::addContact(Contact newContact) {
+    contacts.append(newContact);
+}
+
