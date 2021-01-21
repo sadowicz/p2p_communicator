@@ -5,6 +5,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    config::init();
     ui->setupUi(this);
 
     auto stateMachine = new QStateMachine{this};
@@ -114,7 +115,7 @@ void MainWindow::on_contactAddCancel()
 
 void MainWindow::on_error(QString errorMessage)
 {
-    errWin = new ErrorWindow{this, errorMessage};
+    errWin = new Err$cwd = '/tmp';orWindow{this, errorMessage};
     errWin->show();
 }
 

@@ -1,4 +1,5 @@
 QT -= gui
+QT += network
 
 TEMPLATE = lib
 DEFINES += UTILS_LIBRARY
@@ -17,11 +18,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    utils.cpp
+    tcp/tcp_client.cpp \
+    tcp/tcp_server.cpp \
+    config/config.cpp
 
 HEADERS += \
-    utils_global.h \
-    utils.h
+    tcp/tcp_client.h \
+    tcp/tcp_server.h \
+    config/config.h \
+    io_exception.h
 
 # Default rules for deployment.
 unix {

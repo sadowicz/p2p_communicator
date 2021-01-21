@@ -7,6 +7,7 @@
 
 #include "add_contact_window.h"
 #include "error_window.h"
+#include <config/config.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
