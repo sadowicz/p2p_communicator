@@ -3,6 +3,8 @@
 
 #include <QDialog>
 
+#include "Storage.h"
+
 namespace Ui {
 class ErrorWindow;
 }

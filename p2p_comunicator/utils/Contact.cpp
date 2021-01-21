@@ -8,10 +8,11 @@ void Contact::read(const QJsonObject &json) {
     port = json["port"].toInt();
 
     history.clear();
-    QJsonArray historyArray = json["contacts"].toArray();
+    QJsonArray historyArray = json["history"].toArray();
     for (int i = 0; i < historyArray.size(); ++i) {
         QJsonObject contactMessage = historyArray[i].toObject();
 
+        // using QJsonDocument to convert QJsonObject to QString
         QJsonDocument Doc(contactMessage);
         QByteArray ba = Doc.toJson();
         history.append(QString(ba));
