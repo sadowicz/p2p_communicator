@@ -7,7 +7,10 @@ pipelines:
           - pushd .
           -   mkdir build-p2p_comunicator && pushd build-p2p_comunicator
           -     qmake ../p2p_comunicator
-          -     make -j4 
+          -     make -j4
+          -		pushd tests/contact_validator
+          -			LD_LIBRARY_PATH=../../utils ./contact_validator -o test_detail.xml,xunitxml
+          -		popd
           -   popd
           - popd
           - .ci/collect_reports.sh
