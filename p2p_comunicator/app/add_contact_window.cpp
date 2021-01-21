@@ -13,6 +13,8 @@ AddContactWindow::AddContactWindow(QWidget *parent) :
     QObject::connect(this, SIGNAL(contactAddSuccess()), parent, SLOT(on_contactAddSuccess()));
     QObject::connect(this, SIGNAL(contactAddCancel()), parent, SLOT(on_contactAddCancel()));
     QObject::connect(this, SIGNAL(contactAddFailure(QString)), parent, SLOT(on_error(QString)));
+
+    storage.load();
 }
 
 AddContactWindow::~AddContactWindow()
@@ -26,6 +28,10 @@ void AddContactWindow::on_bbAddContact_accepted()
     if(validator->validateContactForm(ui->leName->text(), ui->leIP->text(), ui->lePort->text()))
     {
         // TODO: File Storage
+
+        Contact newContact{ui->leName->text(), ui->leIP->text(), ui->lePort->text().toUInt()};
+        storage.addContact(newContact);
+
         //if storage successfull:
         emit contactAddSuccess();
     }

@@ -5,6 +5,7 @@
 #include <QDebug>
 
 #include "contact_validator.h"
+#include "Storage.h"
 
 namespace Ui {
 class AddContactWindow;
@@ -21,6 +22,7 @@ public:
 private:
     Ui::AddContactWindow *ui;
     ContactValidator* validator;
+    Storage storage;
 
 
 signals:

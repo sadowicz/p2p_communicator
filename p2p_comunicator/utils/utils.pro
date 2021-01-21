@@ -18,10 +18,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     contact_validator.cpp \
+    Contact.cpp \
+    Storage.cpp \
     utils.cpp
 
 HEADERS += \
     contact_validator.h \
+    Contact.h \
+    Storage.h \
     utils_global.h \
     utils.h
 
