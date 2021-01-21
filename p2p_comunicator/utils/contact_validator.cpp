@@ -32,9 +32,11 @@ void ContactValidator::validateIP(QString ip)
 
 void ContactValidator::validatePort(QString port)
 {
-    isValidPort = (!port.isEmpty() &&
-                    port.toInt() >= 0 &&
-                    port.toInt() <= 65535);
+    QRegularExpression regex{"\\d+"};
+
+    isValidPort = (regex.match(port).hasMatch() &&
+                   port.toInt() >= 0 &&
+                   port.toInt() <= 65535);
 
     if(!isValidPort) _validationErrMsg += "\nInvalid port adress format.";
 }

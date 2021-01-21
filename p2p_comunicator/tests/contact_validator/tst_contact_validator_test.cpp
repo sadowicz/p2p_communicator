@@ -14,8 +14,20 @@ private slots:
     void contactValidatorIsCreateable();
     void constructorSetsErrMsgHeader();
 
-    void emptyFiledMakeFormInvalid_data();
-    void emptyFiledMakeFormInvalid();
+    void emptyFiledReturnFalse_data();
+    void emptyFiledReturnFalse();
+
+    void allFieldsValidReturnTrue();
+
+    void nameShorterThan25ReturnTrue();
+    void nameLongerThan25ReturnFalse();
+
+    void ipInvalidFormatReturnFalse_data();
+    void ipInvalidFormatReturnFalse();
+
+    void portInRangeReturnTrue();
+    void portOutOfRangeReturnFalse();
+    void nonNumericPortReturnFalse();
 
 };
 
@@ -34,7 +46,7 @@ void ContactValidatorTest::constructorSetsErrMsgHeader()
     QCOMPARE(validator.validationErrMsg(), QString("Unable to add new contact.\n"));
 }
 
-void ContactValidatorTest::emptyFiledMakeFormInvalid_data()
+void ContactValidatorTest::emptyFiledReturnFalse_data()
 {
     QTest::addColumn<QString>("name");
     QTest::addColumn<QString>("ip");
@@ -52,7 +64,7 @@ void ContactValidatorTest::emptyFiledMakeFormInvalid_data()
     QTest::newRow("ip empty") << QString("abc") << QString("") << QString("1234") << false;
 }
 
-void ContactValidatorTest::emptyFiledMakeFormInvalid()
+void ContactValidatorTest::emptyFiledReturnFalse()
 {
     ContactValidator validator{};
 
@@ -62,6 +74,74 @@ void ContactValidatorTest::emptyFiledMakeFormInvalid()
     QFETCH(bool, result);
 
     QCOMPARE(validator.validateContactForm(name, ip, port), result);
+}
+
+void ContactValidatorTest::allFieldsValidReturnTrue()
+{
+    ContactValidator validator{};
+    QCOMPARE(validator.validateContactForm(QString("Joe Doe"), QString("127.0.0.1"), QString("1111")), true);
+}
+
+void ContactValidatorTest::nameShorterThan25ReturnTrue()
+{
+    ContactValidator validator{};
+    QString name = "a";
+
+    for(int i = 1; i <= 25; i++, name += "a")
+        QCOMPARE(validator.validateContactForm(name, QString("127.0.0.1"), QString("1111")), true);
+}
+
+void ContactValidatorTest::nameLongerThan25ReturnFalse()
+{
+    ContactValidator validator{};
+    QCOMPARE(validator.validateContactForm(QString("aaaaaaaaaaaaaaaaaaaaaaaaaaa"), QString("127.0.0.1"), QString("1111")), false);
+}
+
+void ContactValidatorTest::ipInvalidFormatReturnFalse_data()
+{
+    QTest::addColumn<QString>("ip");
+    QTest::addColumn<bool>("result");
+
+    QTest::newRow("non numeric string") << QString("asdasd") << false;
+    QTest::newRow("no octets separation") << QString("111111111111") << false;
+    QTest::newRow("not enough octets (2)") << QString("111.111") << false;
+    QTest::newRow("not enough octets (3)") << QString("111.111.111") << false;
+    QTest::newRow("octet value exceeded") << QString("257.111.111") << false;
+}
+
+void ContactValidatorTest::ipInvalidFormatReturnFalse()
+{
+    ContactValidator validator{};
+
+    QFETCH(QString, ip);
+    QFETCH(bool, result);
+
+    QCOMPARE(validator.validateContactForm(QString("Joe Doe"), ip, QString("1234")), result);
+}
+
+void ContactValidatorTest::portInRangeReturnTrue()
+{
+    ContactValidator validator{};
+
+    QCOMPARE(validator.validateContactForm(QString("Joe Doe"), QString("127.0.0.1"), QString("0")), true);
+    QCOMPARE(validator.validateContactForm(QString("Joe Doe"), QString("127.0.0.1"), QString("1234")), true);
+    QCOMPARE(validator.validateContactForm(QString("Joe Doe"), QString("127.0.0.1"), QString("27895")), true);
+    QCOMPARE(validator.validateContactForm(QString("Joe Doe"), QString("127.0.0.1"), QString("65535")), true);
+}
+
+void ContactValidatorTest::portOutOfRangeReturnFalse()
+{
+    ContactValidator validator{};
+
+    QCOMPARE(validator.validateContactForm(QString("Joe Doe"), QString("127.0.0.1"), QString("-1")), false);
+    QCOMPARE(validator.validateContactForm(QString("Joe Doe"), QString("127.0.0.1"), QString("65536")), false);
+}
+
+void ContactValidatorTest::nonNumericPortReturnFalse()
+{
+    ContactValidator validator{};
+
+    QCOMPARE(validator.validateContactForm(QString("Joe Doe"), QString("127.0.0.1"), QString("abcd")), false);
 }
 
 QTEST_APPLESS_MAIN(ContactValidatorTest)
