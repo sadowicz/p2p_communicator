@@ -16,6 +16,8 @@ AddContactWindow::AddContactWindow(QWidget *parent) :
 
     Storage storage{};
     Contact contact{"example", "127.0.0.1", 8080};
+    contact.addToHistory("wiad1");
+    contact.addToHistory("wiad2");
     storage.addContact(contact);
     Contact contact2{"example2", "127.5.0.1", 7080};
     storage.addContact(contact2);

@@ -2,11 +2,17 @@
     "contacts": [
         {
             "address": "127.0.0.1",
+            "history": [
+                "wiad1",
+                "wiad2"
+            ],
             "name": "example",
             "port": 8080
         },
         {
             "address": "127.5.0.1",
+            "history": [
+            ],
             "name": "example2",
             "port": 7080
         }

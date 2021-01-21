@@ -2,6 +2,8 @@
 #include <QString>
 #include <QList>
 #include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonDocument>
 
 class Contact
 {
@@ -11,7 +13,7 @@ public:
     void read(const QJsonObject &json);
     void write(QJsonObject &json) const;
 
-    void addToHistory(QString);
+    void addToHistory(QString message);
 
 private:
     QString name;
