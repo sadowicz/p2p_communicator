@@ -14,5 +14,9 @@ void Contact::write(QJsonObject &json) const {
     json["port"] = port;
 }
 
+void Contact::addToHistory(QString message) {
+    history.append(message);
+}
+
 
 

@@ -1,0 +1,14 @@
+{
+    "contacts": [
+        {
+            "address": "127.0.0.1",
+            "name": "example",
+            "port": 8080
+        },
+        {
+            "address": "127.5.0.1",
+            "name": "example2",
+            "port": 7080
+        }
+    ]
+}
