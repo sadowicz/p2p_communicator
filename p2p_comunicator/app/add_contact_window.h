@@ -4,6 +4,8 @@
 #include <QDialog>
 #include <QDebug>
 
+#include "contact_validator.h"
+
 namespace Ui {
 class AddContactWindow;
 }
@@ -18,6 +20,8 @@ public:
 
 private:
     Ui::AddContactWindow *ui;
+    ContactValidator* validator;
+
 
 signals:
     void contactAddSuccess();

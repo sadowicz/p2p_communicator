@@ -5,6 +5,8 @@ AddContactWindow::AddContactWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::AddContactWindow)
 {
+    validator = new ContactValidator{};
+
     ui->setupUi(this);
     setFixedSize(this->minimumSize());  // sets size to fixed value, disables resizing
 
@@ -16,18 +18,19 @@ AddContactWindow::AddContactWindow(QWidget *parent) :
 AddContactWindow::~AddContactWindow()
 {
     delete ui;
+    delete validator;
 }
 
 void AddContactWindow::on_bbAddContact_accepted()
 {
-    if(validateForm())
+    if(validator->validateContactForm(ui->leName->text(), ui->leIP->text(), ui->lePort->text()))
     {
         // TODO: File Storage
         //if storage successfull:
         emit contactAddSuccess();
     }
     else
-        emit contactAddFailure(tr("Unable to add contact to contact list.\nInvalid input parameters"));
+        emit contactAddFailure(validator->validationErrMsg());
 }
 
 void AddContactWindow::on_AddContactWindow_finished(int result)

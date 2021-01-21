@@ -2,13 +2,12 @@
 #define CONTACTVALIDATOR_H
 
 #include <QRegularExpression>
-#include <QObject>
 
 class ContactValidator
 {
-    Q_OBJECT
 public:
     ContactValidator();
+    ~ContactValidator() = default;
 
     bool validateContactForm(QString name, QString ip, QString port);
     QString validationErrMsg() { return _validationErrMsg; }
