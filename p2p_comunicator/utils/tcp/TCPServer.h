@@ -5,14 +5,19 @@
 #include <QTcpServer>
 #include <QObject>
 
-class tcp_server : public QObject {
+#include <config/Config.h>
+
+class TCPServer : public QObject {
     Q_OBJECT
 
 public:
-    tcp_server();
+    TCPServer();
 
 private:
     QTcpServer* server;
+
+private slots:
+    void acceptConnection();
 
 };
 

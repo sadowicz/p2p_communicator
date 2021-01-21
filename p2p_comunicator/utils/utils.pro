@@ -20,17 +20,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     Contact.cpp \
     Storage.cpp \
-    tcp/tcp_client.cpp \
-    tcp/tcp_server.cpp \
-    config/config.cpp
+    tcp/TCPClient.cpp \
+    tcp/TCPServer.cpp \
+    config/Config.cpp
 
 HEADERS += \
     Contact.h \
     Storage.h \
-    tcp/tcp_client.h \
-    tcp/tcp_server.h \
-    config/config.h \
-    io_exception.h
+    tcp/TCPClient.h \
+    tcp/TCPServer.h \
+    config/Config.h \
+    IOException.h
 
 # Default rules for deployment.
 unix {

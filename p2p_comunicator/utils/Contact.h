@@ -15,6 +15,10 @@ public:
 
     void addToHistory(QString message);
 
+    QString getName();
+    QString getAddress();
+    int getPort();
+
 private:
     QString name;
     QString address;

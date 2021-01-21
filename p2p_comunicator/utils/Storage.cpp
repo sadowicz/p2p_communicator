@@ -44,8 +44,12 @@ void Storage::read(const QJsonObject &json) {
         QJsonObject contactObject = contactsArray[i].toObject();
         Contact contact{"example","127.0.0.1", 8080};
         contact.read(contactObject);
-        contacts.append(contact);
+        contacts.insert(contact.getAddress(), contact);
     }
+}
+
+QMap<QString, Contact> Storage::getContacts() {
+    return contacts;
 }
 
 void Storage::write(QJsonObject &json) const {
@@ -60,7 +64,7 @@ void Storage::write(QJsonObject &json) const {
 }
 
 void Storage::addContact(Contact newContact) {
-    contacts.append(newContact);
+    contacts.insert(newContact.getAddress(), newContact);
     save();
 }
 
