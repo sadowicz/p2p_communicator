@@ -55,7 +55,7 @@ QMap<QString, Contact> Storage::getContacts() {
 void Storage::write(QJsonObject &json) const {
 
     QJsonArray contactsArray;
-    foreach (const Contact contact, contacts) {
+    foreach (const Contact contact, contacts.values()) {
         QJsonObject contactObject;
         contact.write(contactObject);
         contactsArray.append(contactObject);
