@@ -23,6 +23,7 @@ SOURCES += \
     Storage.cpp \
     tcp/TCPClient.cpp \
     tcp/TCPServer.cpp \
+    tcp/TCPPacket.cpp \
     config/Config.cpp
 
 HEADERS += \
@@ -31,6 +32,8 @@ HEADERS += \
     Storage.h \
     tcp/TCPClient.h \
     tcp/TCPServer.h \
+    tcp/TCPPacket.h \
+    tcp/TCPException.h \
     config/Config.h \
     IOException.h
 

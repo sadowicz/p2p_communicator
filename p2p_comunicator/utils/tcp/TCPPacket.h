@@ -1,0 +1,72 @@
+#pragma once
+
+#include <string>
+#include <string.h>
+#include <stdlib.h>
+
+#include <tcp/TCPException.h>
+
+#include <QRegularExpression>
+
+class TCPPacket {
+
+public:
+    enum PacketType {
+        TEXT, FILE
+    };
+
+    static TCPPacket* decode(std::string* packet);
+    static std::string* encode(PacketType type, std::string* filename, std::string* content);
+
+    PacketType getType() {
+        return type;
+    }
+
+    std::string* getContentFromRaw() {
+        return content;
+    }
+
+    std::string* getFilename() {
+        return filename;
+    }
+
+    std::string* getRaw() {
+        return raw;
+    }
+
+    ~TCPPacket() {
+        if (filename) delete filename;
+        if (content) delete content;
+    }
+
+private:
+    PacketType type;
+    std::string* filename;
+    std::string* content;
+    std::string* raw;
+
+    TCPPacket* withType(PacketType type) {
+        this->type = type;
+        return this;
+    }
+
+    TCPPacket* withContent(std::string* content) {
+        this->content = content;
+        return this;
+    }
+
+    TCPPacket* withFilename(std::string* filename) {
+        this->filename = filename;
+        return this;
+    }
+
+    TCPPacket(std::string* raw) {
+        this->raw = raw;
+    }
+
+    static const char* getContentFromRaw(const char* cstr);
+    static bool tryParseFilePacket(const char* cstr, char* filename);
+    static bool tryParseTextPacket(const char* cstr);
+};
+
+
