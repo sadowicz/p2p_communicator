@@ -18,18 +18,17 @@ public:
         TEXT, FILE
     };
 
-    static Message* fromTCPPacket(TCPPacket* packet);
-    static Message* deserialize(QJsonObject& object);
-    Message(QDateTime timestamp, Type type, string content, string filename) : timestamp(timestamp), type(type), content(content), filename(filename) {}
-    void serialize(QJsonObject& object);
+    Message(TCPPacket* packet);
+    Message(QJsonObject& object);
+    QJsonObject serialize();
     void downloadFile();
     string getTimestamp();
 
-    string getContent() {
+    string& getContent() {
         return content;
     }
 
-    string getFilename() {
+    string& getFilename() {
         return filename;
     }
 
@@ -42,5 +41,7 @@ private:
     Type type;
     string content;
     string filename;
+
+    Message(QDateTime timestamp, Type type, string content, string filename) : timestamp(timestamp), type(type), content(content), filename(filename) {}
 
 };

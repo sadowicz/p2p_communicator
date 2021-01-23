@@ -39,7 +39,8 @@ HEADERS += \
     util/strutil.h \
     config/Config.h \
     IOException.h \
-    util/strbuilder.h
+    util/strbuilder.h \
+    util/util.h
 
 # Default rules for deployment.
 unix {

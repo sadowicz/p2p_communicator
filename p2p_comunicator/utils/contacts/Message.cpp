@@ -1,29 +1,29 @@
 #include <contacts/Message.h>
 
-Message* Message::fromTCPPacket(TCPPacket* packet) {
-    Message::Type type = packet->getType() == TCPPacket::PacketType::TEXT
+Message::Message(TCPPacket* packet) {
+    this->type = packet->getType() == TCPPacket::PacketType::TEXT
             ? Message::Type::TEXT
             : Message::Type::FILE;
-    Message* msg = new Message(QDateTime::currentDateTime(), type, packet->getContent(), packet->getFilename());
-    return msg;
+    this->timestamp = QDateTime::currentDateTime();
+    this->content = packet->getContent();
+    this->filename = packet->getFilename();
 }
 
+Message::Message(QJsonObject& object) {
+    this->type = object["type"].toString().toStdString() == "TEXT"
+            ? Message::Type::TEXT
+            : Message::Type::FILE;
+    this->filename = object["filename"].toString().toStdString();
+    this->content = object["content"].toString().toStdString();
+    this->timestamp = QDateTime::fromString(object["timestamp"].toString());
+}
 void Message::downloadFile() {
     string fullPath = (strbuilder() + Config::get("downloads-directory") + "/" + filename).get();
     //TODO: download file
 }
 
-Message* Message::deserialize(QJsonObject& object) {
-    Message::Type type = object["type"].toString().toStdString() == "TEXT"
-            ? Message::Type::TEXT
-            : Message::Type::FILE;
-    string filename = object["filename"].toString().toStdString();
-    string content = object["content"].toString().toStdString();
-    QDateTime ts = QDateTime::fromString(object["timestamp"].toString());
-    return new Message(ts, type, content, filename);
-}
-
-void Message::serialize(QJsonObject& object) {
+QJsonObject Message::serialize() {
+    QJsonObject object{};
     object["type"] = getType() == Message::Type::TEXT
             ? QString("TEXT")
             : QString("FILE");
@@ -33,6 +33,7 @@ void Message::serialize(QJsonObject& object) {
     } else {
         object["filename"] = QString(getFilename().c_str());
     }
+    return object;
 }
 
 string Message::getTimestamp() {

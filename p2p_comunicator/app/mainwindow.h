@@ -8,6 +8,7 @@
 #include <add_contact_window.h>
 #include <error_window.h>
 #include <config/Config.h>
+#include "ui_mainwindow.h"
 
 #include <contacts/Storage.h>
 

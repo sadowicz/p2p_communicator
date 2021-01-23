@@ -8,8 +8,6 @@
 #include <util/strbuilder.h>
 #include <tcp/TCPException.h>
 
-#include <QRegularExpression>
-
 class TCPPacket {
 
 public:

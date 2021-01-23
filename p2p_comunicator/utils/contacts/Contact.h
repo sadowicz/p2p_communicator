@@ -1,4 +1,5 @@
 #pragma once
+
 #include <QString>
 #include <QList>
 #include <QJsonObject>
@@ -6,25 +7,32 @@
 #include <QJsonDocument>
 
 #include <contacts/Message.h>
+#include <vector>
 
-class Contact
-{
+
+
+class Contact {
 public:
-    Contact(QString name, QString address, unsigned port);
+
+    Contact() {}
+    Contact(std::string name, std::string address, unsigned port);
 
     void read(const QJsonObject &json);
-    void write(QJsonObject &json) const;
+    void write(QJsonObject &json);
 
-    void addToHistory(Message* message);
+    void addToHistory(Message message);
+    std::vector<Message>& getHistory() {
+        return history;
+    }
 
-    QString getName();
-    QString getAddress();
+    std::string& getName();
+    std::string& getAddress();
     int getPort();
 
 private:
-    QString name;
-    QString address;
+    std::string name;
+    std::string address;
     int port;
-    QList<Message*> history;
+    std::vector<Message> history;
 
 };

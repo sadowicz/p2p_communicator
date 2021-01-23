@@ -1,5 +1,4 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 
 /*TODO:
     - user should be notified when someone sends them a message (icon next to contact name?)

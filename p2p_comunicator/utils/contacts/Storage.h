@@ -7,17 +7,22 @@
 #include <QFile>
 #include <QMap>
 
+#include <unordered_map>
+#include <util/util.h>
+
 class Storage
 {
 public:
     bool load(); // load contacts from .json file
     bool save() const;  // save contacts to .json file
 
-    void addContact(Contact* newContact);
-    QMap<QString, Contact*> getContacts();
+    void addContact(Contact newContact);
+    std::unordered_map<std::string, Contact>& getContacts();
+    Contact& getContact(std::string& ip);
+    bool contactExists(std::string& ip);
 
 private:
-    QMap<QString, Contact*> contacts;
+    std::unordered_map<std::string, Contact> contacts;
 
     void read(const QJsonObject &json);
     void write(QJsonObject &json) const;
