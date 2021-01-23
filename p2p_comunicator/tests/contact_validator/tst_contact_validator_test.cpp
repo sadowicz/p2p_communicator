@@ -1,6 +1,6 @@
 #include <QtTest>
 
-#include "../../utils/contact_validator.h"
+#include <contacts/contact_validator.h>
 
 class ContactValidatorTest : public QObject
 {

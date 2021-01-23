@@ -5,8 +5,8 @@
 #include <QTcpServer>
 #include <QObject>
 
-#include <Storage.h>
-#include <Contact.h>
+#include <contacts/Storage.h>
+#include <contacts/Contact.h>
 #include <config/Config.h>
 #include <tcp/TCPPacket.h>
 

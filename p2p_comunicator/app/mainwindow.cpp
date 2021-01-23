@@ -1,6 +1,13 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+/*TODO:
+    - user should be notified when someone sends them a message (icon next to contact name?)
+    - contact editing, when someone sends you a message first their name is unknown
+    - synchronize recieving messages
+    - remove port from Contact
+*/
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)

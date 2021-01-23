@@ -42,7 +42,7 @@ void Storage::read(const QJsonObject &json) {
     QJsonArray contactsArray = json["contacts"].toArray();
     for (int i = 0; i < contactsArray.size(); ++i) {
         QJsonObject contactObject = contactsArray[i].toObject();
-        Contact* contact = new Contact("example","127.0.0.1", 8080);
+        Contact* contact = new Contact("example", "127.0.0.1", 8080);
         contact->read(contactObject);
         contacts.insert(contact->getAddress(), contact);
     }

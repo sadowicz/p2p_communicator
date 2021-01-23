@@ -17,54 +17,52 @@ public:
         TEXT, FILE
     };
 
-    static TCPPacket* decode(std::string* packet);
-    static std::string* encode(PacketType type, std::string* filename, std::string* content);
+    static TCPPacket* decode(std::string packet);
+    static std::string encode(PacketType type, std::string filename, std::string content);
 
     PacketType getType() {
         return type;
     }
 
-    std::string* getContentFromRaw() {
+    std::string getContent() {
         return content;
     }
 
-    std::string* getFilename() {
+    std::string getFilename() {
         return filename;
     }
 
-    std::string* getRaw() {
+    std::string getRaw() {
         return raw;
     }
 
-    ~TCPPacket() {
-        if (filename) delete filename;
-        if (content) delete content;
+    void disownPointers() {
+        filename = nullptr;
+        content = nullptr;
     }
 
 private:
     PacketType type;
-    std::string* filename;
-    std::string* content;
-    std::string* raw;
+    std::string filename;
+    std::string content;
+    std::string raw;
 
     TCPPacket* withType(PacketType type) {
         this->type = type;
         return this;
     }
 
-    TCPPacket* withContent(std::string* content) {
+    TCPPacket* withContent(std::string content) {
         this->content = content;
         return this;
     }
 
-    TCPPacket* withFilename(std::string* filename) {
+    TCPPacket* withFilename(std::string filename) {
         this->filename = filename;
         return this;
     }
 
-    TCPPacket(std::string* raw) {
-        this->raw = raw;
-    }
+    TCPPacket(std::string raw) : raw(raw) {}
 
     static const char* getContentFromRaw(const char* cstr);
     static bool tryParseFilePacket(const char* cstr, char* filename);

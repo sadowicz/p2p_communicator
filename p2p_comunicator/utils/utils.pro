@@ -18,18 +18,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    contact_validator.cpp \
-    Contact.cpp \
-    Storage.cpp \
+    contacts/contact_validator.cpp \
+    contacts/Contact.cpp \
+    contacts/Storage.cpp \
+    contacts/Message.cpp \
     tcp/TCPClient.cpp \
     tcp/TCPServer.cpp \
     tcp/TCPPacket.cpp \
     config/Config.cpp
 
 HEADERS += \
-    contact_validator.h \
-    Contact.h \
-    Storage.h \
+    contacts/contact_validator.h \
+    contacts/Contact.h \
+    contacts/Storage.h \
+    contacts/Message.h \
     tcp/TCPClient.h \
     tcp/TCPServer.h \
     tcp/TCPPacket.h \

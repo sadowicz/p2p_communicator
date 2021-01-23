@@ -5,6 +5,8 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 
+#include <contacts/Message.h>
+
 class Contact
 {
 public:
@@ -13,7 +15,7 @@ public:
     void read(const QJsonObject &json);
     void write(QJsonObject &json) const;
 
-    void addToHistory(QString message);
+    void addToHistory(Message* message);
 
     QString getName();
     QString getAddress();
@@ -23,5 +25,6 @@ private:
     QString name;
     QString address;
     int port;
-    QList<QString> history;
+    QList<Message*> history;
+
 };

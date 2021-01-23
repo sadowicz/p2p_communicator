@@ -1,5 +1,4 @@
-#include "add_contact_window.h"
-#include "ui_add_contact_window.h"
+#include <add_contact_window.h>
 
 AddContactWindow::AddContactWindow(QWidget *parent) :
     QDialog(parent),

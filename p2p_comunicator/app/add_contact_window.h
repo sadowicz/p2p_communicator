@@ -4,8 +4,9 @@
 #include <QDialog>
 #include <QDebug>
 
-#include "contact_validator.h"
-#include "Storage.h"
+#include <contacts/contact_validator.h>
+#include <contacts/Storage.h>
+#include <ui_add_contact_window.h>
 
 namespace Ui {
 class AddContactWindow;

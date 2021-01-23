@@ -3,39 +3,39 @@
 #define TEXT_PACKET_HEADER "TEXT"
 #define FILE_PACKET_HEADER "FILE"
 
-TCPPacket* TCPPacket::decode(std::string* packet) {
-    if (packet->empty()) {
+TCPPacket* TCPPacket::decode(std::string packet) {
+    if (packet.empty()) {
         throw new TCPException("Packet decoding failed: packet was empty");
     }
-    const char* cstr = packet->c_str();
+    const char* cstr = packet.c_str();
     char filename[260] = "";
 
     if (tryParseFilePacket(cstr, filename)) {
         const char* content = getContentFromRaw(cstr);
         return (new TCPPacket(packet))
-                ->withContent(new std::string(content + 1))
-                ->withFilename(new std::string(filename))
+                ->withContent(std::string(content + 1))
+                ->withFilename(std::string(filename))
                 ->withType(PacketType::FILE);
     } else if (tryParseTextPacket(cstr)) {
         const char* content = getContentFromRaw(cstr);
         return (new TCPPacket(packet))
-                ->withContent(new std::string(content + 1))
+                ->withContent(std::string(content + 1))
                 ->withType(PacketType::TEXT);
     } else {
         throw TCPException("Packet decoding failed: unknown error");
     }
 }
 
-std::string* TCPPacket::encode(TCPPacket::PacketType type, std::string* filename, std::string* content) {
-    if (content->empty()) {
+std::string TCPPacket::encode(TCPPacket::PacketType type, std::string filename, std::string content) {
+    if (content.empty()) {
         throw TCPException("Packet encoding failed: content cannot be empty");
     }
 
     if (type == PacketType::TEXT) {
-        return new std::string((strbuilder() + "<" TEXT_PACKET_HEADER "> " + *content).get());
+        return (strbuilder() + "<" TEXT_PACKET_HEADER "> " + content).get();
 
     } else if (type == PacketType::FILE) {
-        return new std::string((strbuilder() + "<" FILE_PACKET_HEADER ":" + *filename + "> " + *content).get());
+        return (strbuilder() + "<" FILE_PACKET_HEADER ":" + filename + "> " + content).get();
 
     } else {
         throw TCPException("Packet encoding failed: incorrect packet type");
