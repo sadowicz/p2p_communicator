@@ -32,10 +32,10 @@ std::string* TCPPacket::encode(TCPPacket::PacketType type, std::string* filename
     }
 
     if (type == PacketType::TEXT) {
-        return new std::string(std::string("<" TEXT_PACKET_HEADER "> ") + *content);
+        return new std::string((strbuilder() + "<" TEXT_PACKET_HEADER "> " + *content).get());
 
     } else if (type == PacketType::FILE) {
-        return new std::string(std::string("<" FILE_PACKET_HEADER ":") + *filename + std::string("> ") + *content);
+        return new std::string((strbuilder() + "<" FILE_PACKET_HEADER ":" + *filename + "> " + *content).get());
 
     } else {
         throw TCPException("Packet encoding failed: incorrect packet type");

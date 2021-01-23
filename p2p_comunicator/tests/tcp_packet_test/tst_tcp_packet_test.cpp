@@ -19,6 +19,8 @@ private Q_SLOTS:
     void encodeIncorrectPacket_incorrectPacketType();
     void decodeIncorrectFilePacket_noSemicolonAfterHeader();
     void decodeIncorrectTextPacket_noSpaceAfterHeader();
+    void decodeIncorrectFilePacket_emptyFilename();
+    void decodeIncorrectFilePacket_noContent();
 };
 
 tcp_packet_test::tcp_packet_test(){
@@ -159,6 +161,56 @@ void tcp_packet_test::decodeIncorrectTextPacket_noSpaceAfterHeader() {
     QCOMPARE(raw, *actual->getRaw());
     QCOMPARE(content, *actual->getContentFromRaw());
     QCOMPARE(type, actual->getType());
+
+    // - CLEANUP -
+    delete actual;
+}
+
+void tcp_packet_test::decodeIncorrectFilePacket_emptyFilename() {
+    // - DATA -
+    std::string raw("<FILE:> some content");
+    std::string content("some content");
+    std::string filename("test.txt");
+    TCPPacket::PacketType type = TCPPacket::PacketType::FILE;
+
+    // - TEST -
+    TCPPacket* actual = nullptr;
+    try {
+        actual = TCPPacket::decode(&raw);
+    } catch (TCPException& e) {
+        return;
+    }
+
+    // - ASSERT -
+    QCOMPARE(raw, *actual->getRaw());
+    QCOMPARE(content, *actual->getContentFromRaw());
+    QCOMPARE(type, actual->getType());
+    QCOMPARE(filename, *actual->getFilename());
+
+    // - CLEANUP -
+    delete actual;
+}
+
+void tcp_packet_test::decodeIncorrectFilePacket_noContent() {
+    // - DATA -
+    std::string raw("<FILE:test.txt>");
+    std::string content("some content");
+    std::string filename("test.txt");
+    TCPPacket::PacketType type = TCPPacket::PacketType::FILE;
+
+    // - TEST -
+    TCPPacket* actual = nullptr;
+    try {
+        actual = TCPPacket::decode(&raw);
+    } catch (TCPException& e) {
+        return;
+    }
+
+    // - ASSERT -
+    QCOMPARE(raw, *actual->getRaw());
+    QCOMPARE(content, *actual->getContentFromRaw());
+    QCOMPARE(type, actual->getType());
+    QCOMPARE(filename, *actual->getFilename());
 
     // - CLEANUP -
     delete actual;

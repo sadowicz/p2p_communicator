@@ -4,6 +4,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include <util/strutil.h>
+#include <util/strbuilder.h>
 #include <tcp/TCPException.h>
 
 #include <QRegularExpression>

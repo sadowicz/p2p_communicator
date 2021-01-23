@@ -5,16 +5,21 @@
 #include <QTcpServer>
 #include <QObject>
 
+#include <Storage.h>
+#include <Contact.h>
 #include <config/Config.h>
+#include <tcp/TCPPacket.h>
 
 class TCPServer : public QObject {
     Q_OBJECT
 
 public:
-    TCPServer();
+    TCPServer() = delete;
+    TCPServer(Storage& storage);
 
 private:
     QTcpServer* server;
+    Storage& storage;
 
 private slots:
     void acceptConnection();

@@ -1,6 +1,6 @@
-#include "TCPServer.h"
+#include <tcp/TCPServer.h>
 
-TCPServer::TCPServer() {
+TCPServer::TCPServer(Storage& storage) : storage(storage) {
     this->server = new QTcpServer(this);
     int port = std::stoi(Config::get("port"));
     this->server->listen(QHostAddress::Any, (quint16) port);
@@ -9,8 +9,18 @@ TCPServer::TCPServer() {
 
 void TCPServer::acceptConnection() {
     QTcpSocket* connection = this->server->nextPendingConnection();
+    QString address = connection->peerAddress().toString();
+    unsigned short port = connection->peerPort();
 
-    // TODO: recieve message and add new contact if necessary
+    Contact* contact = storage.getContacts()[address];
+    if (nullptr == contact) {
+        // new contact
+        contact = new Contact(address, address, port);
+        storage.addContact(contact);
+    }
+
+
+    contact->addToHistory();
 
     connection->close();
     delete connection;

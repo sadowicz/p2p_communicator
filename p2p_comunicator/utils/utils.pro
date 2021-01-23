@@ -34,8 +34,10 @@ HEADERS += \
     tcp/TCPServer.h \
     tcp/TCPPacket.h \
     tcp/TCPException.h \
+    util/strutil.h \
     config/Config.h \
-    IOException.h
+    IOException.h \
+    util/strbuilder.h
 
 # Default rules for deployment.
 unix {
