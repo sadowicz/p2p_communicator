@@ -9,21 +9,22 @@ TCPServer::TCPServer(Storage& storage) : storage(storage) {
 
 void TCPServer::acceptConnection() {
     QTcpSocket* connection = this->server->nextPendingConnection();
-    QString address = connection->peerAddress().toString();
+    std::string address = connection->peerAddress().toString().toStdString();
+    std::string content = connection->readAll().toStdString();
     unsigned short port = connection->peerPort();
-    QByteArray content = connection->readAll();
 
-    Contact* contact = storage.getContacts()[address];
-    if (nullptr == contact) {
+    if (!storage.contactExists(address)) {
         // save new contact
-        contact = new Contact(address, address, port);
-        storage.addContact(contact);
+        storage.addContact(Contact(address, address, port));
     }
+    Contact& contact = storage.getContact(address);
 
     // read message content
-    TCPPacket* packet = TCPPacket::decode(content.toStdString());
-
+    TCPPacket* packet = TCPPacket::decode(content);
+    Message msg(packet);
+    contact.addToHistory(msg);
 
     connection->close();
+    delete packet;
     delete connection;
 }

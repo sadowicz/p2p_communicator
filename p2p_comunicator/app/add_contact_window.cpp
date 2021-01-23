@@ -28,7 +28,7 @@ void AddContactWindow::on_bbAddContact_accepted()
     {
         // TODO: File Storage
 
-        Contact* newContact = new Contact(ui->leName->text(), ui->leIP->text(), ui->lePort->text().toUInt());
+        Contact newContact = Contact(ui->leName->text().toStdString(), ui->leIP->text().toStdString(), ui->lePort->text().toUInt());
         storage.addContact(newContact);
 
         //if storage successfull:
