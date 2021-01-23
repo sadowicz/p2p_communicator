@@ -36,11 +36,6 @@ public:
         return raw;
     }
 
-    void disownPointers() {
-        filename = nullptr;
-        content = nullptr;
-    }
-
 private:
     PacketType type;
     std::string filename;

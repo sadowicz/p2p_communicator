@@ -1,6 +1,10 @@
 #pragma once
-#include "Contact.h"
+#include <contacts/Contact.h>
+#include <config/Config.h>
 
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QFile>
 #include <QMap>
 
 class Storage

@@ -5,7 +5,6 @@ Message* Message::fromTCPPacket(TCPPacket* packet) {
             ? Message::Type::TEXT
             : Message::Type::FILE;
     Message* msg = new Message(QDateTime::currentDateTime(), type, packet->getContent(), packet->getFilename());
-    packet->disownPointers();
     return msg;
 }
 

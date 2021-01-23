@@ -1,10 +1,8 @@
 #include "Storage.h"
-#include <QJsonArray>
-#include <QJsonDocument>
-#include <QFile>
+
 
 bool Storage::load() {
-    QFile loadFile(QStringLiteral("../../data.json"));
+    QFile loadFile(QString(Config::get("history-log-file")));
 
     if (!loadFile.open(QIODevice::ReadOnly)) {
         qWarning("Couldn't open save file.");
@@ -21,7 +19,7 @@ bool Storage::load() {
 }
 
 bool Storage::save() const {
-    QFile saveFile(QStringLiteral("../../data.json"));
+    QFile saveFile(QString(Config::get("history-log-file")));
 
     if (!saveFile.open(QIODevice::WriteOnly)) {
         qWarning("Couldn't open save file.");

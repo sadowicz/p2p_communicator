@@ -6,6 +6,9 @@
     - contact editing, when someone sends you a message first their name is unknown
     - synchronize recieving messages
     - remove port from Contact
+    - use std types instead of Qt ones
+    - test for serializing contact data
+    - two more packet types FILE-REQUEST and NEW-CONTACT
 */
 
 MainWindow::MainWindow(QWidget *parent)
