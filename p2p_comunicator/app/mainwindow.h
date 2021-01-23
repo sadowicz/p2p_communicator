@@ -5,11 +5,11 @@
 #include <QStateMachine>
 #include <QHistoryState>
 
-#include "add_contact_window.h"
-#include "error_window.h"
+#include <add_contact_window.h>
+#include <error_window.h>
 #include <config/Config.h>
 
-#include "Storage.h"
+#include <contacts/Storage.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

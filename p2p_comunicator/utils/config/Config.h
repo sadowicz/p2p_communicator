@@ -13,15 +13,17 @@
 
 #define CONFIG_DEFAULT_FILE_PATH "config.txt"
 
-#define CONFIG_DEFAULT_FILE_CONTENTS "port=8080"
+#define CONFIG_DEFAULT_FILE_CONTENTS "history-log-file=history.json\nport=8080\ndownloads-directory=downloads\nconfig-file=" CONFIG_DEFAULT_FILE_PATH
 
 using namespace std;
 
 class Config {
 
 public:
-    static void init(string filename = CONFIG_DEFAULT_FILE_PATH);
-    static string get(string key);
+    static void init(string& filename);
+    static void init();
+    static string& get(string& key);
+    static string& get(const char* key);
 
 private:
     static string configFile;

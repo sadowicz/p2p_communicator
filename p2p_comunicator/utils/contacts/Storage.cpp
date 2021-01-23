@@ -1,10 +1,8 @@
 #include "Storage.h"
-#include <QJsonArray>
-#include <QJsonDocument>
-#include <QFile>
+
 
 bool Storage::load() {
-    QFile loadFile(QStringLiteral("../../data.json"));
+    QFile loadFile(QString(Config::get("history-log-file").c_str()));
 
     if (!loadFile.open(QIODevice::ReadOnly)) {
         qWarning("Couldn't open save file.");
@@ -21,7 +19,7 @@ bool Storage::load() {
 }
 
 bool Storage::save() const {
-    QFile saveFile(QStringLiteral("../../data.json"));
+    QFile saveFile(QString(Config::get("history-log-file").c_str()));
 
     if (!saveFile.open(QIODevice::WriteOnly)) {
         qWarning("Couldn't open save file.");
@@ -42,29 +40,29 @@ void Storage::read(const QJsonObject &json) {
     QJsonArray contactsArray = json["contacts"].toArray();
     for (int i = 0; i < contactsArray.size(); ++i) {
         QJsonObject contactObject = contactsArray[i].toObject();
-        Contact contact{"example","127.0.0.1", 8080};
-        contact.read(contactObject);
-        contacts.insert(contact.getAddress(), contact);
+        Contact* contact = new Contact("example", "127.0.0.1", 8080);
+        contact->read(contactObject);
+        contacts.insert(contact->getAddress(), contact);
     }
 }
 
-QMap<QString, Contact> Storage::getContacts() {
+QMap<QString, Contact*> Storage::getContacts() {
     return contacts;
 }
 
 void Storage::write(QJsonObject &json) const {
 
     QJsonArray contactsArray;
-    foreach (const Contact contact, contacts.values()) {
+    foreach (const Contact* contact, contacts.values()) {
         QJsonObject contactObject;
-        contact.write(contactObject);
+        contact->write(contactObject);
         contactsArray.append(contactObject);
     }
     json["contacts"] = contactsArray;
 }
 
-void Storage::addContact(Contact newContact) {
-    contacts.insert(newContact.getAddress(), newContact);
+void Storage::addContact(Contact* newContact) {
+    contacts.insert(newContact->getAddress(), newContact);
     save();
 }
 

@@ -1,5 +1,6 @@
 #include "Contact.h"
 
+// TODO: validate IP before saving
 Contact::Contact(QString name, QString address, unsigned port) : name(name), address(address), port(port) {}
 
 void Contact::read(const QJsonObject &json) {
@@ -7,15 +8,19 @@ void Contact::read(const QJsonObject &json) {
     address = json["address"].toString();
     port = json["port"].toInt();
 
+    foreach (const Message* message, history) {
+        delete message;
+    }
     history.clear();
+
     QJsonArray historyArray = json["history"].toArray();
     for (int i = 0; i < historyArray.size(); ++i) {
         QJsonObject contactMessage = historyArray[i].toObject();
 
         // using QJsonDocument to convert QJsonObject to QString
-        QJsonDocument Doc(contactMessage);
-        QByteArray ba = Doc.toJson();
-        history.append(QString(ba));
+
+        Message* msg = Message::deserialize(contactMessage);
+        history.append(msg);
     }
 }
 
@@ -25,13 +30,15 @@ void Contact::write(QJsonObject &json) const {
     json["port"] = port;
 
     QJsonArray historyArray;
-    foreach (const QString message, history) {
-        historyArray.append(message);
+    foreach (Message* message, history) {
+        QJsonObject msgObject{};
+        message->serialize(msgObject);
+        historyArray.append(msgObject);
     }
     json["history"] = historyArray;
 }
 
-void Contact::addToHistory(QString message) {
+void Contact::addToHistory(Message* message) {
     history.append(message);
 }
 
@@ -46,6 +53,8 @@ QString Contact::getAddress() {
 int Contact::getPort() {
     return this->port;
 }
+
+
 
 
 

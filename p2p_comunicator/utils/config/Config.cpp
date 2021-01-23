@@ -3,11 +3,24 @@
 string Config::configFile = CONFIG_DEFAULT_FILE_PATH;
 unordered_map<string, string> Config::values;
 
-string Config::get(string key) {
+string& Config::get(string& key) {
     return values.at(key);
 }
 
-void Config::init(string filename) {
+string& Config::get(const char* key) {
+    return values.at(string(key));
+}
+
+void Config::init() {
+    configFile = CONFIG_DEFAULT_FILE_PATH;
+    if (shouldCreateDefaultConfig()) {
+        writeDefaultConfig();
+    }
+
+    loadConfiguration();
+}
+
+void Config::init(string& filename) {
     configFile = filename;
     if (shouldCreateDefaultConfig()) {
         writeDefaultConfig();

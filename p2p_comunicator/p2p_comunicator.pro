@@ -4,5 +4,5 @@ CONFIG += ordered
 
 SUBDIRS += \
     utils \
-    app \
-    tests
+    tests \
+    app
