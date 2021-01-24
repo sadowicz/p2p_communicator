@@ -8,35 +8,12 @@ class strbuilder {
 
 public:
     strbuilder() {}
-    strbuilder(string& first) {
-        this->internal = string(first);
-    }
 
-    strbuilder(char* first) {
-        this->internal = string(first);
-    }
+    class end {
+    };
 
-    strbuilder(const char* first) {
-        this->internal = string(first);
-    }
-
-    string& get() {
+    string operator+(strbuilder::end _) {
         return internal;
-    }
-
-    strbuilder& add(string& next) {
-        internal.append(next);
-        return *this;
-    }
-
-    strbuilder& add(char* next) {
-        internal.append(string(next));
-        return *this;
-    }
-
-    strbuilder& add(const char* next) {
-        internal.append(string(next));
-        return *this;
     }
 
     strbuilder& operator+(string& next) {

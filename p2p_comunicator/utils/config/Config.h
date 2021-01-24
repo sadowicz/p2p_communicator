@@ -26,11 +26,13 @@ public:
     static string& get(const char* key);
 
 private:
+
     static string configFile;
     static unordered_map<string, string> values;
     static void writeDefaultConfig();
     static bool shouldCreateDefaultConfig();
     static void loadConfiguration();
+    static void loadProperties();
     Config() = delete;
 };
 

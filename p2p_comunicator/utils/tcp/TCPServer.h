@@ -1,5 +1,4 @@
-#ifndef TCP_SERVER_H
-#define TCP_SERVER_H
+#pragma once
 
 #include <QTcpSocket>
 #include <QTcpServer>
@@ -23,7 +22,7 @@ private:
 
 private slots:
     void acceptConnection();
+    void readyRead();
 
 };
 
-#endif // TCP_SERVER_H

@@ -9,8 +9,6 @@
 #include <contacts/Message.h>
 #include <vector>
 
-
-
 class Contact {
 public:
 

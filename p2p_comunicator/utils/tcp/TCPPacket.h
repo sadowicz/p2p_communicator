@@ -15,7 +15,7 @@ public:
         TEXT, FILE
     };
 
-    static TCPPacket* decode(std::string packet);
+    static TCPPacket decode(std::string packet);
     static std::string encode(PacketType type, std::string filename, std::string content);
 
     PacketType getType() {
@@ -34,28 +34,29 @@ public:
         return raw;
     }
 
+    // for tests only
+    TCPPacket(std::string raw) : raw(raw) {}
+
 private:
     PacketType type;
     std::string filename;
     std::string content;
     std::string raw;
 
-    TCPPacket* withType(PacketType type) {
+    TCPPacket& withType(PacketType type) {
         this->type = type;
-        return this;
+        return *this;
     }
 
-    TCPPacket* withContent(std::string content) {
+    TCPPacket& withContent(std::string content) {
         this->content = content;
-        return this;
+        return *this;
     }
 
-    TCPPacket* withFilename(std::string filename) {
+    TCPPacket& withFilename(std::string filename) {
         this->filename = filename;
-        return this;
+        return *this;
     }
-
-    TCPPacket(std::string raw) : raw(raw) {}
 
     static const char* getContentFromRaw(const char* cstr);
     static bool tryParseFilePacket(const char* cstr, char* filename);

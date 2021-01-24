@@ -3,24 +3,24 @@
 #define TEXT_PACKET_HEADER "TEXT"
 #define FILE_PACKET_HEADER "FILE"
 
-TCPPacket* TCPPacket::decode(std::string packet) {
+TCPPacket TCPPacket::decode(std::string packet) {
     if (packet.empty()) {
-        throw new TCPException("Packet decoding failed: packet was empty");
+        throw TCPException("Packet decoding failed: packet was empty");
     }
     const char* cstr = packet.c_str();
     char filename[260] = "";
 
     if (tryParseFilePacket(cstr, filename)) {
         const char* content = getContentFromRaw(cstr);
-        return (new TCPPacket(packet))
-                ->withContent(std::string(content + 1))
-                ->withFilename(std::string(filename))
-                ->withType(PacketType::FILE);
+        return TCPPacket(packet)
+                .withContent(std::string(content + 1))
+                .withFilename(std::string(filename))
+                .withType(PacketType::FILE);
     } else if (tryParseTextPacket(cstr)) {
         const char* content = getContentFromRaw(cstr);
-        return (new TCPPacket(packet))
-                ->withContent(std::string(content + 1))
-                ->withType(PacketType::TEXT);
+        return TCPPacket(packet)
+                .withContent(std::string(content + 1))
+                .withType(PacketType::TEXT);
     } else {
         throw TCPException("Packet decoding failed: unknown error");
     }
@@ -32,10 +32,10 @@ std::string TCPPacket::encode(TCPPacket::PacketType type, std::string filename, 
     }
 
     if (type == PacketType::TEXT) {
-        return (strbuilder() + "<" TEXT_PACKET_HEADER "> " + content).get();
+        return strbuilder() + "<" TEXT_PACKET_HEADER "> " + content + strbuilder::end();
 
     } else if (type == PacketType::FILE) {
-        return (strbuilder() + "<" FILE_PACKET_HEADER ":" + filename + "> " + content).get();
+        return strbuilder() + "<" FILE_PACKET_HEADER ":" + filename + "> " + content + strbuilder::end();
 
     } else {
         throw TCPException("Packet encoding failed: incorrect packet type");

@@ -1,15 +1,26 @@
-#ifndef TCP_CLIENT_H
-#define TCP_CLIENT_H
-
+#pragma once
 #include <string>
 
 #include <QTcpSocket>
+#include <QAbstractSocket>
+#include <QHostAddress>
+
+#include <contacts/Storage.h>
+#include <config/Config.h>
+
+using namespace std;
 
 class TCPClient {
 
 public:
-    TCPClient();
+    TCPClient(Storage& storage);
 
+    ~TCPClient() { delete socket; }
+
+    // connect and send packet
+    void send(string& address, string& packet);
+
+private:
+    Storage& storage;
+    QTcpSocket* socket;
 };
-
-#endif // TCP_CLIENT_H
