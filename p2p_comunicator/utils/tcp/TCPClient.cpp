@@ -19,8 +19,10 @@ void TCPClient::send(string& address, string& packet) {
     if (socket->state() == QAbstractSocket::ConnectedState) {
         size_t writingResult = socket->write(packet.c_str());
         if (writingResult == -1 || writingResult != packet.size()) {
-            string error = strbuilder()<<"Client error: writing failed, "
-                    <<to_string(writingResult)<<" out of "<<to_string(packet.size())<<" bytes written"<<strbuilder::end();
+            string bytesWritten = to_string(writingResult);
+            string totalBytes = to_string(packet.size());
+            string error = strbuilder() + "Client error: writing failed, "
+                    + bytesWritten + " out of " + totalBytes + " bytes written" + strbuilder::end();
             throw TCPException(error);
         }
 
