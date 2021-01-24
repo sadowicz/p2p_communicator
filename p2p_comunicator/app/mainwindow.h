@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QStateMachine>
 #include <QHistoryState>
+#include <QDebug>
 
 #include <add_contact_window.h>
 #include <error_window.h>
@@ -53,10 +54,13 @@ private:
     QState* ValidateSendable;
     QState* Sendable;
 
+    Storage storage;
+
     void assignStatesProperties();
     void setStatesTransistions();
     void setUpStateMachine();
 
-    Storage storage;
+    void loadListItems();
+
 };
 #endif // MAINWINDOW_H

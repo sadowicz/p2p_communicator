@@ -25,7 +25,6 @@ private:
     ContactValidator* validator;
     Storage storage;
 
-
 signals:
     void contactAddSuccess();
     void contactAddCancel();

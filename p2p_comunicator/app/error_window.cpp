@@ -1,4 +1,4 @@
-#include <error_window.h>
+#include "error_window.h"
 
 
 ErrorWindow::ErrorWindow(QWidget *parent, QString errorMessage) :

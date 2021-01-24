@@ -16,6 +16,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     Config::init();
     ui->setupUi(this);
+    loadListItems();
+
     setUpStateMachine();
 
     storage.load();
@@ -103,6 +105,18 @@ void MainWindow::setStatesTransistions()
     Locked->addTransition(this, SIGNAL(contactAdded()), Connected);
     Locked->addTransition(this, SIGNAL(contactAdditionCanceled()), Unlocked);
     Locked->addTransition(this, SIGNAL(errorCatched()), Unlocked);
+}
+
+void MainWindow::loadListItems()
+{
+    if(storage.load())
+    {
+        std::unordered_map<std::string, Contact> contacts = storage.getContacts();
+        for(auto& contact : contacts)
+        {
+            new QListWidgetItem(contact.second.getName().c_str(), ui->lwContacts);
+        }
+    }
 }
 
 void MainWindow::on_pbNewContact_clicked()
