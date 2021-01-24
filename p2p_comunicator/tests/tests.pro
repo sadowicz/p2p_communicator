@@ -1,6 +1,7 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
+    contact_test \
     contact_validator \
     tcp_packet_test
 
