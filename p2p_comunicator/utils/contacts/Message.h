@@ -18,7 +18,7 @@ public:
         TEXT, FILE
     };
 
-    Message(TCPPacket* packet);
+    Message(TCPPacket packet);
     Message(QJsonObject& object);
     QJsonObject serialize();
     void downloadFile();
@@ -36,12 +36,22 @@ public:
         return type;
     }
 
+    string& getAddress() {
+        return *address;
+    }
+
+    Message& withAddress(string* sender) {
+        this->address = sender;
+        return *this;
+    }
+
 private:
     QDateTime timestamp;
     Type type;
     string content;
     string filename;
+    string* address;
 
-    Message(QDateTime timestamp, Type type, string content, string filename) : timestamp(timestamp), type(type), content(content), filename(filename) {}
+    Message(string* address, QDateTime timestamp, Type type, string content, string filename) : address(address), timestamp(timestamp), type(type), content(content), filename(filename) {}
 
 };
