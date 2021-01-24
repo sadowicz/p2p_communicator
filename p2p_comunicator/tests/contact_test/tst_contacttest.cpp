@@ -80,7 +80,6 @@ private slots:
         QCOMPARE(1234, contact2.getPort());
         QCOMPARE(10, contact2.getHistory().size());
     }
-
 };
 
 QTEST_APPLESS_MAIN(ContactTest)
