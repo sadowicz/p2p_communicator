@@ -9,7 +9,7 @@ AddContactWindow::AddContactWindow(QWidget *parent) :
     ui->setupUi(this);
     setFixedSize(this->minimumSize());  // sets size to fixed value, disables resizing
 
-    QObject::connect(this, SIGNAL(contactAddSuccess()), parent, SLOT(on_contactAddSuccess()));
+    QObject::connect(this, SIGNAL(contactAddSuccess(std::string)), parent, SLOT(on_contactAddSuccess(std::string)));
     QObject::connect(this, SIGNAL(contactAddCancel()), parent, SLOT(on_contactAddCancel()));
     QObject::connect(this, SIGNAL(contactAddFailure(QString)), parent, SLOT(on_error(QString)));
 
@@ -32,7 +32,7 @@ void AddContactWindow::on_bbAddContact_accepted()
         storage.addContact(newContact);
 
         //if storage successfull:
-        emit contactAddSuccess();
+        emit contactAddSuccess(newContact.getAddress());
     }
     else
         emit contactAddFailure(validator->validationErrMsg());

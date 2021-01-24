@@ -125,9 +125,12 @@ void MainWindow::on_pbNewContact_clicked()
     addContactWin->show();
 }
 
-void MainWindow::on_contactAddSuccess()
+void MainWindow::on_contactAddSuccess(std::string ip)
 {
-    // TODO : update contact list form file
+    // Update contact list form file
+    storage.load();
+    ui->lwContacts->addItem(storage.getContact(ip).getName().c_str());
+
     emit contactAdded();
 }
 

@@ -26,7 +26,7 @@ private:
     Storage storage;
 
 signals:
-    void contactAddSuccess();
+    void contactAddSuccess(std::string ip);
     void contactAddCancel();
     void contactAddFailure(QString errorMessage);
 

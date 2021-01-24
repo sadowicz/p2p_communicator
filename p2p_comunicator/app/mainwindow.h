@@ -34,7 +34,7 @@ signals:
 
 private slots:
     void on_pbNewContact_clicked();
-    void on_contactAddSuccess();
+    void on_contactAddSuccess(std::string ip);
     void on_contactAddCancel();
     void on_error(QString errorMessage);
     void on_errorRead();
