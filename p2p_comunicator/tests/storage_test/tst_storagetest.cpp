@@ -73,6 +73,27 @@ private slots:
         QCOMPARE(true, storage.contactExists(address));
         QCOMPARE(true, storage.contactExists(address2));
     }
+
+    void getContact() {
+        Storage storage{};
+
+        QCOMPARE(0, storage.getContacts().size());
+
+        std::string address = "11.22.33.44";
+
+        try {
+            storage.addContact(Contact{"name", address, 8175});
+        }
+        catch(std::out_of_range&) {}
+
+        QCOMPARE(1, storage.getContacts().size());
+
+        auto contact = storage.getContact(address);
+
+        QCOMPARE("name", contact.getName());
+        QCOMPARE(address, contact.getAddress());
+        QCOMPARE(8175, contact.getPort());
+    }
 };
 
 QTEST_APPLESS_MAIN(StorageTest)
