@@ -10,7 +10,7 @@ public:
     ~StorageTest() {}
 
 private slots:
-    void addContact() {
+    void addContactAndGetContacts() {
         Storage storage{};
 
         std::string name = "name";
@@ -25,8 +25,7 @@ private slots:
 
         try {
             storage.addContact(Contact{name, address, port});
-        }
-        catch(std::out_of_range&) {}
+        } catch(std::out_of_range&) {}
 
         auto contacts = storage.getContacts();
 
@@ -38,8 +37,7 @@ private slots:
 
         try {
             storage.addContact(Contact{name2, address2, port2});
-        }
-        catch(std::out_of_range&) {}
+        } catch(std::out_of_range&) {}
 
         contacts = storage.getContacts();
 
@@ -72,16 +70,14 @@ private slots:
 
         try {
             storage.addContact(Contact{name, address, port});
-        }
-        catch(std::out_of_range&) {}
+        } catch(std::out_of_range&) {}
 
         QCOMPARE(true, storage.contactExists(address));
         QCOMPARE(false, storage.contactExists(address2));
 
         try {
             storage.addContact(Contact{name2, address2, port2});
-        }
-        catch(std::out_of_range&) {}
+        } catch(std::out_of_range&) {}
 
         QCOMPARE(true, storage.contactExists(address));
         QCOMPARE(true, storage.contactExists(address2));
@@ -94,6 +90,54 @@ private slots:
         std::string address = "11.22.33.44";
         unsigned int port = 8175;
 
+        std::string name2 = "other name";
+        std::string address2 = "74.92.76.33";
+        unsigned int port2 = 5342;
+
+        QCOMPARE(0, storage.getContacts().size());
+
+        try {
+            storage.addContact(Contact{name, address, port});
+        } catch(std::out_of_range&) {}
+        try {
+            storage.addContact(Contact{name2, address2, port2});
+        } catch(std::out_of_range&) {}
+
+        QCOMPARE(2, storage.getContacts().size());
+
+        auto contact = storage.getContact(address);
+
+        QCOMPARE(name, contact.getName());
+        QCOMPARE(address, contact.getAddress());
+        QCOMPARE(port, contact.getPort());
+
+        contact = storage.getContact(address2);
+
+        QCOMPARE(name2, contact.getName());
+        QCOMPARE(address2, contact.getAddress());
+        QCOMPARE(port2, contact.getPort());
+    }
+
+    void saveAndLoad() {
+        Storage storage{};
+
+        std::string name = "name";
+        std::string address = "11.22.33.44";
+        unsigned int port = 8175;
+
+        std::string name2 = "other name";
+        std::string address2 = "74.92.76.33";
+        unsigned int port2 = 5342;
+
+        QCOMPARE(0, storage.getContacts().size());
+
+        try {
+            storage.save();
+        } catch(std::out_of_range&) {}
+        try {
+            storage.load();
+        } catch(std::out_of_range&) {}
+
         QCOMPARE(0, storage.getContacts().size());
 
         try {
@@ -101,13 +145,34 @@ private slots:
         }
         catch(std::out_of_range&) {}
 
+        try {
+            storage.save();
+        } catch(std::out_of_range&) {}
+
+        try {
+            storage.load();
+        } catch(std::out_of_range&) {}
+
         QCOMPARE(1, storage.getContacts().size());
+        QCOMPARE(true, storage.contactExists(address));
+        QCOMPARE(false, storage.contactExists(address2));
 
-        auto contact = storage.getContact(address);
+        try {
+            storage.addContact(Contact{name2, address2, port2});
+        }
+        catch(std::out_of_range&) {}
 
-        QCOMPARE(name, contact.getName());
-        QCOMPARE(address, contact.getAddress());
-        QCOMPARE(port, contact.getPort());
+        try {
+            storage.save();
+        } catch(std::out_of_range&) {}
+
+        try {
+            storage.load();
+        } catch(std::out_of_range&) {}
+
+        QCOMPARE(2, storage.getContacts().size());
+        QCOMPARE(true, storage.contactExists(address));
+        QCOMPARE(true, storage.contactExists(address2));
     }
 };
 
