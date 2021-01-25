@@ -1,7 +1,9 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
+    contact_test \
     contact_validator \
+    storage_test \
     tcp_packet_test
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../utils/release/ -lutils
