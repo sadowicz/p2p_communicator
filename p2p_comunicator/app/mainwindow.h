@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QStateMachine>
 #include <QHistoryState>
+#include <QDebug>
 
 #include <add_contact_window.h>
 #include <error_window.h>
@@ -28,6 +29,7 @@ public:
 signals:
     void contactAdded();
     void contactAdditionCanceled();
+    void error(QString errorMessage);
     void errorCatched();
     void msgSendable();
     void msgUnsendable();
@@ -35,11 +37,13 @@ signals:
 
 private slots:
     void on_pbNewContact_clicked();
-    void on_contactAddSuccess();
+    void on_contactAddSuccess(std::string ip);
     void on_contactAddCancel();
     void on_error(QString errorMessage);
     void on_errorRead();
     void on_validateSendable();
+
+    void on_lwContacts_itemClicked(QListWidgetItem *item);
 
 private:
     Ui::MainWindow *ui;
@@ -55,10 +59,16 @@ private:
     QState* ValidateSendable;
     QState* Sendable;
 
+    Storage storage;
+    std::unordered_map<std::string, Contact> contacts;
+    Contact* activeContact;
+
     void assignStatesProperties();
     void setStatesTransistions();
     void setUpStateMachine();
 
-    Storage storage;
+    void loadContacts();
+    void loadListItems();
+
 };
 #endif // MAINWINDOW_H

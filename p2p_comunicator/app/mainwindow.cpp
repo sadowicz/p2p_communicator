@@ -4,7 +4,11 @@
     - user should be notified when someone sends them a message (icon next to contact name?)
     - contact editing, when someone sends you a message first their name is unknown
     - two more packet types FILE-REQUEST and NEW-CONTACT
+<<<<<<< HEAD
+    - state to locked after emieting error form constructor (loadContacts() method)
+=======
     - add "active" flag to Contact class
+>>>>>>> bd2d0c703607830b5dfbdfac520226918aff816f
 */
 
 MainWindow::MainWindow(QWidget *parent)
@@ -13,18 +17,23 @@ MainWindow::MainWindow(QWidget *parent)
 {
 
     ui->setupUi(this);
+
     setUpStateMachine();
+    stateMachine->start();
+
+    connect(this, SIGNAL(error(QString)), this, SLOT(on_error(QString)));
 
     Config::init();
-    storage.load();
+
+    loadContacts();
+    loadListItems();
+
     TCPConnection::init(storage);
     // connect(this, SIGNAL(sendMsg(string&, string&)), TCPConnection::get(), SLOT(send(string&, string&)));
     //  sending example:
     // emit sendMsg("ip", "content");
 
     // connect(TCPConnection::get(), SIGNAL(sendingError()), this, SLOT(...));
-
-    stateMachine->start();
 }
 
 MainWindow::~MainWindow()
@@ -95,6 +104,9 @@ void MainWindow::assignStatesProperties()
 void MainWindow::setStatesTransistions()
 {
     Unlocked->addTransition(ui->pbNewContact, SIGNAL(clicked()), Locked);
+    Unlocked->addTransition(this, SIGNAL(error(QString)), Locked);
+
+    Disconnected->addTransition(ui->lwContacts, SIGNAL(itemClicked(QListWidgetItem*)), Connected);
 
     Connected->addTransition(ui->teSend, SIGNAL(textChanged()), ValidateSendable);
 
@@ -109,15 +121,42 @@ void MainWindow::setStatesTransistions()
     Locked->addTransition(this, SIGNAL(errorCatched()), Unlocked);
 }
 
+void MainWindow::loadContacts()
+{
+    if(storage.load())
+    {
+        for(auto& contact : storage.getContacts())
+        {
+            contacts.insert({contact.second.getName(), contact.second});
+        }
+    }
+    else
+        emit error("Unable to load contacts data.");
+}
+
+void MainWindow::loadListItems()
+{
+    for(auto& contact : contacts)
+    {
+        new QListWidgetItem(contact.first.c_str(), ui->lwContacts);
+    }
+}
+
 void MainWindow::on_pbNewContact_clicked()
 {
     addContactWin = new AddContactWindow{this};
     addContactWin->show();
 }
 
-void MainWindow::on_contactAddSuccess()
+void MainWindow::on_contactAddSuccess(std::string ip)
 {
-    // TODO : update contact list form file
+    // Update contact list form file
+    storage.load();
+
+    auto added = storage.getContact(ip);
+    contacts.insert({added->getName(), *added});
+    ui->lwContacts->addItem(added->getName().c_str());
+
     emit contactAdded();
 }
 
@@ -143,4 +182,9 @@ void MainWindow::on_validateSendable()
         emit msgUnsendable();
     else
         emit msgSendable();
+}
+
+void MainWindow::on_lwContacts_itemClicked(QListWidgetItem *item)
+{
+    activeContact = &contacts[item->text().toStdString()];
 }
