@@ -1,6 +1,5 @@
 #include "Contact.h"
 
-// TODO: validate IP before saving
 Contact::Contact(std::string name, std::string address, unsigned port) : name(name), address(address), port(port) {}
 
 void Contact::read(const QJsonObject &json) {

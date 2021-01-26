@@ -11,5 +11,14 @@ pipelines:
           -     pushd tests/contact_validator
           -       LD_LIBRARY_PATH=../../utils ./contact_validator
           -     popd
+          -     pushd tests/contact_test
+          -       LD_LIBRARY_PATH=../../utils ./contact_test
+          -     popd
+          -     pushd tests/storage_test
+          -       LD_LIBRARY_PATH=../../utils ./storage_test
+          -     popd
+          -     pushd tests/tcp_packet_test
+          -       LD_LIBRARY_PATH=../../utils ./tst_tcp_packet_test
+          -     popd
           -   popd
           - .ci/collect_reports.sh
