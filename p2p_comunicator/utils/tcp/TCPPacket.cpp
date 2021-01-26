@@ -4,6 +4,8 @@
 #define FILE_PACKET_HEADER "FILE"
 
 TCPPacket TCPPacket::decode(std::string packet) {
+    packet = QByteArray::fromBase64(QByteArray(packet.c_str())).toStdString();
+
     if (packet.empty()) {
         throw TCPException("Packet decoding failed: packet was empty");
     }
@@ -30,16 +32,17 @@ std::string TCPPacket::encode(TCPPacket::PacketType type, std::string filename, 
     if (content.empty()) {
         throw TCPException("Packet encoding failed: content cannot be empty");
     }
-
+    std::string packet = "";
     if (type == PacketType::TEXT) {
-        return strbuilder() + "<" TEXT_PACKET_HEADER "> " + content + strbuilder::end();
+        packet = strbuilder() + "<" TEXT_PACKET_HEADER "> " + content + strbuilder::end();
 
     } else if (type == PacketType::FILE) {
-        return strbuilder() + "<" FILE_PACKET_HEADER ":" + filename + "> " + content + strbuilder::end();
+        packet = strbuilder() + "<" FILE_PACKET_HEADER ":" + filename + "> " + content + strbuilder::end();
 
     } else {
         throw TCPException("Packet encoding failed: incorrect packet type");
     }
+    return QByteArray(packet.c_str()).toBase64().toStdString();
 }
 
 const char* TCPPacket::getContentFromRaw(const char* cstr) {

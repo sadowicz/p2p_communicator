@@ -8,6 +8,8 @@
 #include <util/strbuilder.h>
 #include <tcp/TCPException.h>
 
+#include <QByteArray>
+
 class TCPPacket {
 
 public:
