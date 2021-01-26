@@ -3,9 +3,7 @@
 /*TODO:
     - user should be notified when someone sends them a message (icon next to contact name?)
     - contact editing, when someone sends you a message first their name is unknown
-    - test for serializing contact data
     - two more packet types FILE-REQUEST and NEW-CONTACT
-
     - add "active" flag to Contact class
 */
 
@@ -19,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     Config::init();
     storage.load();
-    // TCPConnection::init(storage);
+    TCPConnection::init(storage);
     // connect(this, SIGNAL(sendMsg(string&, string&)), TCPConnection::get(), SLOT(send(string&, string&)));
     //  sending example:
     // emit sendMsg("ip", "content");

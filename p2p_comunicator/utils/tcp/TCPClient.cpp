@@ -1,25 +1,12 @@
 #include <tcp/TCPClient.h>
 
 TCPClient::TCPClient(Contact& contact, Storage& storage) : storage(storage), contact(contact) {
-    do {
-        this->socket = new QTcpSocket();
-        connect(socket, SIGNAL(disconnected()), this, SLOT(onDisconnect()));
-        connect(socket, SIGNAL(connected()), this, SLOT(onConnect()));
+    this->socket = new QTcpSocket();
+    connect(socket, SIGNAL(disconnected()), this, SLOT(onDisconnect()));
+    connect(socket, SIGNAL(connected()), this, SLOT(onConnect()));
 
-        QHostAddress hostAddress = QHostAddress(QString(contact.getAddress().c_str()));
-        socket->connectToHost(hostAddress, std::stoi(Config::get("port")));
-
-        if (!socket->waitForConnected()) {
-            emit failed(&contact, TCPException("Client error: could not connect to host (timeout)"));
-            break;
-        }
-
-        if (socket->state() != QAbstractSocket::ConnectedState) {
-            emit failed(&contact, TCPException("Client error: could not connect to host"));
-            break;
-        }
-
-    } while(false);
+    QHostAddress hostAddress = QHostAddress(QString(contact.getAddress().c_str()));
+    socket->connectToHost(hostAddress, std::stoi(Config::get("port")));
 }
 
 void TCPClient::onDisconnect() {
@@ -31,6 +18,11 @@ void TCPClient::onConnect() {
 }
 
 void TCPClient::send(string& packet) {
+
+    if (socket->state() != QAbstractSocket::ConnectedState) {
+        emit failed(&contact, TCPException("Client error: client was not connected to host"));
+        return;
+    }
 
     size_t writingResult = socket->write(packet.c_str());
 
