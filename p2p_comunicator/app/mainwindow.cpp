@@ -17,6 +17,8 @@ MainWindow::MainWindow(QWidget *parent)
     Config::init();
     ui->setupUi(this);
 
+    connect(this, SIGNAL(error(QString)), this, SLOT(on_error(QString)));
+
     storage.load();
 
     loadContacts();
@@ -118,7 +120,8 @@ void MainWindow::loadContacts()
             contacts.insert({contact.second.getName(), contact.second});
         }
     }
-    //else err window
+    else
+        emit error("Unable to load contacts data.");
 }
 
 void MainWindow::loadListItems()

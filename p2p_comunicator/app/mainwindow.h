@@ -28,6 +28,7 @@ public:
 signals:
     void contactAdded();
     void contactAdditionCanceled();
+    void error(QString errorMessage);
     void errorCatched();
     void msgSendable();
     void msgUnsendable();
