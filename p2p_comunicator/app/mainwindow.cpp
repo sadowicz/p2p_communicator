@@ -188,3 +188,8 @@ void MainWindow::on_lwContacts_itemClicked(QListWidgetItem *item)
 {
     activeContact = &contacts[item->text().toStdString()];
 }
+
+void MainWindow::on_pbDeleteContact_clicked()
+{
+    storage.deleteContact(activeContact->getAddress());
+}

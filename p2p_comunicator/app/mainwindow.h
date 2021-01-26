@@ -45,6 +45,8 @@ private slots:
 
     void on_lwContacts_itemClicked(QListWidgetItem *item);
 
+    void on_pbDeleteContact_clicked();
+
 private:
     Ui::MainWindow *ui;
     AddContactWindow *addContactWin;

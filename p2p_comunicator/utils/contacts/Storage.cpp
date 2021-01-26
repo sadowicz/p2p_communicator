@@ -75,3 +75,11 @@ void Storage::addContact(Contact newContact) {
     save();
 }
 
+void Storage::deleteContact(std::string& ip) {
+    contacts.erase(ip);
+    save();
+}
+
+void Storage::editContact(std::string& ip) {
+
+}
