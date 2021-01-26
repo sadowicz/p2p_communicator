@@ -4,11 +4,12 @@
 #define FILE_PACKET_HEADER "FILE"
 
 TCPPacket TCPPacket::decode(std::string packet) {
-    packet = QByteArray::fromBase64(QByteArray(packet.c_str())).toStdString();
-
     if (packet.empty()) {
         throw TCPException("Packet decoding failed: packet was empty");
     }
+
+    packet = QByteArray::fromBase64(QByteArray(packet.c_str())).toStdString();
+
     const char* cstr = packet.c_str();
     char filename[260] = "";
 
