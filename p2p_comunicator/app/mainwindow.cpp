@@ -8,6 +8,7 @@
     - use std types instead of Qt ones
     - test for serializing contact data
     - two more packet types FILE-REQUEST and NEW-CONTACT
+    - state to locked after emieting error form constructor (loadContacts() method)
 */
 
 MainWindow::MainWindow(QWidget *parent)
@@ -17,16 +18,13 @@ MainWindow::MainWindow(QWidget *parent)
     Config::init();
     ui->setupUi(this);
 
-    connect(this, SIGNAL(error(QString)), this, SLOT(on_error(QString)));
+    setUpStateMachine();
+    stateMachine->start();
 
-    storage.load();
+    connect(this, SIGNAL(error(QString)), this, SLOT(on_error(QString)));
 
     loadContacts();
     loadListItems();
-
-    setUpStateMachine();
-
-    stateMachine->start();
 }
 
 MainWindow::~MainWindow()
@@ -97,6 +95,9 @@ void MainWindow::assignStatesProperties()
 void MainWindow::setStatesTransistions()
 {
     Unlocked->addTransition(ui->pbNewContact, SIGNAL(clicked()), Locked);
+    Unlocked->addTransition(this, SIGNAL(error(QString)), Locked);
+
+    Disconnected->addTransition(ui->lwContacts, SIGNAL(itemClicked(QListWidgetItem*)), Connected);
 
     Connected->addTransition(ui->teSend, SIGNAL(textChanged()), ValidateSendable);
 
