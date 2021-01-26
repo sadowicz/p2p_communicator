@@ -107,15 +107,15 @@ private slots:
 
         auto contact = storage.getContact(address);
 
-        QCOMPARE(name, contact.getName());
-        QCOMPARE(address, contact.getAddress());
-        QCOMPARE(port, contact.getPort());
+        QCOMPARE(name, contact->getName());
+        QCOMPARE(address, contact->getAddress());
+        QCOMPARE(port, contact->getPort());
 
         contact = storage.getContact(address2);
 
-        QCOMPARE(name2, contact.getName());
-        QCOMPARE(address2, contact.getAddress());
-        QCOMPARE(port2, contact.getPort());
+        QCOMPARE(name2, contact->getName());
+        QCOMPARE(address2, contact->getAddress());
+        QCOMPARE(port2, contact->getPort());
     }
 
     void saveAndLoad() {

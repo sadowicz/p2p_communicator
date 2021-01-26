@@ -9,6 +9,8 @@
 #include <config/Config.h>
 #include <tcp/TCPPacket.h>
 
+#include <unordered_map>
+
 class TCPServer : public QObject {
     Q_OBJECT
 
@@ -19,10 +21,17 @@ public:
 private:
     QTcpServer* server;
     Storage& storage;
+    unordered_map<QTcpSocket*, Contact*> contacts;
 
 private slots:
-    void acceptConnection();
-    void readyRead();
+    void onAcceptConnection();
+    void onReadyRead();
+    void onDisconnected();
+
+signals:
+    void recieved(Contact*, TCPPacket);
+    void connected(Contact*);
+    void disconnected(Contact*);
 
 };
 

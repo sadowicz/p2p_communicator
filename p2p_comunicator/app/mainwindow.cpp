@@ -3,22 +3,28 @@
 /*TODO:
     - user should be notified when someone sends them a message (icon next to contact name?)
     - contact editing, when someone sends you a message first their name is unknown
-    - synchronize recieving messages
-    - remove port from Contact
-    - use std types instead of Qt ones
     - test for serializing contact data
     - two more packet types FILE-REQUEST and NEW-CONTACT
+
+    - add "active" flag to Contact class
 */
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    Config::init();
+
     ui->setupUi(this);
     setUpStateMachine();
 
+    Config::init();
     storage.load();
+    // TCPConnection::init(storage);
+    // connect(this, SIGNAL(sendMsg(string&, string&)), TCPConnection::get(), SLOT(send(string&, string&)));
+    //  sending example:
+    // emit sendMsg("ip", "content");
+
+    // connect(TCPConnection::get(), SIGNAL(sendingError()), this, SLOT(...));
 
     stateMachine->start();
 }

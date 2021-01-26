@@ -25,7 +25,8 @@ SOURCES += \
     tcp/TCPClient.cpp \
     tcp/TCPServer.cpp \
     tcp/TCPPacket.cpp \
-    config/Config.cpp
+    config/Config.cpp \
+    tcp/TCPConnection.cpp
 
 HEADERS += \
     contacts/contact_validator.h \
@@ -40,7 +41,8 @@ HEADERS += \
     config/Config.h \
     IOException.h \
     util/strbuilder.h \
-    util/util.h
+    util/util.h \
+    tcp/TCPConnection.h
 
 # Default rules for deployment.
 unix {

@@ -18,7 +18,7 @@ public:
 
     void addContact(Contact newContact);
     std::unordered_map<std::string, Contact>& getContacts();
-    Contact& getContact(std::string& ip);
+    Contact* getContact(std::string& ip);
     bool contactExists(std::string& ip);
 
 private:
