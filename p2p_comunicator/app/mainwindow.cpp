@@ -16,11 +16,13 @@ MainWindow::MainWindow(QWidget *parent)
 {
     Config::init();
     ui->setupUi(this);
+
+    storage.load();
+
+    loadContacts();
     loadListItems();
 
     setUpStateMachine();
-
-    storage.load();
 
     stateMachine->start();
 }
@@ -107,15 +109,23 @@ void MainWindow::setStatesTransistions()
     Locked->addTransition(this, SIGNAL(errorCatched()), Unlocked);
 }
 
-void MainWindow::loadListItems()
+void MainWindow::loadContacts()
 {
     if(storage.load())
     {
-        std::unordered_map<std::string, Contact> contacts = storage.getContacts();
-        for(auto& contact : contacts)
+        for(auto& contact : storage.getContacts())
         {
-            new QListWidgetItem(contact.second.getName().c_str(), ui->lwContacts);
+            contacts.insert({contact.second.getName(), contact.second});
         }
+    }
+    //else err window
+}
+
+void MainWindow::loadListItems()
+{
+    for(auto& contact : contacts)
+    {
+        new QListWidgetItem(contact.first.c_str(), ui->lwContacts);
     }
 }
 
@@ -129,7 +139,10 @@ void MainWindow::on_contactAddSuccess(std::string ip)
 {
     // Update contact list form file
     storage.load();
-    ui->lwContacts->addItem(storage.getContact(ip).getName().c_str());
+
+    auto added = storage.getContact(ip);
+    contacts.insert({added.getName(), added});
+    ui->lwContacts->addItem(added.getName().c_str());
 
     emit contactAdded();
 }
@@ -156,4 +169,9 @@ void MainWindow::on_validateSendable()
         emit msgUnsendable();
     else
         emit msgSendable();
+}
+
+void MainWindow::on_lwContacts_itemClicked(QListWidgetItem *item)
+{
+    activeContact = &contacts[item->text().toStdString()];
 }

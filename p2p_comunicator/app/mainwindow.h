@@ -40,6 +40,8 @@ private slots:
     void on_errorRead();
     void on_validateSendable();
 
+    void on_lwContacts_itemClicked(QListWidgetItem *item);
+
 private:
     Ui::MainWindow *ui;
     AddContactWindow *addContactWin;
@@ -55,11 +57,14 @@ private:
     QState* Sendable;
 
     Storage storage;
+    std::unordered_map<std::string, Contact> contacts;
+    Contact* activeContact;
 
     void assignStatesProperties();
     void setStatesTransistions();
     void setUpStateMachine();
 
+    void loadContacts();
     void loadListItems();
 
 };
