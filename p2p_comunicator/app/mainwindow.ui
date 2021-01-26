@@ -22,7 +22,7 @@
    </property>
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <layout class="QHBoxLayout" name="hlApp" stretch="2,1,4">
+     <layout class="QHBoxLayout" name="hlApp" stretch="2,2,4">
       <item>
        <layout class="QVBoxLayout" name="vlContacts">
         <item>
@@ -116,6 +116,20 @@
           </property>
           <property name="text">
            <string>Add new contact</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pbDeleteContact">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Delete contact</string>
           </property>
          </widget>
         </item>
