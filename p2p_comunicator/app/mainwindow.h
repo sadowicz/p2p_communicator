@@ -12,6 +12,7 @@
 #include "ui_mainwindow.h"
 
 #include <contacts/Storage.h>
+#include <tcp/TCPConnection.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -32,6 +33,7 @@ signals:
     void errorCatched();
     void msgSendable();
     void msgUnsendable();
+    void sendMsg(string& ip, string& content);
 
 private slots:
     void on_pbNewContact_clicked();

@@ -1,5 +1,6 @@
 #include <QString>
 #include <QtTest>
+#include <QByteArray>
 
 #include <tcp/TCPPacket.h>
 
@@ -9,6 +10,10 @@ class tcp_packet_test : public QObject
 
 public:
     tcp_packet_test();
+
+private:
+    std::string base64encode(std::string s);
+    std::string base64decode(std::string s);
 
 private Q_SLOTS:
     void encodeFilePacket();
@@ -21,6 +26,8 @@ private Q_SLOTS:
     void decodeIncorrectTextPacket_noSpaceAfterHeader();
     void decodeIncorrectFilePacket_emptyFilename();
     void decodeIncorrectFilePacket_noContent();
+
+    void encodeAndDecode();
 };
 
 tcp_packet_test::tcp_packet_test(){
@@ -34,7 +41,7 @@ void tcp_packet_test::decodeFilePacket() {
     TCPPacket::PacketType type = TCPPacket::PacketType::FILE;
 
     // - TEST -
-    TCPPacket actual = TCPPacket::decode(raw);
+    TCPPacket actual = TCPPacket::decode(base64encode(raw));
 
     // - ASSERT -
     QCOMPARE(raw, actual.getRaw());
@@ -50,7 +57,7 @@ void tcp_packet_test::decodeTextPacket() {
     TCPPacket::PacketType type = TCPPacket::PacketType::TEXT;
 
     // - TEST -
-    TCPPacket actual = TCPPacket::decode(raw);
+    TCPPacket actual = TCPPacket::decode(base64encode(raw));
 
     // - ASSERT -
     QCOMPARE(raw, actual.getRaw());
@@ -69,7 +76,7 @@ void tcp_packet_test::encodeFilePacket() {
     std::string encoded = TCPPacket::encode(type, filename, content);
 
     // - ASSERT -
-    QCOMPARE(raw, encoded);
+    QCOMPARE(base64encode(raw), encoded);
 }
 
 void tcp_packet_test::encodeTextPacket() {
@@ -82,7 +89,26 @@ void tcp_packet_test::encodeTextPacket() {
     std::string encoded = TCPPacket::encode(type, "", content);
 
     // - ASSERT -
-    QCOMPARE(raw, encoded);
+    QCOMPARE(base64encode(raw), encoded);
+}
+
+void tcp_packet_test::encodeAndDecode() {
+    // - DATA -
+    std::string raw("<TEXT> some content");
+    std::string content("some content");
+    TCPPacket::PacketType type = TCPPacket::PacketType::TEXT;
+
+    // - ENCODE -
+    std::string encoded = TCPPacket::encode(type, "", content);
+
+    // - DECODE -
+    TCPPacket decoded = TCPPacket::decode(encoded);
+
+    // - ASSERT -
+    QCOMPARE(raw, decoded.getRaw());
+    QCOMPARE(content, decoded.getContent());
+    QCOMPARE(type, decoded.getType());
+    QCOMPARE("", decoded.getFilename());
 }
 
 void tcp_packet_test::encodeIncorrectPacket_incorrectPacketType() {
@@ -187,6 +213,14 @@ void tcp_packet_test::decodeIncorrectFilePacket_noContent() {
     QCOMPARE(content, actual.getContent());
     QCOMPARE(type, actual.getType());
     QCOMPARE(filename, actual.getFilename());
+}
+
+std::string tcp_packet_test::base64encode(std::string s) {
+    return QByteArray(s.c_str()).toBase64().toStdString();
+}
+
+std::string tcp_packet_test::base64decode(std::string s) {
+    return QByteArray::fromBase64(s.c_str()).toStdString();
 }
 
 

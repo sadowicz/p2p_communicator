@@ -55,8 +55,8 @@ bool Storage::contactExists(std::string& ip) {
     return util::has(contacts, ip);
 }
 
-Contact& Storage::getContact(std::string& ip) {
-    return contacts[ip];
+Contact* Storage::getContact(std::string& ip) {
+    return &contacts[ip];
 }
 
 void Storage::write(QJsonObject &json) const {

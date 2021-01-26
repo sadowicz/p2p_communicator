@@ -3,19 +3,19 @@
 /*TODO:
     - user should be notified when someone sends them a message (icon next to contact name?)
     - contact editing, when someone sends you a message first their name is unknown
-    - synchronize recieving messages
-    - remove port from Contact
-    - use std types instead of Qt ones
-    - test for serializing contact data
     - two more packet types FILE-REQUEST and NEW-CONTACT
+<<<<<<< HEAD
     - state to locked after emieting error form constructor (loadContacts() method)
+=======
+    - add "active" flag to Contact class
+>>>>>>> bd2d0c703607830b5dfbdfac520226918aff816f
 */
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    Config::init();
+
     ui->setupUi(this);
 
     setUpStateMachine();
@@ -23,8 +23,17 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(this, SIGNAL(error(QString)), this, SLOT(on_error(QString)));
 
+    Config::init();
+
     loadContacts();
     loadListItems();
+
+    TCPConnection::init(storage);
+    // connect(this, SIGNAL(sendMsg(string&, string&)), TCPConnection::get(), SLOT(send(string&, string&)));
+    //  sending example:
+    // emit sendMsg("ip", "content");
+
+    // connect(TCPConnection::get(), SIGNAL(sendingError()), this, SLOT(...));
 }
 
 MainWindow::~MainWindow()
@@ -145,8 +154,8 @@ void MainWindow::on_contactAddSuccess(std::string ip)
     storage.load();
 
     auto added = storage.getContact(ip);
-    contacts.insert({added.getName(), added});
-    ui->lwContacts->addItem(added.getName().c_str());
+    contacts.insert({added->getName(), *added});
+    ui->lwContacts->addItem(added->getName().c_str());
 
     emit contactAdded();
 }

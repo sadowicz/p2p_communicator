@@ -3,17 +3,35 @@
 TCPServer::TCPServer(Storage& storage) : storage(storage) {
     this->server = new QTcpServer(this);
     this->server->listen(QHostAddress::Any, std::stoi(Config::get("port")));
-    connect(this->server, SIGNAL(newConnection()), this, SLOT(acceptConnection()));
+    connect(this->server, SIGNAL(newConnection()), this, SLOT(onAcceptConnection()));
 }
 
-void TCPServer::acceptConnection() {
+void TCPServer::onAcceptConnection() {
     while (server->hasPendingConnections()) {
         QTcpSocket* connection = this->server->nextPendingConnection();
-        connect(connection, SIGNAL(readyRead()), SLOT(readyRead()));
+        std::string address = connection->peerAddress().toString().toStdString();
+
+        if (!storage.contactExists(address)) {
+            storage.addContact(Contact(address, address, std::stoi(Config::get("port"))));
+        }
+
+        Contact* contact = storage.getContact(address);
+        contacts[connection] = contact;
+
+        connect(connection, SIGNAL(onReadyRead()), SLOT(onReadyRead()));
+        connect(connection, SIGNAL(disconnected()), SLOT(onDisconnected()));
+
+        emit connected(contact);
     }
 }
 
-void TCPServer::readyRead() {
+void TCPServer::onDisconnected() {
+    QTcpSocket* socket = (QTcpSocket*) sender();
+    Contact* contact = contacts[socket];
+    emit disconnected(contact);
+}
+
+void TCPServer::onReadyRead() {
 
     QTcpSocket* socket = (QTcpSocket*) sender();
     std::string content{};
@@ -23,22 +41,8 @@ void TCPServer::readyRead() {
         content.append(socket->readAll().toStdString());
     }
 
-    std::string address = socket->peerAddress().toString().toStdString();
-
-    if (!storage.contactExists(address)) {
-       // save new contact
-        storage.addContact(Contact(address, address, std::stoi(Config::get("port"))));
-    }
-    Contact& contact = storage.getContact(address);
-
-    // add message to contact's message history
-    Message msg = Message(TCPPacket::decode(content)).withAddress(&contact.getAddress());
-    contact.addToHistory(msg);
-
-    // TODO: notify user that a message has been recieved?
-
-    socket->close();
-    delete socket;
+    Contact* contact = contacts[socket];
+    emit recieved(contact, TCPPacket::decode(content));
 }
 
 
