@@ -13,7 +13,7 @@ void TCPServer::onAcceptConnection() {
         std::string address = connection->peerAddress().toString().toStdString();
 
         if (!storage.contactExists(address)) {
-            storage.addContact(Contact(address, address, std::stoi(Config::config().get("port"))));
+            storage.addContact(new Contact(address, address, std::stoi(Config::config().get("port"))));
         }
 
         Contact* contact = storage.getContact(address);

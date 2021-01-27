@@ -15,14 +15,14 @@ class TCPClient : public QObject {
 
     Q_OBJECT
 public:
-    TCPClient(Contact& contact);
+    TCPClient(Contact* contact);
 
     ~TCPClient() { delete socket; }
 
     void send(string& packet);
 
 private:
-    Contact& contact;
+    Contact* contact;
     QTcpSocket* socket;
 
 private slots:

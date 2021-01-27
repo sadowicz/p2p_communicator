@@ -126,7 +126,7 @@ void MainWindow::loadContacts()
     {
         for(auto& contact : storage.getContacts())
         {
-            contacts.insert({contact.second.getName(), contact.second});
+            contacts.insert({contact.second->getName(), contact.second});
         }
     }
     else
@@ -154,7 +154,7 @@ void MainWindow::on_contactAddSuccess(std::string ip)
     storage.load();
 
     auto added = storage.getContact(ip);
-    contacts.insert({added->getName(), *added});
+    contacts.insert({added->getName(), added});
 
     refreshContactsList();
 
@@ -194,7 +194,7 @@ void MainWindow::on_validateSendable()
 
 void MainWindow::on_lwContacts_itemClicked(QListWidgetItem *item)
 {
-    activeContact = &contacts[item->text().toStdString()];
+    activeContact = contacts[item->text().toStdString()];
 }
 
 void MainWindow::on_pbDeleteContact_clicked()

@@ -46,13 +46,13 @@ void Storage::read(const QJsonObject &json) {
     QJsonArray contactsArray = json["contacts"].toArray();
     for (int i = 0; i < contactsArray.size(); ++i) {
         QJsonObject contactObject = contactsArray[i].toObject();
-        Contact contact("example", "127.0.0.1", 8080);
-        contact.read(contactObject);
-        contacts[contact.getAddress()] = contact;
+        Contact* contact = new Contact("example", "127.0.0.1", 8080);
+        contact->read(contactObject);
+        contacts[contact->getAddress()] = contact;
     }
 }
 
-std::unordered_map<std::string, Contact>& Storage::getContacts() {
+std::unordered_map<std::string, Contact*>& Storage::getContacts() {
     return contacts;
 }
 
@@ -61,22 +61,22 @@ bool Storage::contactExists(std::string& ip) {
 }
 
 Contact* Storage::getContact(std::string& ip) {
-    return &contacts[ip];
+    return contacts[ip];
 }
 
 void Storage::write(QJsonObject &json) const {
 
     QJsonArray contactsArray;
-    for (std::pair<std::string, Contact> entry : contacts) {
+    for (std::pair<std::string, Contact*> entry : contacts) {
         QJsonObject contactObject;
-        entry.second.write(contactObject);
+        entry.second->write(contactObject);
         contactsArray.append(contactObject);
     }
     json["contacts"] = contactsArray;
 }
 
-void Storage::addContact(Contact newContact) {
-    contacts[newContact.getAddress()] = newContact;
+void Storage::addContact(Contact* newContact) {
+    contacts[newContact->getAddress()] = newContact;
     save();
 }
 
@@ -92,12 +92,12 @@ void Storage::deleteContact(std::string& ip) {
 
 void Storage::editContact(std::string ip, std::string newName, std::string newAddress, unsigned newPort) {
     auto oldContact = getContact(ip);
-    auto editedContact = Contact(newName, newAddress, newPort);
+    auto editedContact = new Contact(newName, newAddress, newPort);
 
     auto history = oldContact->getHistory();
 
     for(auto entry : history)
-        editedContact.addToHistory(entry);
+        editedContact->addToHistory(entry);
 
     deleteContact(oldContact->getAddress());
     addContact(editedContact);

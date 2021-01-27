@@ -1,6 +1,7 @@
 #include <contacts/Message.h>
 
-Message::Message(TCPPacket packet) {
+Message::Message(TCPPacket packet, QObject* parent)
+    : QObject(parent){
     this->type = packet.getType() == TCPPacket::PacketType::TEXT
             ? Message::Type::TEXT
             : Message::Type::FILE;
@@ -9,7 +10,8 @@ Message::Message(TCPPacket packet) {
     this->filename = packet.getFilename();
 }
 
-Message::Message(QJsonObject& object) {
+Message::Message(QJsonObject& object, QObject* parent)
+    : QObject(parent) {
     this->type = object["type"].toString().toStdString() == "TEXT"
             ? Message::Type::TEXT
             : Message::Type::FILE;

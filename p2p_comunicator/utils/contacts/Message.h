@@ -7,21 +7,22 @@
 #include <QFile>
 #include <QDir>
 
+#include <QObject>
 #include <tcp/TCPPacket.h>
 #include <config/Config.h>
 #include <util/strbuilder.h>
 
 using namespace std;
 
-class Message {
+class Message : public QObject{
 
 public:
     enum Type {
         TEXT, FILE
     };
 
-    Message(TCPPacket packet);
-    Message(QJsonObject& object);
+    Message(TCPPacket packet, QObject* parent = nullptr);
+    Message(QJsonObject& object, QObject* parent = nullptr);
     QJsonObject serialize();
     void downloadFile();
     void save();
