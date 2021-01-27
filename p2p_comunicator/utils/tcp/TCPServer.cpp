@@ -1,6 +1,6 @@
 #include <tcp/TCPServer.h>
 
-TCPServer::TCPServer(Storage& storage) : storage(storage) {
+TCPServer::TCPServer() {
     this->server = new QTcpServer(this);
     this->server->listen(QHostAddress::Any, std::stoi(Config::get("port")));
     connect(this->server, SIGNAL(newConnection()), this, SLOT(onAcceptConnection()));
@@ -8,6 +8,7 @@ TCPServer::TCPServer(Storage& storage) : storage(storage) {
 
 void TCPServer::onAcceptConnection() {
     while (server->hasPendingConnections()) {
+        Storage& storage = Storage::storage();
         QTcpSocket* connection = this->server->nextPendingConnection();
         std::string address = connection->peerAddress().toString().toStdString();
 

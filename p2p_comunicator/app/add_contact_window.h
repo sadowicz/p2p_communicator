@@ -23,7 +23,6 @@ public:
 private:
     Ui::AddContactWindow *ui;
     ContactValidator* validator;
-    Storage storage;
 
 signals:
     void contactAddSuccess(std::string ip);

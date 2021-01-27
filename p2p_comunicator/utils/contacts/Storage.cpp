@@ -1,6 +1,11 @@
 #include "Storage.h"
 
 
+Storage& Storage::storage(){
+    static Storage s;
+    return s;
+}
+
 bool Storage::load() {
     QString filename = QString(Config::get("history-log-file").c_str());
     QFile loadFile(filename);
@@ -72,6 +77,11 @@ void Storage::write(QJsonObject &json) const {
 
 void Storage::addContact(Contact newContact) {
     contacts[newContact.getAddress()] = newContact;
+    save();
+}
+
+void Storage::clear(){
+    contacts.clear();
     save();
 }
 

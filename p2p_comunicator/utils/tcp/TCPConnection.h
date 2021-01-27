@@ -16,14 +16,12 @@ class TCPConnection : public QObject {
     Q_OBJECT
 
 public:
-    TCPConnection(Storage& storage) : storage(storage) {}
-    static void init(Storage& storage);
+    TCPConnection() = default;
+    static void init();
     static TCPConnection* get() {return TCPConnection::connection;}
 
 private:
     static TCPConnection* connection;
-    Storage& storage;
-
     TCPServer* server;
     unordered_map<string, TCPClient*> clients;
 
