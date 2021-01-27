@@ -7,6 +7,7 @@
 #include <QDebug>
 
 #include <add_contact_window.h>
+#include <editcontactwindow.h>
 #include <error_window.h>
 #include <config/Config.h>
 #include "ui_mainwindow.h"
@@ -34,6 +35,7 @@ signals:
     void msgSendable();
     void msgUnsendable();
     void sendMsg(string& ip, string& content);
+    void edited(std::string ip, std::string name, int port);
 
 private slots:
     void on_pbNewContact_clicked();
@@ -45,9 +47,14 @@ private slots:
 
     void on_lwContacts_itemClicked(QListWidgetItem *item);
 
+    void on_pbDeleteContact_clicked();
+
+    void on_pbEditContact_clicked();
+
 private:
     Ui::MainWindow *ui;
     AddContactWindow *addContactWin;
+    EditContactWindow *editContactWin;
     ErrorWindow *errWin;
 
     QStateMachine* stateMachine;
@@ -69,6 +76,7 @@ private:
 
     void loadContacts();
     void loadListItems();
+    void refreshContactsList();
 
 };
 #endif // MAINWINDOW_H

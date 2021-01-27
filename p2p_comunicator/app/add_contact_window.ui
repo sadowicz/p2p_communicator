@@ -57,9 +57,6 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="leIP"/>
-     </item>
      <item row="2" column="0">
       <widget class="QLabel" name="lbPort">
        <property name="text">
@@ -69,6 +66,9 @@
      </item>
      <item row="2" column="1">
       <widget class="QLineEdit" name="lePort"/>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="leIP"/>
      </item>
     </layout>
    </item>
