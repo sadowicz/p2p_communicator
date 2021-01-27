@@ -4,6 +4,8 @@
 
 #include <QJsonObject>
 #include <QDateTime>
+#include <QFile>
+#include <QDir>
 
 #include <tcp/TCPPacket.h>
 #include <config/Config.h>
@@ -22,6 +24,7 @@ public:
     Message(QJsonObject& object);
     QJsonObject serialize();
     void downloadFile();
+    void save();
     string getTimestamp();
 
     string& getContent() {

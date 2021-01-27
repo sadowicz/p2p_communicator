@@ -37,6 +37,25 @@ QJsonObject Message::serialize() {
     return object;
 }
 
+void Message::save() {
+    if(type == FILE) {
+        QDir dir;
+        QString dirPath = Config::get("downloads-directory").c_str();
+        if(!dir.exists(dirPath)) {
+            dir.mkpath(dirPath);
+        }
+
+        QString filename = QString(dirPath + QString::fromStdString("/") + QString::fromStdString(getFilename()));
+
+        ofstream file(filename.toUtf8());
+        if (!file.is_open()) {
+            throw new IOException("Failed saving file.");
+        }
+        file << content;
+        file.close();
+    }
+}
+
 string Message::getTimestamp() {
     return timestamp.toString().toStdString();
 }
