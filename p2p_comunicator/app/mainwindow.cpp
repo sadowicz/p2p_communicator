@@ -155,7 +155,11 @@ void MainWindow::on_contactAddSuccess(std::string ip)
 
     auto added = storage.getContact(ip);
     contacts.insert({added->getName(), *added});
-    ui->lwContacts->addItem(added->getName().c_str());
+
+    contacts.clear();
+    ui->lwContacts->clear();
+    loadContacts();
+    loadListItems();
 
     emit contactAdded();
 }
@@ -192,6 +196,10 @@ void MainWindow::on_lwContacts_itemClicked(QListWidgetItem *item)
 void MainWindow::on_pbDeleteContact_clicked()
 {
     storage.deleteContact(activeContact->getAddress());
+    contacts.clear();
+    ui->lwContacts->clear();
+    loadContacts();
+    loadListItems();
 }
 
 void MainWindow::on_pbEditContact_clicked()

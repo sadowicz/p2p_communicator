@@ -28,6 +28,7 @@ signals:
     void contactAddFailure(QString errorMessage);
 private slots:
     void on_bbAddContact_accepted();
+    void on_EditContactWindow_finished(int result);
 };
 
 #endif // EDITCONTACTWINDOW_H

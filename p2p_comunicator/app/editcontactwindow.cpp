@@ -35,3 +35,9 @@ void EditContactWindow::on_bbAddContact_accepted()
     else
         emit contactAddFailure(validator->validationErrMsg());
 }
+
+void EditContactWindow::on_EditContactWindow_finished(int result)
+{
+    if(result == QDialog::Rejected)
+        emit contactAddCancel();
+}
