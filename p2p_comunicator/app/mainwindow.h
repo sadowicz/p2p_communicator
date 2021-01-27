@@ -59,7 +59,6 @@ private:
     QState* ValidateSendable;
     QState* Sendable;
 
-    Storage storage;
     std::unordered_map<std::string, Contact> contacts;
     Contact* activeContact;
 

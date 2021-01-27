@@ -27,7 +27,6 @@ private slots:
 private:
     Ui::ErrorWindow *ui;
     QString errMsg;
-    Storage storage;
 };
 
 #endif // ERRORWINDOW_H

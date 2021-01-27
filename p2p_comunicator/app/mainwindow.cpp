@@ -23,12 +23,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(this, SIGNAL(error(QString)), this, SLOT(on_error(QString)));
 
-    Config::init();
 
+    Config::init();
+    Storage::storage().clear();
     loadContacts();
     loadListItems();
 
-    TCPConnection::init(storage);
+    TCPConnection::init();
     // connect(this, SIGNAL(sendMsg(string&, string&)), TCPConnection::get(), SLOT(send(string&, string&)));
     //  sending example:
     // emit sendMsg("ip", "content");
@@ -123,6 +124,7 @@ void MainWindow::setStatesTransistions()
 
 void MainWindow::loadContacts()
 {
+    Storage& storage = Storage::storage();
     if(storage.load())
     {
         for(auto& contact : storage.getContacts())
@@ -151,6 +153,7 @@ void MainWindow::on_pbNewContact_clicked()
 void MainWindow::on_contactAddSuccess(std::string ip)
 {
     // Update contact list form file
+    Storage& storage = Storage::storage();
     storage.load();
 
     auto added = storage.getContact(ip);
