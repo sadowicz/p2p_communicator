@@ -69,35 +69,35 @@ void MainWindow::assignStatesProperties()
     Unlocked->assignProperty(ui->pbSend, "enabled", true);
     Unlocked->assignProperty(ui->pbAttachFile, "enabled", true);
     Unlocked->assignProperty(ui->lwContacts, "enabled", true);
-    Unlocked->assignProperty(ui->teChat, "enabled", true);
+    //Unlocked->assignProperty(ui->teChat, "enabled", true);
     Unlocked->assignProperty(ui->teSend, "enabled", true);
 
     Disconnected->assignProperty(ui->pbNewContact, "enabled", true);
     Disconnected->assignProperty(ui->pbSend, "enabled", false);
     Disconnected->assignProperty(ui->pbAttachFile, "enabled", false);
     Disconnected->assignProperty(ui->lwContacts, "enabled", true);
-    Disconnected->assignProperty(ui->teChat, "enabled", false);
+    //Disconnected->assignProperty(ui->teChat, "enabled", false);
     Disconnected->assignProperty(ui->teSend, "enabled", false);
 
     Connected->assignProperty(ui->pbNewContact, "enabled", true);
     Connected->assignProperty(ui->pbSend, "enabled", false);
     Connected->assignProperty(ui->pbAttachFile, "enabled", true);
     Connected->assignProperty(ui->lwContacts, "enabled", true);
-    Connected->assignProperty(ui->teChat, "enabled", true);
+    //Connected->assignProperty(ui->teChat, "enabled", true);
     Connected->assignProperty(ui->teSend, "enabled", true);
 
     Sendable->assignProperty(ui->pbNewContact, "enabled", true);
     Sendable->assignProperty(ui->pbSend, "enabled", true);
     Sendable->assignProperty(ui->pbAttachFile, "enabled", true);
     Sendable->assignProperty(ui->lwContacts, "enabled", true);
-    Sendable->assignProperty(ui->teChat, "enabled", true);
+    //Sendable->assignProperty(ui->teChat, "enabled", true);
     Sendable->assignProperty(ui->teSend, "enabled", true);
 
     Locked->assignProperty(ui->pbNewContact, "enabled", false);
     Locked->assignProperty(ui->pbSend, "enabled", false);
     Locked->assignProperty(ui->pbAttachFile, "enabled", false);
     Locked->assignProperty(ui->lwContacts, "enabled", false);
-    Locked->assignProperty(ui->teChat, "enabled", false);
+    //Locked->assignProperty(ui->teChat, "enabled", false);
     Locked->assignProperty(ui->teSend, "enabled", false);
 }
 
