@@ -22,8 +22,9 @@ public:
 
 private:
     static TCPConnection* connection;
-    TCPServer* server;
     Storage& storage;
+
+    TCPServer* server;
     unordered_map<string, TCPClient*> clients;
 
 signals:

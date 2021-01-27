@@ -6,7 +6,7 @@ TCPClient::TCPClient(Contact& contact, Storage& storage) : storage(storage), con
     connect(socket, SIGNAL(connected()), this, SLOT(onConnect()));
 
     QHostAddress hostAddress = QHostAddress(QString(contact.getAddress().c_str()));
-    socket->connectToHost(hostAddress, std::stoi(Config::get("port")));
+    socket->connectToHost(hostAddress, (short) contact.getPort());
 }
 
 void TCPClient::onDisconnect() {
