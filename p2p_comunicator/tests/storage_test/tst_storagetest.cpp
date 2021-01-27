@@ -118,6 +118,47 @@ private slots:
         QCOMPARE(port2, contact->getPort());
     }
 
+    void deleteContact() {
+        Storage storage{};
+
+        std::string name = "name";
+        std::string address = "11.22.33.44";
+        unsigned int port = 8175;
+
+        std::string name2 = "other name";
+        std::string address2 = "74.92.76.33";
+        unsigned int port2 = 5342;
+
+        QCOMPARE(0, storage.getContacts().size());
+
+        try {
+            storage.addContact(Contact{name, address, port});
+        } catch(std::out_of_range&) {}
+        try {
+            storage.addContact(Contact{name2, address2, port2});
+        } catch(std::out_of_range&) {}
+
+        QCOMPARE(2, storage.getContacts().size());
+        QCOMPARE(true, storage.contactExists(address));
+        QCOMPARE(true, storage.contactExists(address2));
+
+        try {
+            storage.deleteContact(address);
+        } catch (std::out_of_range) {}
+
+        QCOMPARE(1, storage.getContacts().size());
+        QCOMPARE(false, storage.contactExists(address));
+        QCOMPARE(true, storage.contactExists(address2));
+
+        try {
+            storage.deleteContact(address2);
+        } catch (std::out_of_range) {}
+
+        QCOMPARE(0, storage.getContacts().size());
+        QCOMPARE(false, storage.contactExists(address));
+        QCOMPARE(false, storage.contactExists(address2));
+    }
+
     void saveAndLoad() {
         Storage storage{};
 

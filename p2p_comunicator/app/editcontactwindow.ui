@@ -43,10 +43,14 @@
      <widget class="QLineEdit" name="leIP"/>
     </item>
     <item row="3" column="1">
-     <widget class="QLineEdit" name="lePort"/>
-    </item>
-    <item row="4" column="1">
      <widget class="QLineEdit" name="leName"/>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="lbName">
+      <property name="text">
+       <string>Name</string>
+      </property>
+     </widget>
     </item>
     <item row="4" column="0">
      <widget class="QLabel" name="lbPort">
@@ -55,12 +59,8 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="0">
-     <widget class="QLabel" name="lbName">
-      <property name="text">
-       <string>Name</string>
-      </property>
-     </widget>
+    <item row="4" column="1">
+     <widget class="QLineEdit" name="lePort"/>
     </item>
    </layout>
   </widget>
