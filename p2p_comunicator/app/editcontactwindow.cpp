@@ -13,6 +13,7 @@ EditContactWindow::EditContactWindow(QWidget *parent) :
     QObject::connect(this, SIGNAL(contactAddSuccess(std::string)), parent, SLOT(on_contactAddSuccess(std::string)));
     QObject::connect(this, SIGNAL(contactAddCancel()), parent, SLOT(on_contactAddCancel()));
     QObject::connect(this, SIGNAL(contactAddFailure(QString)), parent, SLOT(on_error(QString)));
+    QObject::connect(parent, SIGNAL(edited(std::string,std::string, int)), this, SLOT(setValues(std::string,std::string,int)));
 
     storage.load();
 }
@@ -36,8 +37,19 @@ void EditContactWindow::on_bbAddContact_accepted()
         emit contactAddFailure(validator->validationErrMsg());
 }
 
+void EditContactWindow::setValues(std::string ip, std::string name, int port) {
+    ui->leIP->setText(QString::fromStdString(ip));
+    ui->leName->setText(QString::fromStdString(name));
+    ui->lePort->setText(QString::number(port));
+}
+
 void EditContactWindow::on_EditContactWindow_finished(int result)
 {
     if(result == QDialog::Rejected)
         emit contactAddCancel();
+}
+
+void EditContactWindow::on_bbAddContact_rejected()
+{
+    delete this;
 }

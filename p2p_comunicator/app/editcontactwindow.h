@@ -22,6 +22,10 @@ private:
     ContactValidator* validator;
     Storage storage;
 
+    std::string ip;
+    std::string name;
+    int port;
+
 signals:
     void contactAddSuccess(std::string ip);
     void contactAddCancel();
@@ -29,6 +33,8 @@ signals:
 private slots:
     void on_bbAddContact_accepted();
     void on_EditContactWindow_finished(int result);
+    void on_bbAddContact_rejected();
+    void setValues(std::string ip, std::string name, int port);
 };
 
 #endif // EDITCONTACTWINDOW_H

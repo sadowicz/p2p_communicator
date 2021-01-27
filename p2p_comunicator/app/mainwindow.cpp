@@ -206,4 +206,6 @@ void MainWindow::on_pbEditContact_clicked()
 {
     editContactWin = new EditContactWindow{this};
     editContactWin->show();
+
+    emit edited(activeContact->getAddress(), activeContact->getName(), activeContact->getPort());
 }

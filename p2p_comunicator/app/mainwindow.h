@@ -35,6 +35,7 @@ signals:
     void msgSendable();
     void msgUnsendable();
     void sendMsg(string& ip, string& content);
+    void edited(std::string ip, std::string name, int port);
 
 private slots:
     void on_pbNewContact_clicked();
