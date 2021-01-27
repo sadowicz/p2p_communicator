@@ -20,20 +20,23 @@ using namespace std;
 class Config {
 
 public:
-    static void init(string& filename);
-    static void init();
-    static string& get(string& key);
-    static string& get(const char* key);
+    static Config& config() {
+        static Config configuration;
+        return configuration;
+    }
+
+    string& get(string& key);
+    string& get(const char* key);
 
 private:
+    string configFile;
+    unordered_map<string, string> values;
+    void writeDefaultConfig();
+    bool shouldCreateDefaultConfig();
+    void loadConfiguration();
+    void loadProperties();
+    Config();
 
-    static string configFile;
-    static unordered_map<string, string> values;
-    static void writeDefaultConfig();
-    static bool shouldCreateDefaultConfig();
-    static void loadConfiguration();
-    static void loadProperties();
-    Config() = delete;
 };
 
 

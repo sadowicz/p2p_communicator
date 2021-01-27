@@ -40,7 +40,7 @@ QJsonObject Message::serialize() {
 void Message::save() {
     if(type == FILE) {
         QDir dir;
-        QString dirPath = Config::get("downloads-directory").c_str();
+        QString dirPath = Config::config().get("downloads-directory").c_str();
         if(!dir.exists(dirPath)) {
             dir.mkpath(dirPath);
         }

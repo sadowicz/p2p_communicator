@@ -23,8 +23,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(this, SIGNAL(error(QString)), this, SLOT(on_error(QString)));
 
-
-    Config::init();
     loadContacts();
     loadListItems();
 

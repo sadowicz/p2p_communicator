@@ -1,8 +1,5 @@
 #include <config/Config.h>
 
-string Config::configFile = CONFIG_DEFAULT_FILE_PATH;
-unordered_map<string, string> Config::values;
-
 string& Config::get(string& key) {
     return values.at(key);
 }
@@ -11,17 +8,8 @@ string& Config::get(const char* key) {
     return values.at(string(key));
 }
 
-void Config::init() {
+Config::Config() {
     configFile = CONFIG_DEFAULT_FILE_PATH;
-    if (shouldCreateDefaultConfig()) {
-        writeDefaultConfig();
-    }
-
-    loadConfiguration();
-}
-
-void Config::init(string& filename) {
-    configFile = filename;
     if (shouldCreateDefaultConfig()) {
         writeDefaultConfig();
     }

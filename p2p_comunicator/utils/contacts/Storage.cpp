@@ -7,7 +7,7 @@ Storage& Storage::storage(){
 }
 
 bool Storage::load() {
-    QString filename = QString(Config::get("history-log-file").c_str());
+    QString filename = QString(Config::config().get("history-log-file").c_str());
     QFile loadFile(filename);
 
     if (!loadFile.open(QIODevice::ReadOnly)) {
@@ -25,7 +25,7 @@ bool Storage::load() {
 }
 
 bool Storage::save() const {
-    QFile saveFile(QString(Config::get("history-log-file").c_str()));
+    QFile saveFile(QString(Config::config().get("history-log-file").c_str()));
 
     if (!saveFile.open(QIODevice::WriteOnly)) {
         qWarning("Couldn't open save file.");

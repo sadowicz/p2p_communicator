@@ -6,9 +6,7 @@ class StorageTest : public QObject
     Q_OBJECT
 
 public:
-    StorageTest() {
-        Config::init();
-    };
+    StorageTest() {}
     ~StorageTest() {}
 
 private slots:
