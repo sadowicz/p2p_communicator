@@ -13,7 +13,7 @@
 
 #define CONFIG_DEFAULT_FILE_PATH "config.txt"
 
-#define CONFIG_DEFAULT_FILE_CONTENTS "history-log-file=history.json\nport=8080\ndownloads-directory=downloads\nconfig-file=" CONFIG_DEFAULT_FILE_PATH
+#define CONFIG_DEFAULT_FILE_CONTENTS "history-log-file=history.json\nport=8080\ndownloads-directory=downloads\ndebug-mode=false\nconfig-file=" CONFIG_DEFAULT_FILE_PATH
 
 using namespace std;
 
