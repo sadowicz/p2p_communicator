@@ -5,6 +5,7 @@
 #include <QAbstractSocket>
 #include <QHostAddress>
 #include <QObject>
+#include <QDebug>
 
 #include <contacts/Storage.h>
 #include <config/Config.h>
