@@ -76,6 +76,7 @@ private:
 
     void loadContacts();
     void loadListItems();
+    void refreshContactsList();
 
 };
 #endif // MAINWINDOW_H
