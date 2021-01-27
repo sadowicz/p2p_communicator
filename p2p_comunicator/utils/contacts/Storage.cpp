@@ -80,7 +80,7 @@ void Storage::deleteContact(std::string& ip) {
     save();
 }
 
-void Storage::editContact(std::string& ip, std::string newName, std::string newAddress, unsigned newPort) {
+void Storage::editContact(std::string ip, std::string newName, std::string newAddress, unsigned newPort) {
     auto oldContact = getContact(ip);
     auto editedContact = Contact(newName, newAddress, newPort);
 

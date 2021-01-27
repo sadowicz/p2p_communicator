@@ -193,3 +193,9 @@ void MainWindow::on_pbDeleteContact_clicked()
 {
     storage.deleteContact(activeContact->getAddress());
 }
+
+void MainWindow::on_pbEditContact_clicked()
+{
+    editContactWin = new EditContactWindow{this};
+    editContactWin->show();
+}

@@ -7,6 +7,7 @@
 #include <QDebug>
 
 #include <add_contact_window.h>
+#include <editcontactwindow.h>
 #include <error_window.h>
 #include <config/Config.h>
 #include "ui_mainwindow.h"
@@ -47,9 +48,12 @@ private slots:
 
     void on_pbDeleteContact_clicked();
 
+    void on_pbEditContact_clicked();
+
 private:
     Ui::MainWindow *ui;
     AddContactWindow *addContactWin;
+    EditContactWindow *editContactWin;
     ErrorWindow *errWin;
 
     QStateMachine* stateMachine;
