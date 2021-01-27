@@ -15,7 +15,7 @@ EditContactWindow::EditContactWindow(QWidget *parent) :
     QObject::connect(this, SIGNAL(contactAddFailure(QString)), parent, SLOT(on_error(QString)));
     QObject::connect(parent, SIGNAL(edited(std::string,std::string, int)), this, SLOT(setValues(std::string,std::string,int)));
 
-    storage.load();
+    Storage::storage().load();
 }
 
 EditContactWindow::~EditContactWindow()
@@ -28,7 +28,7 @@ void EditContactWindow::on_bbAddContact_accepted()
 {
     if(validator->validateContactForm(ui->leName->text(), ui->leIP->text(), ui->lePort->text()))
     {
-        storage.editContact(ui->leIP->text().toStdString(), ui->leName->text().toStdString(), ui->leIP->text().toStdString(), ui->lePort->text().toUInt());
+        Storage::storage().editContact(ui->leIP->text().toStdString(), ui->leName->text().toStdString(), ui->leIP->text().toStdString(), ui->lePort->text().toUInt());
 
         //if storage successfull:
         emit contactAddSuccess(ui->leIP->text().toStdString());

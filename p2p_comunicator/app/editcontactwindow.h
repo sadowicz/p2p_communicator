@@ -20,7 +20,6 @@ public:
 private:
     Ui::EditContactWindow *ui;
     ContactValidator* validator;
-    Storage storage;
 
     std::string ip;
     std::string name;

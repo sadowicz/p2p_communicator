@@ -201,7 +201,7 @@ void MainWindow::on_lwContacts_itemClicked(QListWidgetItem *item)
 
 void MainWindow::on_pbDeleteContact_clicked()
 {
-    storage.deleteContact(activeContact->getAddress());
+    Storage::storage().deleteContact(activeContact->getAddress());
     refreshContactsList();
 }
 
