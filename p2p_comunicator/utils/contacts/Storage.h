@@ -13,15 +13,25 @@
 class Storage
 {
 public:
+    Storage(const Storage&) = delete;
+
+    static Storage& storage();
+
     bool load(); // load contacts from .json file
     bool save() const;  // save contacts to .json file
+    void clear();
+
 
     void addContact(Contact newContact);
+    void deleteContact(std::string& ip);
+    void editContact(std::string ip, std::string newName, std::string newAddress, unsigned newPort);
     std::unordered_map<std::string, Contact>& getContacts();
     Contact* getContact(std::string& ip);
     bool contactExists(std::string& ip);
 
 private:
+    Storage() = default;
+
     std::unordered_map<std::string, Contact> contacts;
 
     void read(const QJsonObject &json);

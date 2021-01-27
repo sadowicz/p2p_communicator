@@ -1,12 +1,12 @@
 #include <tcp/TCPClient.h>
 
-TCPClient::TCPClient(Contact& contact, Storage& storage) : storage(storage), contact(contact) {
+TCPClient::TCPClient(Contact& contact) : contact(contact) {
     this->socket = new QTcpSocket();
     connect(socket, SIGNAL(disconnected()), this, SLOT(onDisconnect()));
     connect(socket, SIGNAL(connected()), this, SLOT(onConnect()));
 
     QHostAddress hostAddress = QHostAddress(QString(contact.getAddress().c_str()));
-    socket->connectToHost(hostAddress, std::stoi(Config::get("port")));
+    socket->connectToHost(hostAddress, (short) contact.getPort());
 }
 
 void TCPClient::onDisconnect() {

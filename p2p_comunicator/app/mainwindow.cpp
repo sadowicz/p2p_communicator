@@ -23,12 +23,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(this, SIGNAL(error(QString)), this, SLOT(on_error(QString)));
 
-    Config::init();
-
     loadContacts();
     loadListItems();
 
-    TCPConnection::init(storage);
+    TCPConnection::init();
     // connect(this, SIGNAL(sendMsg(string&, string&)), TCPConnection::get(), SLOT(send(string&, string&)));
     //  sending example:
     // emit sendMsg("ip", "content");
@@ -123,6 +121,7 @@ void MainWindow::setStatesTransistions()
 
 void MainWindow::loadContacts()
 {
+    Storage& storage = Storage::storage();
     if(storage.load())
     {
         for(auto& contact : storage.getContacts())
@@ -151,13 +150,22 @@ void MainWindow::on_pbNewContact_clicked()
 void MainWindow::on_contactAddSuccess(std::string ip)
 {
     // Update contact list form file
+    Storage& storage = Storage::storage();
     storage.load();
 
     auto added = storage.getContact(ip);
     contacts.insert({added->getName(), *added});
-    ui->lwContacts->addItem(added->getName().c_str());
+
+    refreshContactsList();
 
     emit contactAdded();
+}
+
+void MainWindow::refreshContactsList() {
+    contacts.clear();
+    ui->lwContacts->clear();
+    loadContacts();
+    loadListItems();
 }
 
 void MainWindow::on_contactAddCancel()
@@ -187,4 +195,18 @@ void MainWindow::on_validateSendable()
 void MainWindow::on_lwContacts_itemClicked(QListWidgetItem *item)
 {
     activeContact = &contacts[item->text().toStdString()];
+}
+
+void MainWindow::on_pbDeleteContact_clicked()
+{
+    Storage::storage().deleteContact(activeContact->getAddress());
+    refreshContactsList();
+}
+
+void MainWindow::on_pbEditContact_clicked()
+{
+    editContactWin = new EditContactWindow{this};
+    editContactWin->show();
+
+    emit edited(activeContact->getAddress(), activeContact->getName(), activeContact->getPort());
 }

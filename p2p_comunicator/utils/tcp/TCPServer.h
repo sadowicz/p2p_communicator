@@ -15,12 +15,10 @@ class TCPServer : public QObject {
     Q_OBJECT
 
 public:
-    TCPServer() = delete;
-    TCPServer(Storage& storage);
+    TCPServer();
 
 private:
     QTcpServer* server;
-    Storage& storage;
     unordered_map<QTcpSocket*, Contact*> contacts;
 
 private slots:

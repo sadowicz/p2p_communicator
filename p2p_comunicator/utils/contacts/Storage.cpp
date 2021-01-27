@@ -1,8 +1,13 @@
 #include "Storage.h"
 
 
+Storage& Storage::storage(){
+    static Storage s;
+    return s;
+}
+
 bool Storage::load() {
-    QString filename = QString(Config::get("history-log-file").c_str());
+    QString filename = QString(Config::config().get("history-log-file").c_str());
     QFile loadFile(filename);
 
     if (!loadFile.open(QIODevice::ReadOnly)) {
@@ -20,7 +25,7 @@ bool Storage::load() {
 }
 
 bool Storage::save() const {
-    QFile saveFile(QString(Config::get("history-log-file").c_str()));
+    QFile saveFile(QString(Config::config().get("history-log-file").c_str()));
 
     if (!saveFile.open(QIODevice::WriteOnly)) {
         qWarning("Couldn't open save file.");
@@ -75,3 +80,25 @@ void Storage::addContact(Contact newContact) {
     save();
 }
 
+void Storage::clear(){
+    contacts.clear();
+    save();
+}
+
+void Storage::deleteContact(std::string& ip) {
+    contacts.erase(ip);
+    save();
+}
+
+void Storage::editContact(std::string ip, std::string newName, std::string newAddress, unsigned newPort) {
+    auto oldContact = getContact(ip);
+    auto editedContact = Contact(newName, newAddress, newPort);
+
+    auto history = oldContact->getHistory();
+
+    for(auto entry : history)
+        editedContact.addToHistory(entry);
+
+    deleteContact(oldContact->getAddress());
+    addContact(editedContact);
+}

@@ -1,18 +1,19 @@
 #include <tcp/TCPServer.h>
 
-TCPServer::TCPServer(Storage& storage) : storage(storage) {
+TCPServer::TCPServer() {
     this->server = new QTcpServer(this);
-    this->server->listen(QHostAddress::Any, std::stoi(Config::get("port")));
+    this->server->listen(QHostAddress::Any, std::stoi(Config::config().get("port")));
     connect(this->server, SIGNAL(newConnection()), this, SLOT(onAcceptConnection()));
 }
 
 void TCPServer::onAcceptConnection() {
     while (server->hasPendingConnections()) {
+        Storage& storage = Storage::storage();
         QTcpSocket* connection = this->server->nextPendingConnection();
         std::string address = connection->peerAddress().toString().toStdString();
 
         if (!storage.contactExists(address)) {
-            storage.addContact(Contact(address, address, std::stoi(Config::get("port"))));
+            storage.addContact(Contact(address, address, std::stoi(Config::config().get("port"))));
         }
 
         Contact* contact = storage.getContact(address);

@@ -13,27 +13,30 @@
 
 #define CONFIG_DEFAULT_FILE_PATH "config.txt"
 
-#define CONFIG_DEFAULT_FILE_CONTENTS "history-log-file=history.json\nport=8080\ndownloads-directory=downloads\nconfig-file=" CONFIG_DEFAULT_FILE_PATH
+#define CONFIG_DEFAULT_FILE_CONTENTS "history-log-file=history.json\nport=8080\ndownloads-directory=downloads\ndebug-mode=false\nconfig-file=" CONFIG_DEFAULT_FILE_PATH
 
 using namespace std;
 
 class Config {
 
 public:
-    static void init(string& filename);
-    static void init();
-    static string& get(string& key);
-    static string& get(const char* key);
+    static Config& config() {
+        static Config configuration;
+        return configuration;
+    }
+
+    string& get(string& key);
+    string& get(const char* key);
 
 private:
+    string configFile;
+    unordered_map<string, string> values;
+    void writeDefaultConfig();
+    bool shouldCreateDefaultConfig();
+    void loadConfiguration();
+    void loadProperties();
+    Config();
 
-    static string configFile;
-    static unordered_map<string, string> values;
-    static void writeDefaultConfig();
-    static bool shouldCreateDefaultConfig();
-    static void loadConfiguration();
-    static void loadProperties();
-    Config() = delete;
 };
 
 
