@@ -28,7 +28,7 @@ void AddContactWindow::on_bbAddContact_accepted()
 
         Storage::storage().addContact(newContact);
 
-        //if storage successfull:
+        //if storage successful:
         emit contactAddSuccess(newContact->getAddress());
     }
     else

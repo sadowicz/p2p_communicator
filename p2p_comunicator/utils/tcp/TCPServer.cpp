@@ -2,8 +2,8 @@
 
 TCPServer::TCPServer() {
     this->server = new QTcpServer(this);
-    this->server->listen(QHostAddress::Any, std::stoi(Config::config().get("port")));
-    Logger::log().info("Server listening on port " + Config::config().get("port"));
+    this->server->listen(QHostAddress::Any, std::stoi(Config::config("port")));
+    Logger::log().info("Server listening on port " + Config::config("port"));
 
     connect(this->server, SIGNAL(newConnection()), this, SLOT(onAcceptConnection()));
 }

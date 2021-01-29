@@ -23,6 +23,7 @@ public:
 
     void send(string& packet);
     void tryConnect();
+    void forceDisconnect();
 
 private:
     Contact* contact;

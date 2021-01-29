@@ -6,6 +6,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     ui(new Ui::SettingsWindow)
 {
     ui->setupUi(this);
+    ui->lePort->setText(util::toQString(Config::config("port")));
 
     validator = new ContactValidator{};
 
@@ -28,7 +29,7 @@ void SettingsWindow::on_bbAddContact_accepted()
 {
     if(validator->validateContactForm("name", "127.0.0.1", ui->lePort->text()))
     {
-        Config::config().set("port", ui->lePort->text().toStdString());
+        Config::config("port") = ui->lePort->text().toStdString();
         Config::config().save();
 
         delete this;

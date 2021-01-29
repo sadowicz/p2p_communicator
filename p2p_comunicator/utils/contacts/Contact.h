@@ -19,18 +19,18 @@ public:
     void write(QJsonObject &json);
 
     void addToHistory(Message message);
-    std::vector<Message>& getHistory() {
-        return history;
-    }
+    std::vector<Message>& getHistory() { return history; }
 
     std::string& getName();
     std::string& getAddress();
     int getPort();
+    bool isActive();
 
 private:
     std::string name;
     std::string address;
     int port;
     std::vector<Message> history;
+    bool active;
 
 };

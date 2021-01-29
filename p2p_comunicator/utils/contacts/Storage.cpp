@@ -1,13 +1,12 @@
 #include "Storage.h"
 
-
 Storage& Storage::storage(){
     static Storage s;
     return s;
 }
 
 bool Storage::load() {
-    QString filename = QString(Config::config().get("history-log-file").c_str());
+    QString filename = util::toQString(Config::config()["history-log-file"]);
     QFile loadFile(filename);
 
     if (!loadFile.open(QIODevice::ReadOnly)) {
@@ -25,7 +24,7 @@ bool Storage::load() {
 }
 
 bool Storage::save() const {
-    QFile saveFile(QString(Config::config().get("history-log-file").c_str()));
+    QFile saveFile(util::toQString(Config::config("history-log-file")));
 
     if (!saveFile.open(QIODevice::WriteOnly)) {
         qWarning("Couldn't open save file.");
