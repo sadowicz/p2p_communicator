@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <contacts/contact_validator.h>
 #include <config/Config.h>
+#include "ui_settingswindow.h"
 
 namespace Ui {
 class SettingsWindow;

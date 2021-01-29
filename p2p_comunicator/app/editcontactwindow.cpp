@@ -8,7 +8,6 @@ EditContactWindow::EditContactWindow(QWidget *parent) :
     validator = new ContactValidator{};
 
     ui->setupUi(this);
-    //setFixedSize(this->minimumSize());  // sets size to fixed value, disables resizing
 
     QObject::connect(this, SIGNAL(contactAddSuccess(std::string)), parent, SLOT(on_contactAddSuccess(std::string)));
     QObject::connect(this, SIGNAL(contactAddCancel()), parent, SLOT(on_contactAddCancel()));
