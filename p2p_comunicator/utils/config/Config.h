@@ -27,6 +27,8 @@ public:
 
     string& get(string& key);
     string& get(const char* key);
+    void set(string key, string value);
+    void save();
 
     bool debugMode() {return isDebugMode;}
 

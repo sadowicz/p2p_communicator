@@ -8,6 +8,7 @@
 
 #include <add_contact_window.h>
 #include <editcontactwindow.h>
+#include <settingswindow.h>
 #include <error_window.h>
 #include <config/Config.h>
 #include <logger/Logger.h>
@@ -52,10 +53,13 @@ private slots:
 
     void on_pbEditContact_clicked();
 
+    void on_pbSettings_clicked();
+
 private:
     Ui::MainWindow *ui;
     AddContactWindow *addContactWin;
     EditContactWindow *editContactWin;
+    SettingsWindow *settingsWin;
     ErrorWindow *errWin;
 
     QStateMachine* stateMachine;
