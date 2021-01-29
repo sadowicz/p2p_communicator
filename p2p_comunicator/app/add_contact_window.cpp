@@ -24,12 +24,12 @@ void AddContactWindow::on_bbAddContact_accepted()
 {
     if(validator->validateContactForm(ui->leName->text(), ui->leIP->text(), ui->lePort->text()))
     {
-        Contact newContact = Contact(ui->leName->text().toStdString(), ui->leIP->text().toStdString(), ui->lePort->text().toUInt());
+        Contact* newContact = new Contact(ui->leName->text().toStdString(), ui->leIP->text().toStdString(), ui->lePort->text().toUInt());
 
         Storage::storage().addContact(newContact);
 
         //if storage successfull:
-        emit contactAddSuccess(newContact.getAddress());
+        emit contactAddSuccess(newContact->getAddress());
     }
     else
         emit contactAddFailure(validator->validationErrMsg());

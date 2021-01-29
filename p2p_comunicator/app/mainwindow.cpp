@@ -1,8 +1,6 @@
 #include "mainwindow.h"
 
 /*TODO:
-    - user should be notified when someone sends them a message (icon next to contact name?)
-    - contact editing, when someone sends you a message first their name is unknown
     - two more packet types FILE-REQUEST and NEW-CONTACT
     - state to locked after emieting error form constructor (loadContacts() method)
     - add "active" flag to Contact class
@@ -123,7 +121,7 @@ void MainWindow::loadContacts()
     {
         for(auto& contact : storage.getContacts())
         {
-            contacts.insert({contact.second.getName(), contact.second});
+            contacts.insert({contact.second->getName(), contact.second});
         }
     }
     else
@@ -150,8 +148,8 @@ void MainWindow::on_contactAddSuccess(std::string ip)
     Storage& storage = Storage::storage();
     storage.load();
 
-    auto added = storage.getContact(ip);
-    contacts.insert({added->getName(), *added});
+    Contact* added = storage.getContact(ip);
+    contacts.insert({added->getName(), added});
 
     refreshContactsList();
 
@@ -191,7 +189,7 @@ void MainWindow::on_validateSendable()
 
 void MainWindow::on_lwContacts_itemClicked(QListWidgetItem *item)
 {
-    activeContact = &contacts[item->text().toStdString()];
+    activeContact = contacts[item->text().toStdString()];
 }
 
 void MainWindow::on_pbDeleteContact_clicked()

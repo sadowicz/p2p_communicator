@@ -11,7 +11,7 @@ void TCPConnection::init() {
     connect(connection->server, SIGNAL(disconnected(Contact*)), connection, SIGNAL(disconnected(Contact*)));
     connect(connection->server, SIGNAL(recieved(Contact*, TCPPacket)), connection, SIGNAL(recieved(Contact*, TCPPacket)));
 
-    for (pair<string, Contact> contact : storage.getContacts()) {
+    for (pair<string, Contact*> contact : storage.getContacts()) {
         TCPClient* client = new TCPClient(contact.second);
         client->tryConnect();
 

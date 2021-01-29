@@ -38,7 +38,7 @@ QJsonObject Message::serialize() {
 }
 
 void Message::save() {
-    if(type == FILE) {
+    if (type == FILE) {
         QDir dir;
         QString dirPath = Config::config().get("downloads-directory").c_str();
         if(!dir.exists(dirPath)) {

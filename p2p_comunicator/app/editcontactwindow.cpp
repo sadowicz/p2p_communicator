@@ -1,6 +1,11 @@
 #include "editcontactwindow.h"
 #include "ui_editcontactwindow.h"
 
+/* BUGS:
+ *  1. uruchamiam apkę -> klikam edit -> crash
+ *  2. najlepiej wyrzucić zmianę IP kontaktu, zbyt dużo problemów przy implementacji będzie
+    */
+
 EditContactWindow::EditContactWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::EditContactWindow)
