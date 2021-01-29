@@ -17,7 +17,7 @@ class TCPClient : public QObject {
 
     Q_OBJECT
 public:
-    TCPClient(Contact& contact);
+    TCPClient(Contact* contact);
 
     ~TCPClient() { delete socket; }
 
@@ -25,7 +25,7 @@ public:
     void tryConnect();
 
 private:
-    Contact& contact;
+    Contact* contact;
     QTcpSocket* socket;
 
 private slots:

@@ -71,7 +71,7 @@ private:
     QState* ValidateSendable;
     QState* Sendable;
 
-    std::unordered_map<std::string, Contact> contacts;
+    std::unordered_map<std::string, Contact*> contacts;
     Contact* activeContact;
 
     void assignStatesProperties();
