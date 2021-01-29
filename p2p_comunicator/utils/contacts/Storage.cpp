@@ -93,9 +93,9 @@ void Storage::deleteContact(std::string& ip) {
     save();
 }
 
-void Storage::editContact(std::string ip, std::string newName, std::string newAddress, unsigned newPort) {
+void Storage::editContact(std::string ip, std::string newName, unsigned newPort) {
     Contact* oldContact = getContact(ip);
-    Contact* editedContact = new Contact(newName, newAddress, newPort);
+    Contact* editedContact = new Contact(newName, ip, newPort);
 
     std::vector<Message> history = oldContact->getHistory();
 

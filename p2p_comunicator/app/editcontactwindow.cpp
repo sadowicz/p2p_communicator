@@ -1,10 +1,6 @@
 #include "editcontactwindow.h"
 #include "ui_editcontactwindow.h"
 
-/* BUGS:
- *  1. uruchamiam apkę -> klikam edit -> crash
- *  2. najlepiej wyrzucić zmianę IP kontaktu, zbyt dużo problemów przy implementacji będzie
-    */
 
 EditContactWindow::EditContactWindow(QWidget *parent) :
     QDialog(parent),
@@ -30,12 +26,12 @@ EditContactWindow::~EditContactWindow()
 
 void EditContactWindow::on_bbAddContact_accepted()
 {
-    if(validator->validateContactForm(ui->leName->text(), ui->leIP->text(), ui->lePort->text()))
+    if(validator->validateContactForm(ui->leName->text(), QString::fromStdString(ip), ui->lePort->text()))
     {
-        Storage::storage().editContact(ui->leIP->text().toStdString(), ui->leName->text().toStdString(), ui->leIP->text().toStdString(), ui->lePort->text().toUInt());
+        Storage::storage().editContact(ip, ui->leName->text().toStdString(), ui->lePort->text().toUInt());
 
         //if storage successfull:
-        emit contactAddSuccess(ui->leIP->text().toStdString());
+        emit contactAddSuccess(ip);
 
         delete this;
     }
@@ -44,7 +40,11 @@ void EditContactWindow::on_bbAddContact_accepted()
 }
 
 void EditContactWindow::setValues(std::string ip, std::string name, int port) {
-    ui->leIP->setText(QString::fromStdString(ip));
+    this->ip = ip;
+    this->name = name;
+    this->port = port;
+
+    ui->ipLabel->setText(QString::fromStdString(ip));
     ui->leName->setText(QString::fromStdString(name));
     ui->lePort->setText(QString::number(port));
 }
