@@ -8,7 +8,7 @@ string& Config::get(const char* key) {
     return values.at(string(key));
 }
 
-void Config::set(string& key, string& value) {
+void Config::set(string key, string value) {
     values[key] = value;
 }
 

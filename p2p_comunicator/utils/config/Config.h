@@ -27,7 +27,7 @@ public:
 
     string& get(string& key);
     string& get(const char* key);
-    void set(string& key, string& value);
+    void set(string key, string value);
     void save();
 
 private:
