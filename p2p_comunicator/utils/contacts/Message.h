@@ -23,7 +23,6 @@ public:
     Message(TCPPacket packet);
     Message(QJsonObject& object);
     QJsonObject serialize();
-    void downloadFile();
     void save();
     string getTimestamp();
 

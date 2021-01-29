@@ -2,6 +2,8 @@
 
 #include <unordered_map>
 
+#include <QString>
+
 namespace util {
 
 template<typename K, typename V>
@@ -16,5 +18,7 @@ inline V& orElse(std::unordered_map<K, V> container, K& key, V& alternative) {
         : alternative;
 }
 
-
+inline QString toQString(std::string& s) {
+    return QString(s.c_str());
+}
 }

@@ -14,6 +14,11 @@ void TCPClient::tryConnect() {
     socket->connectToHost(hostAddress, (short) contact->getPort());
 }
 
+void TCPClient::forceDisconnect() {
+    Logger::log().debug("Force disconnected from contact: " + contact->getAddress());
+    socket->disconnectFromHost();
+}
+
 void TCPClient::onError(QAbstractSocket::SocketError e) {
     emit disconnected(contact);
     Logger::log().debug("Couldn't connect to contact: " + contact->getAddress() + ", reason: " + std::to_string(e));

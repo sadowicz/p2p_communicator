@@ -1,17 +1,5 @@
 #include <config/Config.h>
 
-string& Config::get(string& key) {
-    return values.at(key);
-}
-
-string& Config::get(const char* key) {
-    return values.at(string(key));
-}
-
-void Config::set(string key, string value) {
-    values[key] = value;
-}
-
 Config::Config() {
     configFile = CONFIG_DEFAULT_FILE_PATH;
     if (shouldCreateDefaultConfig()) {

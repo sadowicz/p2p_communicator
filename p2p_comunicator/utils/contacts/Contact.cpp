@@ -1,6 +1,6 @@
 #include "Contact.h"
 
-Contact::Contact(std::string name, std::string address, unsigned port) : name(name), address(address), port(port) {}
+Contact::Contact(std::string name, std::string address, unsigned port) : name(name), address(address), port(port), active(false) {}
 
 void Contact::read(const QJsonObject &json) {
     name = json["name"].toString().toStdString();
@@ -45,6 +45,10 @@ std::string& Contact::getAddress() {
 
 int Contact::getPort() {
     return this->port;
+}
+
+bool Contact::isActive() {
+    return this->active;
 }
 
 

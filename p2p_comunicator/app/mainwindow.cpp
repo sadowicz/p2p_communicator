@@ -3,7 +3,7 @@
 /*TODO:
     - two more packet types FILE-REQUEST and NEW-CONTACT
     - state to locked after emieting error form constructor (loadContacts() method)
-    - add "active" flag to Contact class
+    - improve TCPPacket encoding: [packetType:1][filenameLength:1][filename:filenameLength][contentLength:4][content:contentLength]
 */
 
 MainWindow::MainWindow(QWidget *parent)
@@ -21,7 +21,9 @@ MainWindow::MainWindow(QWidget *parent)
     loadContacts();
     loadListItems();
 
-    TCPConnection::init();
+    // initialization
+    TCPConnection::get();
+
     // connect(this, SIGNAL(sendMsg(string&, string&)), TCPConnection::get(), SLOT(send(string&, string&)));
     //  sending example:
     // emit sendMsg("ip", "content");
@@ -152,14 +154,9 @@ void MainWindow::on_pbNewContact_clicked()
     addContactWin->show();
 }
 
-void MainWindow::on_contactAddSuccess(std::string ip)
-{
-    // Update contact list form file
-    Storage& storage = Storage::storage();
-    storage.load();
-
-    Contact* added = storage.getContact(ip);
-    contacts.insert({added->getName(), added});
+void MainWindow::on_contactAddSuccess(std::string ip) {
+    // try connecting to the new contact
+    TCPConnection::get().reconnect(ip);
 
     refreshContactsList();
 
@@ -202,12 +199,21 @@ void MainWindow::on_lwContacts_itemClicked(QListWidgetItem *item)
     activeContact = contacts[item->text().toStdString()];
     ui->pbDeleteContact->setEnabled(true);
     ui->pbEditContact->setEnabled(true);
+
+    // try connecting to contact if it's inactive
+    if (!activeContact->isActive()) {
+        TCPConnection::get().reconnect(activeContact->getAddress());
+    }
 }
 
 void MainWindow::on_pbDeleteContact_clicked()
 {
+    // close tcp connection
+    TCPConnection::get().closeConnection(activeContact->getAddress());
+
     Storage::storage().deleteContact(activeContact->getAddress());
     refreshContactsList();
+
     ui->pbDeleteContact->setEnabled(false);
     ui->pbEditContact->setEnabled(false);
 }
