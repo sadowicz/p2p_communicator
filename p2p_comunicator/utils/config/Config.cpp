@@ -8,6 +8,10 @@ string& Config::get(const char* key) {
     return values.at(string(key));
 }
 
+void Config::set(string& key, string& value) {
+    values.insert(key, value);
+}
+
 Config::Config() {
     configFile = CONFIG_DEFAULT_FILE_PATH;
     if (shouldCreateDefaultConfig()) {
@@ -38,6 +42,22 @@ void Config::writeDefaultConfig() {
         throw new IOException("Failed creating default configuration file");
     }
     file << CONFIG_DEFAULT_FILE_CONTENTS;
+    file.close();
+}
+
+void Config::save() {
+    ofstream file(configFile);
+    if (!file.is_open()) {
+        throw new IOException("Failed creating default configuration file");
+    }
+
+    std::string res = "";
+
+    for (std::pair<std::string, std::string> element : values) {
+        res += element.first + "=" + element.second + "\n";
+    }
+
+    file << res;
     file.close();
 }
 
