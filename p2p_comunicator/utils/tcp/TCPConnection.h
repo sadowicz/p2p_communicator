@@ -8,6 +8,7 @@
 #include <tcp/TCPClient.h>
 #include <tcp/TCPServer.h>
 #include <tcp/TCPPacket.h>
+#include <logger/Logger.h>
 
 using namespace std;
 
@@ -32,6 +33,7 @@ signals:
     void sendingError(Contact*, TCPException);
 
 public slots:
+    void reconnect(string& ip);
     void send(string& ip, string& content);
 
 };

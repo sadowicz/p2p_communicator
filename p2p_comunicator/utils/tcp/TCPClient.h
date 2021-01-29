@@ -9,6 +9,7 @@
 
 #include <contacts/Storage.h>
 #include <config/Config.h>
+#include <logger/Logger.h>
 
 using namespace std;
 
@@ -21,6 +22,7 @@ public:
     ~TCPClient() { delete socket; }
 
     void send(string& packet);
+    void tryConnect();
 
 private:
     Contact& contact;
@@ -29,6 +31,7 @@ private:
 private slots:
     void onDisconnect();
     void onConnect();
+    void onError(QAbstractSocket::SocketError e);
 
 signals:
     void failed(Contact* contact, TCPException e);

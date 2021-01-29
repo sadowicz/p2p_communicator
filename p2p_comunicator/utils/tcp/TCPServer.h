@@ -8,6 +8,7 @@
 #include <contacts/Contact.h>
 #include <config/Config.h>
 #include <tcp/TCPPacket.h>
+#include <logger/Logger.h>
 
 #include <unordered_map>
 

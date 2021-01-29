@@ -29,6 +29,7 @@ void Config::loadConfiguration() {
     } else {
         throw new IOException("Failed opening the configuration file");
     }
+    isDebugMode = values["debug-mode"] == "true";
     file.close();
 }
 

@@ -16,6 +16,7 @@ void TCPServer::onAcceptConnection() {
             storage.addContact(Contact(address, address, std::stoi(Config::config().get("port"))));
         }
 
+
         Contact* contact = storage.getContact(address);
         contacts[connection] = contact;
 

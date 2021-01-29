@@ -4,18 +4,15 @@
     - user should be notified when someone sends them a message (icon next to contact name?)
     - contact editing, when someone sends you a message first their name is unknown
     - two more packet types FILE-REQUEST and NEW-CONTACT
-<<<<<<< HEAD
     - state to locked after emieting error form constructor (loadContacts() method)
-=======
     - add "active" flag to Contact class
->>>>>>> bd2d0c703607830b5dfbdfac520226918aff816f
 */
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-
+    Logger::log().info("------------ App started ------------");
     ui->setupUi(this);
 
     setUpStateMachine();

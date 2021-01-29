@@ -7,6 +7,7 @@
 #include <util/strutil.h>
 #include <util/strbuilder.h>
 #include <tcp/TCPException.h>
+#include <logger/Logger.h>
 
 #include <QByteArray>
 

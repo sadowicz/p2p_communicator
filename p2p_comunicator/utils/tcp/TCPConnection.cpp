@@ -13,12 +13,17 @@ void TCPConnection::init() {
 
     for (pair<string, Contact> contact : storage.getContacts()) {
         TCPClient* client = new TCPClient(contact.second);
+        client->tryConnect();
 
         connection->clients[contact.first] = client;
         connect(client, SIGNAL(failed(Contact*, TCPException)), connection, SIGNAL(sendingError(Contact*, TCPException)));
         connect(client, SIGNAL(connected(Contact*)), connection, SIGNAL(connected(Contact*)));
         connect(client, SIGNAL(disconnected(Contact*)), connection, SIGNAL(disconnected(Contact*)));
     }
+}
+
+void TCPConnection::reconnect(string& ip) {
+    connection->clients[ip]->tryConnect();
 }
 
 void TCPConnection::send(string& ip, string& content) {
