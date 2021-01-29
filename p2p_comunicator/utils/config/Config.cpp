@@ -9,8 +9,7 @@ string& Config::get(const char* key) {
 }
 
 void Config::set(string& key, string& value) {
-    std::pair<std::string,std::string> val(key, value);
-    values.insert(val);
+    values[key] = value;
 }
 
 Config::Config() {

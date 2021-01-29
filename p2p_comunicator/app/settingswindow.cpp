@@ -25,7 +25,7 @@ void SettingsWindow::on_bbAddContact_accepted()
 {
     if(validator->validateContactForm("name", "127.0.0.1", ui->lePort->text()))
     {
-        std::string p = "sdf";
+        std::string p = "port";
         std::string val = ui->lePort->text().toStdString();
         Config::config().set(p, val);
         Config::config().save();
