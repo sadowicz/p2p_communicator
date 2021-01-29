@@ -9,7 +9,8 @@ string& Config::get(const char* key) {
 }
 
 void Config::set(string& key, string& value) {
-    values.insert(key, value);
+    std::pair<std::string,std::string> val(key, value);
+    values.insert(val);
 }
 
 Config::Config() {
@@ -48,7 +49,7 @@ void Config::writeDefaultConfig() {
 void Config::save() {
     ofstream file(configFile);
     if (!file.is_open()) {
-        throw new IOException("Failed creating default configuration file");
+        throw new IOException("Failed opening configuration file");
     }
 
     std::string res = "";
