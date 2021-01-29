@@ -31,6 +31,8 @@ void EditContactWindow::on_bbAddContact_accepted()
 
         //if storage successfull:
         emit contactAddSuccess(ui->leIP->text().toStdString());
+
+        delete this;
     }
     else
         emit contactAddFailure(validator->validationErrMsg());

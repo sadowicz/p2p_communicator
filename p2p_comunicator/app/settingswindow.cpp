@@ -11,7 +11,6 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
 
     QObject::connect(this, SIGNAL(contactAddCancel()), parent, SLOT(on_contactAddCancel()));
     QObject::connect(this, SIGNAL(contactAddFailure(QString)), parent, SLOT(on_error(QString)));
-    QObject::connect(parent, SIGNAL(edited(std::string,std::string, int)), this, SLOT(setValues(std::string,std::string,int)));
 }
 
 SettingsWindow::~SettingsWindow()
@@ -33,6 +32,8 @@ void SettingsWindow::on_bbAddContact_accepted()
         std::string val = ui->lePort->text().toStdString();
         Config::config().set(p, val);
         Config::config().save();
+
+        delete this;
     }
     else
         emit contactAddFailure("Unable to set port.\nInvalid port format.");
