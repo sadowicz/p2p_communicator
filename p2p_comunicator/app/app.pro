@@ -20,19 +20,22 @@ SOURCES += \
     editcontactwindow.cpp \
     error_window.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    settingswindow.cpp
 
 HEADERS += \
     add_contact_window.h \
     editcontactwindow.h \
     error_window.h \
-    mainwindow.h
+    mainwindow.h \
+    settingswindow.h
 
 FORMS += \
     add_contact_window.ui \
     editcontactwindow.ui \
     error_window.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    settingswindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

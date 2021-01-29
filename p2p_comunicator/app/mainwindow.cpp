@@ -210,3 +210,9 @@ void MainWindow::on_pbEditContact_clicked()
 
     emit edited(activeContact->getAddress(), activeContact->getName(), activeContact->getPort());
 }
+
+void MainWindow::on_pbSettings_clicked()
+{
+    settingsWin = new SettingsWindow{this};
+    settingsWin->show();
+}
