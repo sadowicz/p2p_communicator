@@ -27,7 +27,8 @@ void SettingsWindow::on_bbAddContact_rejected()
 
 void SettingsWindow::on_bbAddContact_accepted()
 {
-    if(validator->validateContactForm("name", "127.0.0.1", ui->lePort->text()))
+    if(validator->validateContactForm("name", "127.0.0.1", ui->lePort->text(),
+                                      Storage::storage().getContacts()))
     {
         Config::config("port") = ui->lePort->text().toStdString();
         Config::config().save();

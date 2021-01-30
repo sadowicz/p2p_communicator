@@ -6,19 +6,33 @@ QString ContactValidator::headerErrMsg = "Unable to add new contact.\n";
 QString ContactValidator::nameErrMsg = "\nInvalid contact name format.";
 QString ContactValidator::IPErrMsg = "\nInvalid IP address format.";
 QString ContactValidator::portErrMsg = "\nInvalid port format.";
+QString ContactValidator::uniqNameErrMsg = "\nContact name already exists.";
+QString ContactValidator::uniqIPErrMsg = "\nIP occupied by existing contact.";
 
 ContactValidator::ContactValidator()
 {
     _validationErrMsg = ContactValidator::headerErrMsg;
 }
 
-bool ContactValidator::validateContactForm(QString name, QString ip, QString port)
+bool ContactValidator::validateContactForm(QString name, QString ip, QString port,
+                                           std::unordered_map<std::string, Contact*>& contacts)
 {
     validateName(name);
     validateIP(ip);
     validatePort(port);
+    validateUnique(name, ip, contacts);
 
-    return isValidName && isValidIP && isValidPort;
+    return isValidName && isValidIP && isValidPort && isUnique;
+}
+
+bool ContactValidator::validateContactForm(QString name, QString port,
+                                           std::unordered_map<std::string, Contact*>& contacts)
+{
+    validateName(name);
+    validatePort(port);
+    validateUnique(name, contacts);
+
+    return isValidName && isValidPort && isUnique;
 }
 
 void ContactValidator::validateName(QString name)
@@ -46,4 +60,37 @@ void ContactValidator::validatePort(QString port)
                    port.toInt() <= 65535);
 
     if(!isValidPort) _validationErrMsg += ContactValidator::portErrMsg;
+}
+
+void ContactValidator::validateUnique(QString name, QString ip, std::unordered_map<std::string, Contact*>& contacts)
+{   
+    if(contacts.find(ip.toStdString()) == contacts.end())
+    {
+        for(auto& contact : contacts)
+        {
+            if(contact.second->getName().c_str() == name)
+            {
+                _validationErrMsg += ContactValidator::uniqNameErrMsg;
+                return;
+            }
+        }
+
+        isUnique = true;
+    }
+    else
+        _validationErrMsg += ContactValidator::uniqIPErrMsg;
+}
+
+void ContactValidator::validateUnique(QString name, std::unordered_map<std::string, Contact*>& contacts)
+{
+    for(auto& contact : contacts)
+    {
+        if(contact.second->getName().c_str() == name)
+        {
+            _validationErrMsg += ContactValidator::uniqNameErrMsg;
+            return;
+        }
+    }
+
+    isUnique = true;
 }
