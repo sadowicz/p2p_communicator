@@ -6,8 +6,6 @@
 #include <config/Config.h>
 #include "ui_settingswindow.h"
 
-#include <util/util.h>
-
 using namespace contacts;
 
 namespace Ui {

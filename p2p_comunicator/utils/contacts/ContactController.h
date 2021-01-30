@@ -15,23 +15,22 @@ class ContactController : QObject {
 public:
     ContactController(Logger& log);
     void addContact(Contact* contact);
-    void removeContact(string& ip);
+    void removeContact(const string& ip);
     void editContact(Contact* editedContact);
-    void send(string& ip, string& message);
-    bool isActive(string& ip);
-
-    void tryConnect(string& ip);
-    void forceDisconnect(string& ip);
+    void send(const string& ip, const string& message);
+    bool isActive(const string& ip);
+    void tryConnect(const string& ip);
+    void forceDisconnect(const string& ip);
 
 private:
     TCPConnection* connection;
     Logger& log;
 
 private slots:
-    void onConnect(string, short);
-    void onDisconnect(string);
-    void onRecieve(string, TCPPacket);
-    void onSendError(string, TCPException);
+    void onConnect(const string, short);
+    void onDisconnect(const string);
+    void onRecieve(const string, TCPPacket);
+    void onSendError(const string, TCPException);
 
 };
 

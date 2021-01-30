@@ -2,7 +2,8 @@
 
 using namespace contacts;
 
-Contact::Contact(std::string name, std::string address, unsigned port) : name(name), address(address), port(port), active(false) {}
+Contact::Contact(std::string name, std::string address, unsigned port, QObject* parent)
+    : QAbstractListModel(parent) ,name(name), address(address), port(port), active(false) {}
 
 void Contact::read(const QJsonObject &json) {
     name = json["name"].toString().toStdString();
@@ -15,7 +16,7 @@ void Contact::read(const QJsonObject &json) {
         QJsonObject contactMessage = historyArray[i].toObject();
 
         // using QJsonDocument to convert QJsonObject to QString
-        Message msg(contactMessage);
+        Message* msg = new Message(contactMessage,this);
         history.push_back(msg);
     }
 }
@@ -26,26 +27,26 @@ void Contact::write(QJsonObject &json) {
     json["port"] = port;
 
     QJsonArray historyArray;
-    for (Message& message : history) {
-        historyArray.append(message.serialize());
+    for (Message* message : history) {
+        historyArray.append(message->serialize());
     }
 
     json["history"] = historyArray;
 }
 
-void Contact::addToHistory(Message message) {
+void Contact::addToHistory(Message* message) {
     history.push_back(message);
 }
 
-std::string& Contact::getName() {
+std::string Contact::getName() const {
     return this->name;
 }
 
-std::string& Contact::getAddress() {
+std::string Contact::getAddress() const {
     return this->address;
 }
 
-int Contact::getPort() {
+int Contact::getPort()  const{
     return this->port;
 }
 
@@ -58,6 +59,25 @@ void Contact::setActiveState(bool state) {
 }
 
 
+int Contact::rowCount(const QModelIndex &parent) const{
+    if(parent.isValid()){
+        return 0;
+    }
 
+    return history.size();
+}
+
+QVariant Contact::data(const QModelIndex &index, int role) const{
+
+   // if(index.isValid())
+     //   return QVariant();
+
+    if(role != Qt::DisplayRole)
+        return QVariant();
+
+    Message* msg = history[index.row()];
+
+    return QVariant::fromValue(msg);
+}
 
 

@@ -3,23 +3,23 @@
 void TCPConnection::startServer(short port) {
     server = new TCPServer(log, port);
 
-    connect(server, SIGNAL(connected(string, short)), SIGNAL(connected(string, short)));
-    connect(server, SIGNAL(disconnected(string)), SIGNAL(disconnected(string)));
-    connect(server, SIGNAL(recieved(string, TCPPacket)), SIGNAL(recieved(string, TCPPacket)));
+    connect(server, SIGNAL(connected(const string, short)), SIGNAL(connected(const string, short)));
+    connect(server, SIGNAL(disconnected(const string)), SIGNAL(disconnected(const string)));
+    connect(server, SIGNAL(recieved(const string, TCPPacket)), SIGNAL(recieved(const string, TCPPacket)));
 }
 
-TCPClient* TCPConnection::registerClient(string ip, short port) {
+TCPClient* TCPConnection::registerClient(const string ip, short port) {
     TCPClient* client = new TCPClient(log, ip, port);
 
     clients[ip] = client;
-    connect(client, SIGNAL(failed(string, TCPException)), SIGNAL(sendingError(string, TCPException)));
-    connect(client, SIGNAL(connected(string, short)), SIGNAL(connected(string, short)));
-    connect(client, SIGNAL(disconnected(string)), SIGNAL(disconnected(string)));
+    connect(client, SIGNAL(failed(const string, TCPException)), SIGNAL(sendingError(const string, TCPException)));
+    connect(client, SIGNAL(connected(const string, short)), SIGNAL(connected(const string, short)));
+    connect(client, SIGNAL(disconnected(const string)), SIGNAL(disconnected(const string)));
 
     return client;
 }
 
-void TCPConnection::closeConnection(string& ip) {
+void TCPConnection::closeConnection(const string& ip) {
     /* TODO: client gets disconnected but server is still connected,
      *       the next message recieved from the contact will not be
      *       registered as a new contact request, the message won't be
@@ -35,10 +35,10 @@ void TCPConnection::closeConnection(string& ip) {
     clients.erase(ip);
 }
 
-void TCPConnection::reconnect(string& ip) {
+void TCPConnection::reconnect(const string& ip) {
     clients[ip]->tryConnect();
 }
 
-void TCPConnection::send(string& ip, string& content) {
+void TCPConnection::send(const string& ip, const string& content) {
     clients[ip]->send(content);
 }

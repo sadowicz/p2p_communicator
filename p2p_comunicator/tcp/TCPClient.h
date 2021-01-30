@@ -20,7 +20,7 @@ public:
 
     ~TCPClient() { delete socket; }
 
-    void send(string& packet);
+    void send(const string& packet);
     void tryConnect();
     void forceDisconnect();
 
@@ -36,8 +36,8 @@ private slots:
     void onError(QAbstractSocket::SocketError e);
 
 signals:
-    void failed(string ip, TCPException e);
-    void connected(string ip, short port);
-    void disconnected(string ip);
+    void failed(const string ip, TCPException e);
+    void connected(const string ip, short port);
+    void disconnected(const string ip);
 
 };

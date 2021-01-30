@@ -22,6 +22,8 @@ MainWindow::MainWindow(QWidget *parent)
     loadContacts();
     loadListItems();
 
+    ui->msgListView->setItemDelegate(new MessageListDelegate);
+
     log = Logger(Config::config("log-file"), Config::config().debugMode());
     log.info("------------ App started ------------");
     contactController = new ContactController(log);
@@ -60,7 +62,7 @@ void MainWindow::assignStatesProperties()
     Unlocked->assignProperty(ui->pbSend, "enabled", true);
     Unlocked->assignProperty(ui->pbAttachFile, "enabled", true);
     Unlocked->assignProperty(ui->lwContacts, "enabled", true);
-    Unlocked->assignProperty(ui->teChat, "enabled", true);
+    //Unlocked->assignProperty(ui->teChat, "enabled", true);
     Unlocked->assignProperty(ui->teSend, "enabled", true);
     Unlocked->assignProperty(ui->pbDeleteContact, "enabled", false);
     Unlocked->assignProperty(ui->pbEditContact, "enabled", false);
@@ -69,7 +71,7 @@ void MainWindow::assignStatesProperties()
     Disconnected->assignProperty(ui->pbSend, "enabled", false);
     Disconnected->assignProperty(ui->pbAttachFile, "enabled", false);
     Disconnected->assignProperty(ui->lwContacts, "enabled", true);
-    Disconnected->assignProperty(ui->teChat, "enabled", false);
+    //Disconnected->assignProperty(ui->teChat, "enabled", false);
     Disconnected->assignProperty(ui->teSend, "enabled", false);
     Disconnected->assignProperty(ui->pbDeleteContact, "enabled", false);
     Disconnected->assignProperty(ui->pbEditContact, "enabled", false);
@@ -78,7 +80,7 @@ void MainWindow::assignStatesProperties()
     Connected->assignProperty(ui->pbSend, "enabled", false);
     Connected->assignProperty(ui->pbAttachFile, "enabled", true);
     Connected->assignProperty(ui->lwContacts, "enabled", true);
-    Connected->assignProperty(ui->teChat, "enabled", true);
+    //Connected->assignProperty(ui->teChat, "enabled", true);
     Connected->assignProperty(ui->teSend, "enabled", true);
     Connected->assignProperty(ui->pbDeleteContact, "enabled", false);
     Connected->assignProperty(ui->pbEditContact, "enabled", false);
@@ -87,7 +89,7 @@ void MainWindow::assignStatesProperties()
     Sendable->assignProperty(ui->pbSend, "enabled", true);
     Sendable->assignProperty(ui->pbAttachFile, "enabled", true);
     Sendable->assignProperty(ui->lwContacts, "enabled", true);
-    Sendable->assignProperty(ui->teChat, "enabled", true);
+    //Sendable->assignProperty(ui->teChat, "enabled", true);
     Sendable->assignProperty(ui->teSend, "enabled", true);
     Sendable->assignProperty(ui->pbDeleteContact, "enabled", false);
     Sendable->assignProperty(ui->pbEditContact, "enabled", false);
@@ -96,7 +98,7 @@ void MainWindow::assignStatesProperties()
     Locked->assignProperty(ui->pbSend, "enabled", false);
     Locked->assignProperty(ui->pbAttachFile, "enabled", false);
     Locked->assignProperty(ui->lwContacts, "enabled", false);
-    Locked->assignProperty(ui->teChat, "enabled", false);
+    //Locked->assignProperty(ui->teChat, "enabled", false);
     Locked->assignProperty(ui->teSend, "enabled", false);
     Locked->assignProperty(ui->pbDeleteContact, "enabled", false);
     Locked->assignProperty(ui->pbEditContact, "enabled", false);
@@ -207,6 +209,7 @@ void MainWindow::on_lwContacts_itemClicked(QListWidgetItem *item)
     activeContact = contacts[item->text().toStdString()];
     ui->pbDeleteContact->setEnabled(true);
     ui->pbEditContact->setEnabled(true);
+    ui->msgListView->setModel(activeContact);
 
     // try connecting to contact if it's inactive
     if (!activeContact->isActive()) {

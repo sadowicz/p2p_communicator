@@ -60,11 +60,11 @@ std::unordered_map<std::string, Contact*>& Storage::getContacts() {
     return contacts;
 }
 
-bool Storage::contactExists(std::string& ip) {
-    return util::has(contacts, ip);
+bool Storage::contactExists(const std::string& ip) {
+    return contacts.find(ip) != contacts.end();
 }
 
-Contact* Storage::getContact(std::string& ip) {
+Contact* Storage::getContact(const std::string& ip) {
     return contacts[ip];
 }
 
@@ -89,7 +89,7 @@ void Storage::clear(){
     save();
 }
 
-void Storage::deleteContact(std::string& ip) {
+void Storage::deleteContact(const std::string& ip) {
     delete contacts[ip];
     contacts.erase(ip);
     save();
