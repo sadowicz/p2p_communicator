@@ -1,5 +1,7 @@
 #include "Contact.h"
 
+using namespace contacts;
+
 Contact::Contact(std::string name, std::string address, unsigned port) : name(name), address(address), port(port), active(false) {}
 
 void Contact::read(const QJsonObject &json) {

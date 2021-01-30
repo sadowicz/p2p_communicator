@@ -12,6 +12,7 @@
 #include <logger/Logger.h>
 
 using namespace std;
+using namespace contacts;
 
 class TCPClient : public QObject {
 

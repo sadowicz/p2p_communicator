@@ -8,6 +8,8 @@
 #include <contacts/Storage.h>
 #include <ui_add_contact_window.h>
 
+using namespace contacts;
+
 namespace Ui {
 class AddContactWindow;
 }

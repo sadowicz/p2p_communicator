@@ -12,6 +12,8 @@
 
 #include <unordered_map>
 
+using namespace contacts;
+
 class TCPServer : public QObject {
     Q_OBJECT
 

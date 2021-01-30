@@ -1,6 +1,8 @@
 #include <QtTest>
 #include "contacts/Storage.h"
 
+using namespace contacts;
+
 class StorageTest : public QObject
 {
     Q_OBJECT

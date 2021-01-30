@@ -9,6 +9,8 @@
 #include <contacts/Message.h>
 #include <vector>
 
+namespace contacts {
+
 class Contact {
 public:
 
@@ -34,3 +36,5 @@ private:
     bool active;
 
 };
+
+}

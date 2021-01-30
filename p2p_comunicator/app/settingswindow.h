@@ -8,6 +8,8 @@
 
 #include <util/util.h>
 
+using namespace contacts;
+
 namespace Ui {
 class SettingsWindow;
 }
