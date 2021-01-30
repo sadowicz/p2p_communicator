@@ -6,7 +6,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     ui(new Ui::SettingsWindow)
 {
     ui->setupUi(this);
-    ui->lePort->setText(util::toQString(Config::config("port")));
+    ui->lePort->setText(QString::fromStdString(Config::config("port")));
 
     validator = new ContactValidator{};
 

@@ -8,7 +8,6 @@
 #include <QDir>
 
 #include <config/Config.h>
-#include <util/strbuilder.h>
 
 #include <TCPPacket.h>
 #include <Logger.h>

@@ -30,10 +30,8 @@ HEADERS += \
     contacts/Contact.h \
     contacts/Storage.h \
     contacts/Message.h \
-    util/strutil.h \
     config/Config.h \
     IOException.h \
-    util/strbuilder.h \
     util/util.h \
     contacts/ContactController.h
 
