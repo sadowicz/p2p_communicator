@@ -1,6 +1,8 @@
 #include <QtTest>
 #include "contacts/Storage.h"
 
+using namespace contacts;
+
 class StorageTest : public QObject
 {
     Q_OBJECT
@@ -24,32 +26,32 @@ private slots:
         QCOMPARE(0, storage.getContacts().size());
 
         try {
-            storage.addContact(Contact{name, address, port});
+            storage.addContact(new Contact{name, address, port});
         } catch(std::out_of_range&) {}
 
         auto contacts = storage.getContacts();
 
         QCOMPARE(1, contacts.size());
 
-        QCOMPARE(name, contacts[address].getName());
-        QCOMPARE(address, contacts[address].getAddress());
-        QCOMPARE(port, contacts[address].getPort());
+        QCOMPARE(name, contacts[address]->getName());
+        QCOMPARE(address, contacts[address]->getAddress());
+        QCOMPARE(port, contacts[address]->getPort());
 
         try {
-            storage.addContact(Contact{name2, address2, port2});
+            storage.addContact(new Contact{name2, address2, port2});
         } catch(std::out_of_range&) {}
 
         contacts = storage.getContacts();
 
         QCOMPARE(2, contacts.size());
 
-        QCOMPARE(name, contacts[address].getName());
-        QCOMPARE(address, contacts[address].getAddress());
-        QCOMPARE(port, contacts[address].getPort());
+        QCOMPARE(name, contacts[address]->getName());
+        QCOMPARE(address, contacts[address]->getAddress());
+        QCOMPARE(port, contacts[address]->getPort());
 
-        QCOMPARE(name2, contacts[address2].getName());
-        QCOMPARE(address2, contacts[address2].getAddress());
-        QCOMPARE(port2, contacts[address2].getPort());
+        QCOMPARE(name2, contacts[address2]->getName());
+        QCOMPARE(address2, contacts[address2]->getAddress());
+        QCOMPARE(port2, contacts[address2]->getPort());
 
         storage.clear();
     }
@@ -71,14 +73,14 @@ private slots:
            QCOMPARE(false, storage.contactExists(address2));
 
            try {
-               storage.addContact(Contact{name, address, port});
+               storage.addContact(new Contact{name, address, port});
            } catch(std::out_of_range&) {}
 
            QCOMPARE(true, storage.contactExists(address));
            QCOMPARE(false, storage.contactExists(address2));
 
            try {
-               storage.addContact(Contact{name2, address2, port2});
+               storage.addContact(new Contact{name2, address2, port2});
            } catch(std::out_of_range&) {}
 
            QCOMPARE(true, storage.contactExists(address));
@@ -101,15 +103,15 @@ private slots:
         QCOMPARE(0, storage.getContacts().size());
 
         try {
-            storage.addContact(Contact{name, address, port});
+            storage.addContact(new Contact{name, address, port});
         } catch(std::out_of_range&) {}
         try {
-            storage.addContact(Contact{name2, address2, port2});
+            storage.addContact(new Contact{name2, address2, port2});
         } catch(std::out_of_range&) {}
 
         QCOMPARE(2, storage.getContacts().size());
 
-        auto contact = storage.getContact(address);
+        Contact* contact = storage.getContact(address);
 
         QCOMPARE(name, contact->getName());
         QCOMPARE(address, contact->getAddress());
@@ -138,10 +140,10 @@ private slots:
         QCOMPARE(0, storage.getContacts().size());
 
         try {
-            storage.addContact(Contact{name, address, port});
+            storage.addContact(new Contact{name, address, port});
         } catch(std::out_of_range&) {}
         try {
-            storage.addContact(Contact{name2, address2, port2});
+            storage.addContact(new Contact{name2, address2, port2});
         } catch(std::out_of_range&) {}
 
         QCOMPARE(2, storage.getContacts().size());
@@ -188,7 +190,7 @@ private slots:
         QCOMPARE(0, storage.getContacts().size());
 
         try {
-            storage.addContact(Contact{name, address, port});
+            storage.addContact(new Contact{name, address, port});
         }
         catch(std::out_of_range&) {}
 
@@ -205,7 +207,7 @@ private slots:
         QCOMPARE(false, storage.contactExists(address2));
 
         try {
-            storage.addContact(Contact{name2, address2, port2});
+            storage.addContact(new Contact{name2, address2, port2});
         }
         catch(std::out_of_range&) {}
 

@@ -1,6 +1,6 @@
 #include <tcp/TCPClient.h>
 
-TCPClient::TCPClient(Contact& contact) : contact(contact) {
+TCPClient::TCPClient(string ip, short port) : ip(ip), port(port) {
     this->socket = new QTcpSocket(this);
     connect(socket, SIGNAL(disconnected()), this, SLOT(onDisconnect()));
     connect(socket, SIGNAL(connected()), this, SLOT(onConnect()));
@@ -8,31 +8,37 @@ TCPClient::TCPClient(Contact& contact) : contact(contact) {
 }
 
 void TCPClient::tryConnect() {
-    Logger::log().debug("Trying to connect to contact: " + contact.getAddress());
+    Logger::log().debug("Trying to connect to contact: " + ip);
 
-    QHostAddress hostAddress = QHostAddress(QString(contact.getAddress().c_str()));
-    socket->connectToHost(hostAddress, (short) contact.getPort());
+    QHostAddress hostAddress = QHostAddress(QString(ip.c_str()));
+    socket->connectToHost(hostAddress, port);
+}
+
+void TCPClient::forceDisconnect() {
+    Logger::log().debug("Force disconnected from contact: " + ip);
+    socket->disconnectFromHost();
 }
 
 void TCPClient::onError(QAbstractSocket::SocketError e) {
-    emit disconnected(&contact);
+    emit disconnected(ip);
+    Logger::log().debug("Couldn't connect to contact: " + ip + ", reason: " + std::to_string(e));
 }
 
 void TCPClient::onDisconnect() {
-    emit disconnected(&contact);
-    Logger::log().debug("Disconnected from contact: " + contact.getAddress());
+    emit disconnected(ip);
+    Logger::log().debug("Client disconnected from contact: " + ip);
 }
 
 void TCPClient::onConnect() {
-    emit connected(&contact);
-    Logger::log().debug("Connected to contact: " + contact.getAddress());
+    emit connected(ip, port);
+    Logger::log().debug("Client connected to contact: " + ip);
 }
 
 void TCPClient::send(string& packet) {
-    Logger::log().debug("Sending message to contact: " + contact.getAddress() + " ...");
+    Logger::log().debug("Sending message to contact: " + ip + " ...");
 
     if (socket->state() != QAbstractSocket::ConnectedState) {
-        emit failed(&contact, TCPException("Client error: client was not connected to host"));
+        emit failed(ip, TCPException("Client error: client was not connected to host"));
         return;
     }
 
@@ -43,12 +49,13 @@ void TCPClient::send(string& packet) {
         string totalBytes = to_string(packet.size());
         string error = strbuilder() + "Client error: writing failed, "
                  + bytesWritten + " out of " + totalBytes + " bytes written" + strbuilder::end();
-        emit failed(&contact, TCPException(error));
+        emit failed(ip, TCPException(error));
         return;
      }
 
+     // remove this (?)
      if (!socket->waitForBytesWritten()) {
-        emit failed(&contact, TCPException("Client error: could not send packet (timeout)"));
+        emit failed(ip, TCPException("Client error: could not send packet (timeout)"));
         return;
      }
      Logger::log().debug("... message sent successfully");

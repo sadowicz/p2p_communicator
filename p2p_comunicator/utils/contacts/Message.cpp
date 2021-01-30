@@ -1,5 +1,7 @@
 #include <contacts/Message.h>
 
+using namespace contacts;
+
 Message::Message(TCPPacket packet) {
     this->type = packet.getType() == TCPPacket::PacketType::TEXT
             ? Message::Type::TEXT
@@ -18,11 +20,6 @@ Message::Message(QJsonObject& object) {
     this->timestamp = QDateTime::fromString(object["timestamp"].toString());
 }
 
-void Message::downloadFile() {
-    // string fullPath = strbuilder() << Config::get("downloads-directory") << "/" << filename << strbuilder::end();
-    //TODO: download file
-}
-
 QJsonObject Message::serialize() {
     QJsonObject object{};
     object["type"] = getType() == Message::Type::TEXT
@@ -38,9 +35,9 @@ QJsonObject Message::serialize() {
 }
 
 void Message::save() {
-    if(type == FILE) {
+    if (type == FILE) {
         QDir dir;
-        QString dirPath = Config::config().get("downloads-directory").c_str();
+        QString dirPath = Config::config("downloads-directory").c_str();
         if(!dir.exists(dirPath)) {
             dir.mkpath(dirPath);
         }
@@ -53,6 +50,8 @@ void Message::save() {
         }
         file << content;
         file.close();
+
+        Logger::log().info("Saved file '" + filename.toStdString() + "'");
     }
 }
 

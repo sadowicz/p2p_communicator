@@ -1,5 +1,6 @@
 #include "Storage.h"
 
+using namespace contacts;
 
 Storage& Storage::storage(){
     static Storage s;
@@ -7,7 +8,7 @@ Storage& Storage::storage(){
 }
 
 bool Storage::load() {
-    QString filename = QString(Config::config().get("history-log-file").c_str());
+    QString filename = util::toQString(Config::config()["history-log-file"]);
     QFile loadFile(filename);
 
     if (!loadFile.open(QIODevice::ReadOnly)) {
@@ -25,7 +26,7 @@ bool Storage::load() {
 }
 
 bool Storage::save() const {
-    QFile saveFile(QString(Config::config().get("history-log-file").c_str()));
+    QFile saveFile(util::toQString(Config::config("history-log-file")));
 
     if (!saveFile.open(QIODevice::WriteOnly)) {
         qWarning("Couldn't open save file.");
@@ -42,17 +43,20 @@ bool Storage::save() const {
 
 void Storage::read(const QJsonObject &json) {
 
+    for (pair<std::string, Contact*> pair : contacts) {
+        delete pair.second;
+    }
     contacts.clear();
     QJsonArray contactsArray = json["contacts"].toArray();
     for (int i = 0; i < contactsArray.size(); ++i) {
         QJsonObject contactObject = contactsArray[i].toObject();
-        Contact contact("example", "127.0.0.1", 8080);
-        contact.read(contactObject);
-        contacts[contact.getAddress()] = contact;
+        Contact* contact = new Contact();
+        contact->read(contactObject);
+        contacts[contact->getAddress()] = contact;
     }
 }
 
-std::unordered_map<std::string, Contact>& Storage::getContacts() {
+std::unordered_map<std::string, Contact*>& Storage::getContacts() {
     return contacts;
 }
 
@@ -61,22 +65,22 @@ bool Storage::contactExists(std::string& ip) {
 }
 
 Contact* Storage::getContact(std::string& ip) {
-    return &contacts[ip];
+    return contacts[ip];
 }
 
 void Storage::write(QJsonObject &json) const {
 
     QJsonArray contactsArray;
-    for (std::pair<std::string, Contact> entry : contacts) {
+    for (std::pair<std::string, Contact*> entry : contacts) {
         QJsonObject contactObject;
-        entry.second.write(contactObject);
+        entry.second->write(contactObject);
         contactsArray.append(contactObject);
     }
     json["contacts"] = contactsArray;
 }
 
-void Storage::addContact(Contact newContact) {
-    contacts[newContact.getAddress()] = newContact;
+void Storage::addContact(Contact* newContact) {
+    contacts[newContact->getAddress()] = newContact;
     save();
 }
 
@@ -86,19 +90,7 @@ void Storage::clear(){
 }
 
 void Storage::deleteContact(std::string& ip) {
+    delete contacts[ip];
     contacts.erase(ip);
     save();
-}
-
-void Storage::editContact(std::string ip, std::string newName, std::string newAddress, unsigned newPort) {
-    auto oldContact = getContact(ip);
-    auto editedContact = Contact(newName, newAddress, newPort);
-
-    auto history = oldContact->getHistory();
-
-    for(auto entry : history)
-        editedContact.addToHistory(entry);
-
-    deleteContact(oldContact->getAddress());
-    addContact(editedContact);
 }

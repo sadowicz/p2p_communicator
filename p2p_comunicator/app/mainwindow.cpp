@@ -1,11 +1,9 @@
 #include "mainwindow.h"
 
 /*TODO:
-    - user should be notified when someone sends them a message (icon next to contact name?)
-    - contact editing, when someone sends you a message first their name is unknown
     - two more packet types FILE-REQUEST and NEW-CONTACT
     - state to locked after emieting error form constructor (loadContacts() method)
-    - add "active" flag to Contact class
+    - improve TCPPacket encoding: [packetType:1][filenameLength:1][filename:filenameLength][contentLength:4][content:contentLength]
 */
 
 MainWindow::MainWindow(QWidget *parent)
@@ -23,12 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
     loadContacts();
     loadListItems();
 
-    TCPConnection::init();
-    // connect(this, SIGNAL(sendMsg(string&, string&)), TCPConnection::get(), SLOT(send(string&, string&)));
-    //  sending example:
-    // emit sendMsg("ip", "content");
-
-    // connect(TCPConnection::get(), SIGNAL(sendingError()), this, SLOT(...));
+    contactController = new ContactController();
 }
 
 MainWindow::~MainWindow()
@@ -133,7 +126,7 @@ void MainWindow::loadContacts()
     {
         for(auto& contact : storage.getContacts())
         {
-            contacts.insert({contact.second.getName(), contact.second});
+            contacts.insert({contact.second->getName(), contact.second});
         }
     }
     else
@@ -154,15 +147,22 @@ void MainWindow::on_pbNewContact_clicked()
     addContactWin->show();
 }
 
-void MainWindow::on_contactAddSuccess(std::string ip)
-{
-    // Update contact list form file
-    Storage& storage = Storage::storage();
-    storage.load();
+void MainWindow::on_contactEditSuccess(Contact* contact) {
+    // edit contact
+    contactController->editContact(contact);
 
-    auto added = storage.getContact(ip);
-    contacts.insert({added->getName(), *added});
+    // refresh GUI
+    refreshContactsList();
 
+    emit contactAdded();
+}
+
+void MainWindow::on_contactAddSuccess(Contact* newContact) {
+    // add contact to storage and try to connect to it
+    contactController->addContact(newContact);
+    contactController->tryConnect(newContact->getAddress());
+
+    // refresh gui list
     refreshContactsList();
 
     emit contactAdded();
@@ -201,15 +201,24 @@ void MainWindow::on_validateSendable()
 
 void MainWindow::on_lwContacts_itemClicked(QListWidgetItem *item)
 {
-    activeContact = &contacts[item->text().toStdString()];
+    activeContact = contacts[item->text().toStdString()];
     ui->pbDeleteContact->setEnabled(true);
     ui->pbEditContact->setEnabled(true);
+
+    // try connecting to contact if it's inactive
+    if (!activeContact->isActive()) {
+        contactController->tryConnect(activeContact->getAddress());
+    }
 }
 
 void MainWindow::on_pbDeleteContact_clicked()
 {
-    Storage::storage().deleteContact(activeContact->getAddress());
+    // remove contact from storage and close TCP/IP connection
+    contactController->removeContact(activeContact->getAddress());
+
+    // refresh GUI
     refreshContactsList();
+
     ui->pbDeleteContact->setEnabled(false);
     ui->pbEditContact->setEnabled(false);
 }

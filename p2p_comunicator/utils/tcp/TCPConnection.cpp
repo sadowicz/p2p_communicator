@@ -1,29 +1,45 @@
 #include <tcp/TCPConnection.h>
 
-TCPConnection* TCPConnection::connection = nullptr;
 
-void TCPConnection::init() {
-    Storage& storage = Storage::storage();
-    connection = new TCPConnection;
-    connection->server = new TCPServer();
+void TCPConnection::startServer(short port) {
+    server = new TCPServer(port);
 
-    connect(connection->server, SIGNAL(connected(Contact*)), connection, SIGNAL(connected(Contact*)));
-    connect(connection->server, SIGNAL(disconnected(Contact*)), connection, SIGNAL(disconnected(Contact*)));
-    connect(connection->server, SIGNAL(recieved(Contact*, TCPPacket)), connection, SIGNAL(recieved(Contact*, TCPPacket)));
+    connect(server, SIGNAL(connected(string, short)), SIGNAL(connected(string, short)));
+    connect(server, SIGNAL(disconnected(string)), SIGNAL(disconnected(string)));
+    connect(server, SIGNAL(recieved(string, TCPPacket)), SIGNAL(recieved(string, TCPPacket)));
+}
 
-    for (pair<string, Contact> contact : storage.getContacts()) {
-        TCPClient* client = new TCPClient(contact.second);
-        client->tryConnect();
+TCPConnection::TCPConnection() {}
 
-        connection->clients[contact.first] = client;
-        connect(client, SIGNAL(failed(Contact*, TCPException)), connection, SIGNAL(sendingError(Contact*, TCPException)));
-        connect(client, SIGNAL(connected(Contact*)), connection, SIGNAL(connected(Contact*)));
-        connect(client, SIGNAL(disconnected(Contact*)), connection, SIGNAL(disconnected(Contact*)));
-    }
+TCPClient* TCPConnection::registerClient(string ip, short port) {
+    TCPClient* client = new TCPClient(ip, port);
+
+    clients[ip] = client;
+    connect(client, SIGNAL(failed(string, TCPException)), SIGNAL(sendingError(string, TCPException)));
+    connect(client, SIGNAL(connected(string, short)), SIGNAL(connected(string, short)));
+    connect(client, SIGNAL(disconnected(string)), SIGNAL(disconnected(string)));
+
+    return client;
+}
+
+void TCPConnection::closeConnection(string& ip) {
+    /* TODO: client gets disconnected but server is still connected,
+     *       the next message recieved from the contact will not be
+     *       registered as a new contact request, the message won't be
+     *       saved and the app will crash
+     *
+     * SOLUTION 1: send a "disconnect" request to the contact, which will make
+     *             them close their client -> server connection
+     * */
+
+    TCPClient* client = clients[ip];
+    client->forceDisconnect();
+    delete client;
+    clients.erase(ip);
 }
 
 void TCPConnection::reconnect(string& ip) {
-    connection->clients[ip]->tryConnect();
+    clients[ip]->tryConnect();
 }
 
 void TCPConnection::send(string& ip, string& content) {

@@ -5,6 +5,8 @@
 #include <contacts/contact_validator.h>
 #include <contacts/Storage.h>
 
+using namespace contacts;
+
 namespace Ui {
 class EditContactWindow;
 }
@@ -26,7 +28,7 @@ private:
     int port;
 
 signals:
-    void contactAddSuccess(std::string ip);
+    void contactAddSuccess(Contact* editedContact);
     void contactAddCancel();
     void contactAddFailure(QString errorMessage);
 private slots:

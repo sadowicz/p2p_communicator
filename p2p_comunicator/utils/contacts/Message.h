@@ -13,6 +13,8 @@
 
 using namespace std;
 
+namespace contacts {
+
 class Message {
 
 public:
@@ -23,7 +25,6 @@ public:
     Message(TCPPacket packet);
     Message(QJsonObject& object);
     QJsonObject serialize();
-    void downloadFile();
     void save();
     string getTimestamp();
 
@@ -58,3 +59,5 @@ private:
     Message(string* address, QDateTime timestamp, Type type, string content, string filename) : address(address), timestamp(timestamp), type(type), content(content), filename(filename) {}
 
 };
+
+}

@@ -15,7 +15,7 @@ class Logger {
 public:
 
     Logger() {
-        filename = Config::config().get("log-file");
+        filename = Config::config("log-file");
     }
 
     static Logger& log() {

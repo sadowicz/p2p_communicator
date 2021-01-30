@@ -25,12 +25,17 @@ public:
         return configuration;
     }
 
-    string& get(string& key);
-    string& get(const char* key);
-    void set(string key, string value);
+    static string& config(const char* key) {
+        return Config::config()[key];
+    }
+
     void save();
 
     bool debugMode() {return isDebugMode;}
+
+    string& operator[](const char* key){
+        return values[key];
+    }
 
 private:
     bool isDebugMode;

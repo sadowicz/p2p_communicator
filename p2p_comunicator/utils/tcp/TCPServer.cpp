@@ -1,36 +1,36 @@
 #include <tcp/TCPServer.h>
 
-TCPServer::TCPServer() {
+TCPServer::TCPServer(short port) {
     this->server = new QTcpServer(this);
-    this->server->listen(QHostAddress::Any, std::stoi(Config::config().get("port")));
-    connect(this->server, SIGNAL(newConnection()), this, SLOT(onAcceptConnection()));
+    this->server->listen(QHostAddress::Any, port);
+    Logger::log().info("Server listening on port " + std::to_string(port));
+
+    connect(this->server, SIGNAL(newConnection()), SLOT(onAcceptConnection()));
 }
 
 void TCPServer::onAcceptConnection() {
     while (server->hasPendingConnections()) {
-        Storage& storage = Storage::storage();
         QTcpSocket* connection = this->server->nextPendingConnection();
         std::string address = connection->peerAddress().toString().toStdString();
+        short peerPort = connection->peerPort();
 
-        if (!storage.contactExists(address)) {
-            storage.addContact(Contact(address, address, std::stoi(Config::config().get("port"))));
-        }
+        Logger::log().debug("Server accepting connection from: " + address);
 
+        clientIPs[connection] = address;
 
-        Contact* contact = storage.getContact(address);
-        contacts[connection] = contact;
-
-        connect(connection, SIGNAL(onReadyRead()), SLOT(onReadyRead()));
+        connect(connection, SIGNAL(readyRead()), SLOT(onReadyRead()));
         connect(connection, SIGNAL(disconnected()), SLOT(onDisconnected()));
 
-        emit connected(contact);
+        emit connected(address, peerPort);
     }
 }
 
 void TCPServer::onDisconnected() {
     QTcpSocket* socket = (QTcpSocket*) sender();
-    Contact* contact = contacts[socket];
-    emit disconnected(contact);
+    string ip = clientIPs[socket];
+    Logger::log().debug("Server disconnected from: " + ip);
+
+    emit disconnected(ip);
 }
 
 void TCPServer::onReadyRead() {
@@ -43,8 +43,10 @@ void TCPServer::onReadyRead() {
         content.append(socket->readAll().toStdString());
     }
 
-    Contact* contact = contacts[socket];
-    emit recieved(contact, TCPPacket::decode(content));
+    string ip = clientIPs[socket];
+    Logger::log().debug("Server recieved a message from: " + ip);
+
+    emit recieved(ip, TCPPacket::decode(content));
 }
 
 

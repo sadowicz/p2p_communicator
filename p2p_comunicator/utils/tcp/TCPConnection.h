@@ -17,22 +17,22 @@ class TCPConnection : public QObject {
     Q_OBJECT
 
 public:
-    TCPConnection() = default;
-    static void init();
-    static TCPConnection* get() {return TCPConnection::connection;}
+    TCPConnection();
+    TCPClient* registerClient(string ip, short port);
+    void startServer(short port);
 
 private:
-    static TCPConnection* connection;
     TCPServer* server;
     unordered_map<string, TCPClient*> clients;
 
 signals:
-    void recieved(Contact*, TCPPacket);
-    void connected(Contact*);
-    void disconnected(Contact*);
-    void sendingError(Contact*, TCPException);
+    void recieved(string, TCPPacket);
+    void connected(string, short);
+    void disconnected(string);
+    void sendingError(string, TCPException);
 
 public slots:
+    void closeConnection(string& ip);
     void reconnect(string& ip);
     void send(string& ip, string& content);
 

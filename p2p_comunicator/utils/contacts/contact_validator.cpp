@@ -1,5 +1,7 @@
 #include "contact_validator.h"
 
+using namespace contacts;
+
 QString ContactValidator::headerErrMsg = "Unable to add new contact.\n";
 QString ContactValidator::nameErrMsg = "\nInvalid contact name format.";
 QString ContactValidator::IPErrMsg = "\nInvalid IP address format.";
@@ -13,7 +15,7 @@ ContactValidator::ContactValidator()
 }
 
 bool ContactValidator::validateContactForm(QString name, QString ip, QString port,
-                                           std::unordered_map<std::string, Contact>* contacts)
+                                           std::unordered_map<std::string, Contact*>& contacts)
 {
     validateName(name);
     validateIP(ip);
@@ -50,13 +52,13 @@ void ContactValidator::validatePort(QString port)
     if(!isValidPort) _validationErrMsg += ContactValidator::portErrMsg;
 }
 
-void ContactValidator::validateUnique(QString name, QString ip, std::unordered_map<std::string, Contact>* contacts)
+void ContactValidator::validateUnique(QString name, QString ip, std::unordered_map<std::string, Contact*>& contacts)
 {   
-    if(contacts->find(ip.toStdString()) == contacts->end())
+    if(contacts.find(ip.toStdString()) == contacts.end())
     {
-        for(auto& contact : *contacts)
+        for(auto& contact : contacts)
         {
-            if(contact.second.getName().c_str() == name)
+            if(contact.second->getName().c_str() == name)
             {
                 _validationErrMsg += ContactValidator::uniqNameErrMsg;
                 return;

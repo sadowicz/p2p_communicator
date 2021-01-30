@@ -8,6 +8,8 @@
 #include <contacts/Storage.h>
 #include <ui_add_contact_window.h>
 
+using namespace contacts;
+
 namespace Ui {
 class AddContactWindow;
 }
@@ -25,7 +27,7 @@ private:
     ContactValidator* validator;
 
 signals:
-    void contactAddSuccess(std::string ip);
+    void contactAddSuccess(Contact*);
     void contactAddCancel();
     void contactAddFailure(QString errorMessage);
 

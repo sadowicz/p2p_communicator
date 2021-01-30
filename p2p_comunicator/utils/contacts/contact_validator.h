@@ -7,6 +7,8 @@
 #include "Storage.h"
 #include "Contact.h"
 
+namespace contacts {
+
 class ContactValidator
 {
 public:
@@ -14,7 +16,7 @@ public:
     ~ContactValidator() = default;
 
     bool validateContactForm(QString name, QString ip, QString port,
-                             std::unordered_map<std::string, Contact>* contacts);
+                             std::unordered_map<std::string, Contact*>& contacts);
     QString validationErrMsg() { return _validationErrMsg; }
 
 private:
@@ -35,7 +37,11 @@ private:
     void validateName(QString name);
     void validateIP(QString ip);
     void validatePort(QString port);
-    void validateUnique(QString name, QString ip, std::unordered_map<std::string, Contact>* contacts);
+    void validateUnique(QString name, QString ip, std::unordered_map<std::string, Contact*>& contacts);
 };
 
+
+}
 #endif // CONTACTVALIDATOR_H
+
+
