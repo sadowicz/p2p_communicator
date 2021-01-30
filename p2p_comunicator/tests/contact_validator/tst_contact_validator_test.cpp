@@ -53,7 +53,7 @@ void ContactValidatorTest::contactValidatorIsCreateable()
 void ContactValidatorTest::constructorSetsErrMsgHeader()
 {
     ContactValidator validator{};
-    QCOMPARE(validator.validationErrMsg(), QString("Unable to add new contact.\n"));
+    QCOMPARE(validator.validationErrMsg(), QString("Unable to submit contact.\n"));
 }
 
 void ContactValidatorTest::emptyFiledReturnFalse_data()
@@ -237,21 +237,21 @@ void ContactValidatorTest::validationErrMsgReturnsErrorInfo_data()
     QTest::addColumn<QString>("msg");
 
     QTest::newRow("all invalid") << QString("") << QString("") << QString("")
-                                 << "Unable to add new contact.\n\nInvalid contact name format.\nInvalid IP address format.\nInvalid port format.";
+                                 << "Unable to submit contact.\n\nInvalid contact name format.\nInvalid IP address format.\nInvalid port format.";
 
     QTest::newRow("ip, port invalid") << QString("abc") << QString("") << QString("")
-                                      << "Unable to add new contact.\n\nInvalid IP address format.\nInvalid port format.";
+                                      << "Unable to submit contact.\n\nInvalid IP address format.\nInvalid port format.";
     QTest::newRow("name, port invalid") << QString("") << QString("1.1.1.1") << QString("")
-                                        << "Unable to add new contact.\n\nInvalid contact name format.\nInvalid port format.";
+                                        << "Unable to submit contact.\n\nInvalid contact name format.\nInvalid port format.";
     QTest::newRow("name, ip invalid") << QString("") << QString("") << QString("1234")
-                                      << "Unable to add new contact.\n\nInvalid contact name format.\nInvalid IP address format.";
+                                      << "Unable to submit contact.\n\nInvalid contact name format.\nInvalid IP address format.";
 
     QTest::newRow("port invalid") << QString("abc") << QString("1.1.1.1") << QString("")
-                                  << "Unable to add new contact.\n\nInvalid port format.";
+                                  << "Unable to submit contact.\n\nInvalid port format.";
     QTest::newRow("name invalid") << QString("") << QString("1.1.1.1") << QString("1234")
-                                  << "Unable to add new contact.\n\nInvalid contact name format.";
+                                  << "Unable to submit contact.\n\nInvalid contact name format.";
     QTest::newRow("ip invalid") << QString("abc") << QString("") << QString("1234")
-                                << "Unable to add new contact.\n\nInvalid IP address format.";
+                                << "Unable to submit contact.\n\nInvalid IP address format.";
 }
 
 void ContactValidatorTest::validationErrMsgReturnsErrorInfo()
@@ -277,7 +277,7 @@ void ContactValidatorTest::validationErrMsgReturnsIPUniquenessErrorInfo()
     contacts.insert({"127.126.1.1", &added});
 
     validator.validateContactForm(QString("Joe Doe"), QString("127.126.1.1"), QString("1111"), contacts);
-    QCOMPARE(validator.validationErrMsg(), "Unable to add new contact.\n\nIP occupied by existing contact.");
+    QCOMPARE(validator.validationErrMsg(), "Unable to submit contact.\n\nIP occupied by existing contact.");
 }
 
 void ContactValidatorTest::validationErrMsgReturnsNameUniquenessErrorInfo()
@@ -289,10 +289,10 @@ void ContactValidatorTest::validationErrMsgReturnsNameUniquenessErrorInfo()
     contacts.insert({"127.126.1.1", &added});
 
     validator1.validateContactForm(QString("John Smith"), QString("128.126.1.1"), QString("1111"), contacts);
-    QCOMPARE(validator1.validationErrMsg(), "Unable to add new contact.\n\nContact name already exists.");
+    QCOMPARE(validator1.validationErrMsg(), "Unable to submit contact.\n\nContact name already exists.");
 
     validator2.validateContactForm(QString("John Smith"), QString("1111"), contacts);
-    QCOMPARE(validator2.validationErrMsg(), "Unable to add new contact.\n\nContact name already exists.");
+    QCOMPARE(validator2.validationErrMsg(), "Unable to submit contact.\n\nContact name already exists.");
 }
 
 QTEST_APPLESS_MAIN(ContactValidatorTest)
