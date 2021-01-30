@@ -29,6 +29,10 @@ private slots:
     void portOutOfRangeReturnFalse();
     void nonNumericPortReturnFalse();
 
+    void uniqueNameAndIPReturnTrue();
+    void notUniqueNameReturnFalse();
+    void notUniqueIPReturnFalse();
+
     void validationErrMsgReturnsErrorInfo_data();
     void validationErrMsgReturnsErrorInfo();
 };
@@ -154,6 +158,39 @@ void ContactValidatorTest::nonNumericPortReturnFalse()
     std::unordered_map<std::string, Contact> contacts{};
 
     QCOMPARE(validator.validateContactForm(QString("Joe Doe"), QString("127.0.0.1"), QString("abcd"), &contacts), false);
+}
+
+void ContactValidatorTest::uniqueNameAndIPReturnTrue()
+{
+    ContactValidator validator{};
+    std::unordered_map<std::string, Contact> contacts{};
+
+    QCOMPARE(validator.validateContactForm(QString("John Smith"), QString("127.126.1.1"), QString("1234"), &contacts), true);
+
+    Contact added{"John Smith", "127.126.1.1", 1234};
+    contacts.insert({"127.126.1.1", added});
+
+    QCOMPARE(validator.validateContactForm(QString("Joe Doe"), QString("128.121.1.1"), QString("1234"), &contacts), true);
+}
+
+void ContactValidatorTest::notUniqueNameReturnFalse()
+{
+    ContactValidator validator{};
+    std::unordered_map<std::string, Contact> contacts{};
+    Contact added{"John Smith", "127.126.1.1", 1234};
+    contacts.insert({"127.126.1.1", added});
+
+    QCOMPARE(validator.validateContactForm(QString("John Smith"), QString("128.121.1.1"), QString("1234"), &contacts), false);
+}
+
+void ContactValidatorTest::notUniqueIPReturnFalse()
+{
+    ContactValidator validator{};
+    std::unordered_map<std::string, Contact> contacts{};
+    Contact added{"John Smith", "127.126.1.1", 1234};
+    contacts.insert({"127.126.1.1", added});
+
+    QCOMPARE(validator.validateContactForm(QString("Joe Doe"), QString("127.126.1.1"), QString("1234"), &contacts), false);
 }
 
 void ContactValidatorTest::validationErrMsgReturnsErrorInfo_data()
