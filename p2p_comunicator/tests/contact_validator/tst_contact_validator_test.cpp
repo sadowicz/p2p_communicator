@@ -89,28 +89,39 @@ void ContactValidatorTest::emptyFiledReturnFalse()
 
 void ContactValidatorTest::allFieldsValidReturnTrue()
 {
-    ContactValidator validator{};
+    ContactValidator validator1{};
+    ContactValidator validator2{};
+
     std::unordered_map<std::string, Contact*> contacts{};
 
-    QCOMPARE(validator.validateContactForm(QString("Joe Doe"), QString("127.0.0.1"), QString("1111"), contacts), true);
+    QCOMPARE(validator1.validateContactForm(QString("Joe Doe"), QString("127.0.0.1"), QString("1111"), contacts), true);
+    QCOMPARE(validator2.validateContactForm(QString("Joe Doe"), QString("1111"), contacts), true);
 }
 
 void ContactValidatorTest::nameShorterThan25ReturnTrue()
 {
-    ContactValidator validator{};
+    ContactValidator validator1{};
+    ContactValidator validator2{};
+
     std::unordered_map<std::string, Contact*> contacts{};
     QString name = "a";
 
     for(int i = 1; i <= 25; i++, name += "a")
-        QCOMPARE(validator.validateContactForm(name, QString("127.0.0.1"), QString("1111"), contacts), true);
+    {
+        QCOMPARE(validator1.validateContactForm(name, QString("127.0.0.1"), QString("1111"), contacts), true);
+        QCOMPARE(validator2.validateContactForm(name, QString("1111"), contacts), true);
+    }
 }
 
 void ContactValidatorTest::nameLongerThan25ReturnFalse()
 {
-    ContactValidator validator{};
+    ContactValidator validator1{};
+    ContactValidator validator2{};
     std::unordered_map<std::string, Contact*> contacts{};
 
-    QCOMPARE(validator.validateContactForm(QString("aaaaaaaaaaaaaaaaaaaaaaaaaaa"), QString("127.0.0.1"), QString("1111"), contacts), false);
+    QCOMPARE(validator1.validateContactForm(QString("aaaaaaaaaaaaaaaaaaaaaaaaaaa"), QString("127.0.0.1"), QString("1111"), contacts), false);
+    QCOMPARE(validator2.validateContactForm(QString("aaaaaaaaaaaaaaaaaaaaaaaaaaa"), QString("1111"), contacts), false);
+
 }
 
 void ContactValidatorTest::ipInvalidFormatReturnFalse_data()
@@ -138,53 +149,74 @@ void ContactValidatorTest::ipInvalidFormatReturnFalse()
 
 void ContactValidatorTest::portInRangeReturnTrue()
 {
-    ContactValidator validator{};
+    ContactValidator validator1{};
+    ContactValidator validator2{};
     std::unordered_map<std::string, Contact*> contacts{};
 
-    QCOMPARE(validator.validateContactForm(QString("Joe Doe"), QString("127.0.0.1"), QString("0"), contacts), true);
-    QCOMPARE(validator.validateContactForm(QString("Joe Doe"), QString("127.0.0.1"), QString("1234"), contacts), true);
-    QCOMPARE(validator.validateContactForm(QString("Joe Doe"), QString("127.0.0.1"), QString("27895"), contacts), true);
-    QCOMPARE(validator.validateContactForm(QString("Joe Doe"), QString("127.0.0.1"), QString("65535"), contacts), true);
+    QCOMPARE(validator1.validateContactForm(QString("Joe Doe"), QString("127.0.0.1"), QString("0"), contacts), true);
+    QCOMPARE(validator2.validateContactForm(QString("Joe Doe"), QString("0"), contacts), true);
+
+    QCOMPARE(validator1.validateContactForm(QString("Joe Doe"), QString("127.0.0.1"), QString("1234"), contacts), true);
+    QCOMPARE(validator2.validateContactForm(QString("Joe Doe"), QString("1234"), contacts), true);
+
+    QCOMPARE(validator1.validateContactForm(QString("Joe Doe"), QString("127.0.0.1"), QString("27895"), contacts), true);
+    QCOMPARE(validator2.validateContactForm(QString("Joe Doe"), QString("27895"), contacts), true);
+
+    QCOMPARE(validator1.validateContactForm(QString("Joe Doe"), QString("127.0.0.1"), QString("65535"), contacts), true);
+    QCOMPARE(validator2.validateContactForm(QString("Joe Doe"), QString("65535"), contacts), true);
 }
 
 void ContactValidatorTest::portOutOfRangeReturnFalse()
 {
-    ContactValidator validator{};
+    ContactValidator validator1{};
+    ContactValidator validator2{};
+
     std::unordered_map<std::string, Contact*> contacts{};
 
-    QCOMPARE(validator.validateContactForm(QString("Joe Doe"), QString("127.0.0.1"), QString("-1"), contacts), false);
-    QCOMPARE(validator.validateContactForm(QString("Joe Doe"), QString("127.0.0.1"), QString("65536"), contacts), false);
+    QCOMPARE(validator1.validateContactForm(QString("Joe Doe"), QString("127.0.0.1"), QString("-1"), contacts), false);
+    QCOMPARE(validator2.validateContactForm(QString("Joe Doe"), QString("-1"), contacts), false);
+
+    QCOMPARE(validator1.validateContactForm(QString("Joe Doe"), QString("127.0.0.1"), QString("65536"), contacts), false);
+    QCOMPARE(validator2.validateContactForm(QString("Joe Doe"), QString("65536"), contacts), false);
 }
 
 void ContactValidatorTest::nonNumericPortReturnFalse()
 {
-    ContactValidator validator{};
+    ContactValidator validator1{};
+    ContactValidator validator2{};
     std::unordered_map<std::string, Contact*> contacts{};
 
-    QCOMPARE(validator.validateContactForm(QString("Joe Doe"), QString("127.0.0.1"), QString("abcd"), contacts), false);
+    QCOMPARE(validator1.validateContactForm(QString("Joe Doe"), QString("127.0.0.1"), QString("abcd"), contacts), false);
+    QCOMPARE(validator2.validateContactForm(QString("Joe Doe"), QString("abcd"), contacts), false);
+
 }
 
 void ContactValidatorTest::uniqueNameAndIPReturnTrue()
 {
-    ContactValidator validator{};
+    ContactValidator validator1{};
+    ContactValidator validator2{};
     std::unordered_map<std::string, Contact*> contacts{};
 
-    QCOMPARE(validator.validateContactForm(QString("John Smith"), QString("127.126.1.1"), QString("1234"), contacts), true);
+    QCOMPARE(validator1.validateContactForm(QString("John Smith"), QString("127.126.1.1"), QString("1234"), contacts), true);
+    QCOMPARE(validator2.validateContactForm(QString("John Smith"), QString("1234"), contacts), true);
 
     Contact added{"John Smith", "127.126.1.1", 1234};
     contacts.insert({"127.126.1.1", &added});
 
-    QCOMPARE(validator.validateContactForm(QString("Joe Doe"), QString("128.121.1.1"), QString("1234"), contacts), true);
+    QCOMPARE(validator1.validateContactForm(QString("Joe Doe"), QString("128.121.1.1"), QString("1234"), contacts), true);
+    QCOMPARE(validator2.validateContactForm(QString("Joe Doe"), QString("1234"), contacts), true);
 }
 
 void ContactValidatorTest::notUniqueNameReturnFalse()
 {
-    ContactValidator validator{};
+    ContactValidator validator1{};
+    ContactValidator validator2{};
     std::unordered_map<std::string, Contact*> contacts{};
     Contact added{"John Smith", "127.126.1.1", 1234};
     contacts.insert({"127.126.1.1", &added});
 
-    QCOMPARE(validator.validateContactForm(QString("John Smith"), QString("128.121.1.1"), QString("1234"), contacts), false);
+    QCOMPARE(validator1.validateContactForm(QString("John Smith"), QString("128.121.1.1"), QString("1234"), contacts), false);
+    QCOMPARE(validator2.validateContactForm(QString("John Smith"), QString("1234"), contacts), false);
 }
 
 void ContactValidatorTest::notUniqueIPReturnFalse()
@@ -250,13 +282,17 @@ void ContactValidatorTest::validationErrMsgReturnsIPUniquenessErrorInfo()
 
 void ContactValidatorTest::validationErrMsgReturnsNameUniquenessErrorInfo()
 {
-    ContactValidator validator{};
+    ContactValidator validator1{};
+    ContactValidator validator2{};
     std::unordered_map<std::string, Contact*> contacts{};
     Contact added{"John Smith", "127.126.1.1", 1234};
     contacts.insert({"127.126.1.1", &added});
 
-    validator.validateContactForm(QString("John Smith"), QString("128.126.1.1"), QString("1111"), contacts);
-    QCOMPARE(validator.validationErrMsg(), "Unable to add new contact.\n\nContact name already exists.");
+    validator1.validateContactForm(QString("John Smith"), QString("128.126.1.1"), QString("1111"), contacts);
+    QCOMPARE(validator1.validationErrMsg(), "Unable to add new contact.\n\nContact name already exists.");
+
+    validator2.validateContactForm(QString("John Smith"), QString("1111"), contacts);
+    QCOMPARE(validator2.validationErrMsg(), "Unable to add new contact.\n\nContact name already exists.");
 }
 
 QTEST_APPLESS_MAIN(ContactValidatorTest)
