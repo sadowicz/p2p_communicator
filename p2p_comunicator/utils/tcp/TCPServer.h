@@ -18,11 +18,11 @@ class TCPServer : public QObject {
     Q_OBJECT
 
 public:
-    TCPServer();
+    TCPServer(short port);
 
 private:
     QTcpServer* server;
-    unordered_map<QTcpSocket*, Contact*> contacts;
+    unordered_map<QTcpSocket*, string> clientIPs;
 
 private slots:
     void onAcceptConnection();
@@ -30,9 +30,9 @@ private slots:
     void onDisconnected();
 
 signals:
-    void recieved(Contact*, TCPPacket);
-    void connected(Contact*);
-    void disconnected(Contact*);
+    void recieved(string, TCPPacket);
+    void connected(string, short);
+    void disconnected(string);
 
 };
 

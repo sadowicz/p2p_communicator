@@ -15,6 +15,7 @@
 #include "ui_mainwindow.h"
 
 #include <contacts/Storage.h>
+#include <contacts/ContactController.h>
 #include <tcp/TCPConnection.h>
 
 QT_BEGIN_NAMESPACE
@@ -41,7 +42,8 @@ signals:
 
 private slots:
     void on_pbNewContact_clicked();
-    void on_contactAddSuccess(std::string ip);
+    void on_contactAddSuccess(Contact* contact);
+    void on_contactEditSuccess(Contact* contact);
     void on_contactAddCancel();
     void on_error(QString errorMessage);
     void on_errorRead();
@@ -70,6 +72,8 @@ private:
     QState* Connected;
     QState* ValidateSendable;
     QState* Sendable;
+
+    ContactController* contactController;
 
     std::unordered_map<std::string, Contact*> contacts;
     Contact* activeContact;

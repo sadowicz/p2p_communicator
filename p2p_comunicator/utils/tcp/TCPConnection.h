@@ -18,33 +18,22 @@ class TCPConnection : public QObject {
 
 public:
     TCPConnection();
-    static TCPConnection& get();
-    TCPClient* registerClient(Contact* contact);
+    TCPClient* registerClient(string ip, short port);
+    void startServer(short port);
 
 private:
     TCPServer* server;
     unordered_map<string, TCPClient*> clients;
 
 signals:
-    void recieved(Contact*, TCPPacket);
-    void connected(Contact*);
-    void disconnected(Contact*);
-    void sendingError(Contact*, TCPException);
+    void recieved(string, TCPPacket);
+    void connected(string, short);
+    void disconnected(string);
+    void sendingError(string, TCPException);
 
 public slots:
     void closeConnection(string& ip);
     void reconnect(string& ip);
     void send(string& ip, string& content);
-
-private slots:
-    void onConnect(Contact* contact) {
-        contact->setActiveState(true);
-        emit connected(contact);
-    }
-
-    void onDisconnect(Contact* contact) {
-        contact->setActiveState(false);
-        emit disconnected(contact);
-    }
 
 };

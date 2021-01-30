@@ -27,7 +27,7 @@ private:
     ContactValidator* validator;
 
 signals:
-    void contactAddSuccess(std::string ip);
+    void contactAddSuccess(Contact*);
     void contactAddCancel();
     void contactAddFailure(QString errorMessage);
 

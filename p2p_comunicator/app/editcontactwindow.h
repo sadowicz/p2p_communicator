@@ -28,7 +28,7 @@ private:
     int port;
 
 signals:
-    void contactAddSuccess(std::string ip);
+    void contactAddSuccess(Contact* editedContact);
     void contactAddCancel();
     void contactAddFailure(QString errorMessage);
 private slots:

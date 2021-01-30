@@ -90,19 +90,7 @@ void Storage::clear(){
 }
 
 void Storage::deleteContact(std::string& ip) {
+    delete contacts[ip];
     contacts.erase(ip);
     save();
-}
-
-void Storage::editContact(std::string ip, std::string newName, unsigned newPort) {
-    Contact* oldContact = getContact(ip);
-    Contact* editedContact = new Contact(newName, ip, newPort);
-
-    std::vector<Message> history = oldContact->getHistory();
-
-    for(Message entry : history)
-        editedContact->addToHistory(entry);
-
-    deleteContact(oldContact->getAddress());
-    addContact(editedContact);
 }

@@ -1,29 +1,23 @@
 #include <tcp/TCPConnection.h>
 
-TCPConnection& TCPConnection::get() {
-    static TCPConnection connection{};
-    return connection;
+
+void TCPConnection::startServer(short port) {
+    server = new TCPServer(port);
+
+    connect(server, SIGNAL(connected(string, short)), SIGNAL(connected(string, short)));
+    connect(server, SIGNAL(disconnected(string)), SIGNAL(disconnected(string)));
+    connect(server, SIGNAL(recieved(string, TCPPacket)), SIGNAL(recieved(string, TCPPacket)));
 }
 
-TCPConnection::TCPConnection() {
-    server = new TCPServer();
+TCPConnection::TCPConnection() {}
 
-    connect(server, SIGNAL(connected(Contact*)), SLOT(onConnect(Contact*)));
-    connect(server, SIGNAL(disconnected(Contact*)), SLOT(onDisconnect(Contact*)));
-    connect(server, SIGNAL(recieved(Contact*, TCPPacket)), SIGNAL(recieved(Contact*, TCPPacket)));
+TCPClient* TCPConnection::registerClient(string ip, short port) {
+    TCPClient* client = new TCPClient(ip, port);
 
-    for (auto& contact : Storage::storage().getContacts()) {
-        registerClient(contact.second)->tryConnect();
-    }
-}
-
-TCPClient* TCPConnection::registerClient(Contact* contact) {
-    TCPClient* client = new TCPClient(contact);
-
-    clients[contact->getAddress()] = client;
-    connect(client, SIGNAL(failed(Contact*, TCPException)), SIGNAL(sendingError(Contact*, TCPException)));
-    connect(client, SIGNAL(connected(Contact*)), SLOT(onConnect(Contact*)));
-    connect(client, SIGNAL(disconnected(Contact*)), SLOT(onDisconnect(Contact*)));
+    clients[ip] = client;
+    connect(client, SIGNAL(failed(string, TCPException)), SIGNAL(sendingError(string, TCPException)));
+    connect(client, SIGNAL(connected(string, short)), SIGNAL(connected(string, short)));
+    connect(client, SIGNAL(disconnected(string)), SIGNAL(disconnected(string)));
 
     return client;
 }
