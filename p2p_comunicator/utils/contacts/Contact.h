@@ -27,6 +27,7 @@ public:
     std::string& getAddress();
     int getPort();
     bool isActive();
+    void setActiveState(bool state);
 
 private:
     std::string name;

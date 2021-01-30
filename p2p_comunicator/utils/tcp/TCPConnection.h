@@ -36,4 +36,15 @@ public slots:
     void reconnect(string& ip);
     void send(string& ip, string& content);
 
+private slots:
+    void onConnect(Contact* contact) {
+        contact->setActiveState(true);
+        emit connected(contact);
+    }
+
+    void onDisconnect(Contact* contact) {
+        contact->setActiveState(false);
+        emit disconnected(contact);
+    }
+
 };

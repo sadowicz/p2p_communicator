@@ -53,6 +53,10 @@ bool Contact::isActive() {
     return this->active;
 }
 
+void Contact::setActiveState(bool state) {
+    this->active = state;
+}
+
 
 
 
