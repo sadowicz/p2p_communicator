@@ -48,8 +48,8 @@ void ContactController::editContact(Contact* editedContact) {
     }
 }
 
-void ContactController::send(Contact* contact, string& message) {
-    connection->send(contact->getAddress(), message);
+void ContactController::send(string& ip, string& message) {
+    connection->send(ip, message);
 }
 
 void ContactController::onConnect(string ip, short port) {
