@@ -4,6 +4,8 @@ QString ContactValidator::headerErrMsg = "Unable to add new contact.\n";
 QString ContactValidator::nameErrMsg = "\nInvalid contact name format.";
 QString ContactValidator::IPErrMsg = "\nInvalid IP address format.";
 QString ContactValidator::portErrMsg = "\nInvalid port format.";
+QString ContactValidator::uniqNameErrMsg = "\nContact name already exists.";
+QString ContactValidator::uniqIPErrMsg = "\nIP occupied by existing contact.";
 
 ContactValidator::ContactValidator()
 {
@@ -44,4 +46,23 @@ void ContactValidator::validatePort(QString port)
                    port.toInt() <= 65535);
 
     if(!isValidPort) _validationErrMsg += ContactValidator::portErrMsg;
+}
+
+void ContactValidator::validateUnique(QString name, QString ip, std::unordered_map<std::string, Contact>* contacts)
+{   
+    if(contacts->find(ip.toStdString()) == contacts->end())
+    {
+        for(auto& contact : *contacts)
+        {
+            if(contact.second.getName().c_str() == name)
+            {
+                _validationErrMsg += ContactValidator::uniqNameErrMsg;
+                return;
+            }
+        }
+
+        isUnique = true;
+    }
+    else
+        _validationErrMsg += ContactValidator::uniqIPErrMsg;
 }
