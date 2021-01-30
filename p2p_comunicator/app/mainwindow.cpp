@@ -237,3 +237,8 @@ void MainWindow::on_pbSettings_clicked()
     settingsWin = new SettingsWindow{this};
     settingsWin->show();
 }
+
+void MainWindow::on_pbSend_clicked() {
+    std::string packet = TCPPacket::encode(TCPPacket::PacketType::TEXT, "", ui->teSend->toPlainText().toStdString());
+    contactController->send(activeContact->getAddress(), packet);
+}

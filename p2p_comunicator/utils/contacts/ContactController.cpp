@@ -6,7 +6,8 @@ ContactController::ContactController(Logger& log) : log(log) {
     connection = new TCPConnection(log);
     connect(connection, SIGNAL(connected(string, short)), SLOT(onConnect(string,short)));
     connect(connection, SIGNAL(disconnected(string)), SLOT(onDisconnect(string)));
-    connect(connection, SIGNAL(recieved(string,TCPPacket)), SLOT(onRecieve(string,TCPPacket)));
+    connect(connection, SIGNAL(recieved(string, TCPPacket)), SLOT(onRecieve(string, TCPPacket)));
+    connect(connection, SIGNAL(sendingError(string, TCPException)), SLOT(onSendError(string, TCPException)));
 
     connection->startServer(std::stoi(Config::config("port")));
 
