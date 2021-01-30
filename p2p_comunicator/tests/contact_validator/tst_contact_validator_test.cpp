@@ -35,6 +35,8 @@ private slots:
 
     void validationErrMsgReturnsErrorInfo_data();
     void validationErrMsgReturnsErrorInfo();
+    void validationErrMsgReturnsIPUniquenessErrorInfo();
+    void validationErrMsgReturnsNameUniquenessErrorInfo();
 };
 
 ContactValidatorTest::ContactValidatorTest() {}
@@ -231,7 +233,28 @@ void ContactValidatorTest::validationErrMsgReturnsErrorInfo()
     validator.validateContactForm(name, ip, port, &contacts);
     QCOMPARE(validator.validationErrMsg(), msg);
 
-    // TODO error msg with reapeating data
+}
+
+void ContactValidatorTest::validationErrMsgReturnsIPUniquenessErrorInfo()
+{
+    ContactValidator validator{};
+    std::unordered_map<std::string, Contact> contacts{};
+    Contact added{"John Smith", "127.126.1.1", 1234};
+    contacts.insert({"127.126.1.1", added});
+
+    validator.validateContactForm(QString("Joe Doe"), QString("127.126.1.1"), QString("1111"), &contacts);
+    QCOMPARE(validator.validationErrMsg(), "Unable to add new contact.\n\nIP occupied by existing contact.");
+}
+
+void ContactValidatorTest::validationErrMsgReturnsNameUniquenessErrorInfo()
+{
+    ContactValidator validator{};
+    std::unordered_map<std::string, Contact> contacts{};
+    Contact added{"John Smith", "127.126.1.1", 1234};
+    contacts.insert({"127.126.1.1", added});
+
+    validator.validateContactForm(QString("John Smith"), QString("128.126.1.1"), QString("1111"), &contacts);
+    QCOMPARE(validator.validationErrMsg(), "Unable to add new contact.\n\nContact name already exists.");
 }
 
 QTEST_APPLESS_MAIN(ContactValidatorTest)
