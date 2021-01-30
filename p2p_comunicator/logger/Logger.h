@@ -8,6 +8,7 @@
 #include <exception>
 #include <stdexcept>
 
+
 class Logger {
 
 public:

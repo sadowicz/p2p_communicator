@@ -57,6 +57,8 @@ private slots:
     void on_pbEditContact_clicked();
     void on_pbSettings_clicked();
 
+    void on_pbSend_clicked();
+
 private:
     Ui::MainWindow *ui;
     AddContactWindow *addContactWin;

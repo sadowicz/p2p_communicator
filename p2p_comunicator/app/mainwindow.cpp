@@ -4,6 +4,8 @@
     - two more packet types FILE-REQUEST and NEW-CONTACT
     - state to locked after emieting error form constructor (loadContacts() method)
     - improve TCPPacket encoding: [packetType:1][filenameLength:1][filename:filenameLength][contentLength:4][content:contentLength]
+    - test if sending messages works
+    - implement sending files
 */
 
 MainWindow::MainWindow(QWidget *parent)
@@ -250,4 +252,9 @@ void MainWindow::on_pbSettings_clicked()
 {
     settingsWin = new SettingsWindow{this};
     settingsWin->show();
+}
+
+void MainWindow::on_pbSend_clicked() {
+    std::string packet = TCPPacket::encode(TCPPacket::PacketType::TEXT, "", ui->teSend->toPlainText().toStdString());
+    contactController->send(activeContact->getAddress(), packet);
 }
