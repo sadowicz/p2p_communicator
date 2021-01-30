@@ -10,6 +10,8 @@
 
 #include <contacts/Message.h>
 
+using namespace contacts;
+
 class MessageListDelegate : public QStyledItemDelegate
 {
 

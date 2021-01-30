@@ -13,7 +13,7 @@ Message::Message(TCPPacket packet, QObject* parent)
     this->filename = packet.getFilename();
 }
 
-Message::Message(QJsonObject& object QObject* parent)
+Message::Message(QJsonObject& object, QObject* parent)
         : QObject(parent) {
     log = Logger(Config::config("log-file"), Config::config().debugMode());
     this->type = object["type"].toString().toStdString() == "TEXT"

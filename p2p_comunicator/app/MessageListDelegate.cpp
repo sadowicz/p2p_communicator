@@ -83,7 +83,6 @@ void MessageListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 
 void MessageListDelegate::paintMessage(const Message* message, QPainter* painter, const QStyleOptionViewItem &option) const{
 
-
     QString content = QString::fromStdString(message->getContent());
     QString sender = QString::fromStdString(message->getAddress());
 

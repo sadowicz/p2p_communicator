@@ -57,11 +57,12 @@ private:
     Type type;
     string content;
     string filename;
-    string* address;
+    string address;
     Logger log;
 
 };
 
+
 }
 
-Q_DECLARE_METATYPE(Message*)
+Q_DECLARE_METATYPE(contacts::Message*)

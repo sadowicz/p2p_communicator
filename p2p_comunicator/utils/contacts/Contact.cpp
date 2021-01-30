@@ -72,7 +72,6 @@ QVariant Contact::data(const QModelIndex &index, int role) const{
    // if(index.isValid())
      //   return QVariant();
 
-
     if(role != Qt::DisplayRole)
         return QVariant();
 

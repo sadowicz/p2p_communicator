@@ -32,7 +32,6 @@ HEADERS += \
     contacts/Message.h \
     config/Config.h \
     IOException.h \
-    util/util.h \
     contacts/ContactController.h
 
 # Default rules for deployment.
