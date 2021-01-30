@@ -21,14 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
     loadContacts();
     loadListItems();
 
-    // initialization
-    TCPConnection::get();
-
-    // connect(this, SIGNAL(sendMsg(string&, string&)), TCPConnection::get(), SLOT(send(string&, string&)));
-    //  sending example:
-    // emit sendMsg("ip", "content");
-
-    // connect(TCPConnection::get(), SIGNAL(sendingError()), this, SLOT(...));
+    contactController = new ContactController();
 }
 
 MainWindow::~MainWindow()
@@ -154,12 +147,22 @@ void MainWindow::on_pbNewContact_clicked()
     addContactWin->show();
 }
 
-void MainWindow::on_contactAddSuccess(std::string ip) {
-    // try connecting to the new contact
-    Contact* newContact = Storage::storage().getContact(ip);
+void MainWindow::on_contactEditSuccess(Contact* contact) {
+    // edit contact
+    contactController->editContact(contact);
 
-    TCPConnection::get().registerClient(newContact)->tryConnect();
+    // refresh GUI
+    refreshContactsList();
 
+    emit contactAdded();
+}
+
+void MainWindow::on_contactAddSuccess(Contact* newContact) {
+    // add contact to storage and try to connect to it
+    contactController->addContact(newContact);
+    contactController->tryConnect(newContact->getAddress());
+
+    // refresh gui list
     refreshContactsList();
 
     emit contactAdded();
@@ -204,16 +207,16 @@ void MainWindow::on_lwContacts_itemClicked(QListWidgetItem *item)
 
     // try connecting to contact if it's inactive
     if (!activeContact->isActive()) {
-        TCPConnection::get().reconnect(activeContact->getAddress());
+        contactController->tryConnect(activeContact->getAddress());
     }
 }
 
 void MainWindow::on_pbDeleteContact_clicked()
 {
-    // close tcp connection
-    TCPConnection::get().closeConnection(activeContact->getAddress());
+    // remove contact from storage and close TCP/IP connection
+    contactController->removeContact(activeContact->getAddress());
 
-    Storage::storage().deleteContact(activeContact->getAddress());
+    // refresh GUI
     refreshContactsList();
 
     ui->pbDeleteContact->setEnabled(false);

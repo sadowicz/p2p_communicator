@@ -90,6 +90,7 @@ void Storage::clear(){
 }
 
 void Storage::deleteContact(std::string& ip) {
+    delete contacts[ip];
     contacts.erase(ip);
     save();
 }
@@ -100,9 +101,10 @@ void Storage::editContact(std::string ip, std::string newName, std::string newAd
 
     std::vector<Message> history = oldContact->getHistory();
 
-    for(Message entry : history)
-        editedContact->addToHistory(entry);
+    for(Message msg : history)
+        editedContact->addToHistory(msg);
 
+    // saves to file twice for no reason (?)
     deleteContact(oldContact->getAddress());
     addContact(editedContact);
 }

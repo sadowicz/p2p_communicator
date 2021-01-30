@@ -18,7 +18,7 @@ class TCPClient : public QObject {
 
     Q_OBJECT
 public:
-    TCPClient(Contact* contact);
+    TCPClient(string ip, short port);
 
     ~TCPClient() { delete socket; }
 
@@ -27,7 +27,8 @@ public:
     void forceDisconnect();
 
 private:
-    Contact* contact;
+    string ip;
+    short port;
     QTcpSocket* socket;
 
 private slots:
@@ -36,8 +37,8 @@ private slots:
     void onError(QAbstractSocket::SocketError e);
 
 signals:
-    void failed(Contact* contact, TCPException e);
-    void connected(Contact* contact);
-    void disconnected(Contact* contact);
+    void failed(string ip, TCPException e);
+    void connected(string ip, short port);
+    void disconnected(string ip);
 
 };
