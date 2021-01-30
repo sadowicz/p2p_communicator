@@ -11,12 +11,11 @@
 #include <settingswindow.h>
 #include <error_window.h>
 #include <config/Config.h>
-#include <logger/Logger.h>
+#include <Logger.h>
 #include "ui_mainwindow.h"
 
 #include <contacts/Storage.h>
 #include <contacts/ContactController.h>
-#include <tcp/TCPConnection.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -74,6 +73,7 @@ private:
     QState* Sendable;
 
     ContactController* contactController;
+    Logger log;
 
     std::unordered_map<std::string, Contact*> contacts;
     Contact* activeContact;

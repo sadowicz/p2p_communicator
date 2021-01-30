@@ -1,18 +1,15 @@
-#include <tcp/TCPConnection.h>
-
+#include <TCPConnection.h>
 
 void TCPConnection::startServer(short port) {
-    server = new TCPServer(port);
+    server = new TCPServer(log, port);
 
     connect(server, SIGNAL(connected(string, short)), SIGNAL(connected(string, short)));
     connect(server, SIGNAL(disconnected(string)), SIGNAL(disconnected(string)));
     connect(server, SIGNAL(recieved(string, TCPPacket)), SIGNAL(recieved(string, TCPPacket)));
 }
 
-TCPConnection::TCPConnection() {}
-
 TCPClient* TCPConnection::registerClient(string ip, short port) {
-    TCPClient* client = new TCPClient(ip, port);
+    TCPClient* client = new TCPClient(log, ip, port);
 
     clients[ip] = client;
     connect(client, SIGNAL(failed(string, TCPException)), SIGNAL(sendingError(string, TCPException)));

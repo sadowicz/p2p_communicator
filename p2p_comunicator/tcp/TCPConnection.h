@@ -5,10 +5,10 @@
 #include <unordered_map>
 #include <string>
 
-#include <tcp/TCPClient.h>
-#include <tcp/TCPServer.h>
-#include <tcp/TCPPacket.h>
-#include <logger/Logger.h>
+#include <TCPClient.h>
+#include <TCPServer.h>
+#include <TCPPacket.h>
+#include <Logger.h>
 
 using namespace std;
 
@@ -17,13 +17,14 @@ class TCPConnection : public QObject {
     Q_OBJECT
 
 public:
-    TCPConnection();
+    TCPConnection(Logger& log) : log(log) {}
     TCPClient* registerClient(string ip, short port);
     void startServer(short port);
 
 private:
     TCPServer* server;
     unordered_map<string, TCPClient*> clients;
+    Logger& log;
 
 signals:
     void recieved(string, TCPPacket);

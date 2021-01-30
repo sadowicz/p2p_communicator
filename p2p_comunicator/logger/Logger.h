@@ -1,27 +1,18 @@
 #pragma once
 
-#include <config/Config.h>
-#include <IOException.h>
-#include <util/strbuilder.h>
-
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <iomanip>
 #include <ctime>
+#include <exception>
+#include <stdexcept>
 
 class Logger {
 
 public:
-
-    Logger() {
-        filename = Config::config("log-file");
-    }
-
-    static Logger& log() {
-        static Logger logger{};
-        return logger;
-    }
+    Logger() {}
+    Logger(std::string& path, bool debugMode) : filename(path), debugMode(debugMode) {}
 
     void debug(std::string message);
     void info(std::string message);
@@ -31,6 +22,7 @@ public:
 
 private:
     std::string filename;
+    bool debugMode;
 
     enum LogType {
         DEBUG_TYPE, INFO_TYPE, ERROR_TYPE
