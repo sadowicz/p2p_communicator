@@ -12,13 +12,15 @@ ContactValidator::ContactValidator()
     _validationErrMsg = ContactValidator::headerErrMsg;
 }
 
-bool ContactValidator::validateContactForm(QString name, QString ip, QString port)
+bool ContactValidator::validateContactForm(QString name, QString ip, QString port,
+                                           std::unordered_map<std::string, Contact>* contacts)
 {
     validateName(name);
     validateIP(ip);
     validatePort(port);
+    validateUnique(name, ip, contacts);
 
-    return isValidName && isValidIP && isValidPort;
+    return isValidName && isValidIP && isValidPort && isUnique;
 }
 
 void ContactValidator::validateName(QString name)

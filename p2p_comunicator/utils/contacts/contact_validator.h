@@ -13,7 +13,8 @@ public:
     ContactValidator();
     ~ContactValidator() = default;
 
-    bool validateContactForm(QString name, QString ip, QString port);
+    bool validateContactForm(QString name, QString ip, QString port,
+                             std::unordered_map<std::string, Contact>* contacts);
     QString validationErrMsg() { return _validationErrMsg; }
 
 private:
