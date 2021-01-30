@@ -158,8 +158,7 @@ void MainWindow::on_contactAddSuccess(std::string ip) {
     // try connecting to the new contact
     Contact* newContact = Storage::storage().getContact(ip);
 
-    TCPConnection::get().registerClient(newContact);
-    TCPConnection::get().reconnect(ip);
+    TCPConnection::get().registerClient(newContact)->tryConnect();
 
     refreshContactsList();
 

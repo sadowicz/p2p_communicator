@@ -14,12 +14,11 @@ TCPConnection::TCPConnection() {
     connect(server, SIGNAL(recieved(Contact*, TCPPacket)), SIGNAL(recieved(Contact*, TCPPacket)));
 
     for (auto& contact : storage.getContacts()) {
-        TCPClient* newClient = addClient(contact.second);
-        newClient->tryConnect();
+        registerClient(contact.second)->tryConnect();
     }
 }
 
-TCPClient* TCPConnection::addClient(Contact* contact) {
+TCPClient* TCPConnection::registerClient(Contact* contact) {
     TCPClient* client = new TCPClient(contact);
 
     clients[contact->getAddress()] = client;
