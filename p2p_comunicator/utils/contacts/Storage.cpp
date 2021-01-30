@@ -85,7 +85,7 @@ void Storage::clear(){
     save();
 }
 
-void Storage::deleteContact(std::string& ip) {
+void Storage::deleteContact(const std::string& ip) {
     contacts.erase(ip);
     save();
 }

@@ -27,7 +27,8 @@ MainWindow::MainWindow(QWidget *parent)
     loadListItems();
 
     ui->msgListView->setItemDelegate(new MessageListDelegate);
-    ui->msgListView->setSelectionMode(QListView::NoSelection);
+
+
 
     TCPConnection::init();
     // connect(this, SIGNAL(sendMsg(string&, string&)), TCPConnection::get(), SLOT(send(string&, string&)));

@@ -59,6 +59,6 @@ void Message::save() {
     }
 }
 
-string Message::getTimestamp() {
+string Message::getTimestamp() const {
     return timestamp.toString().toStdString();
 }

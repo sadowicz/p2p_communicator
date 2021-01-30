@@ -28,9 +28,9 @@ public:
         return history;
     }
 
-    std::string& getName();
-    std::string& getAddress();
-    int getPort();
+    std::string getName() const;
+    std::string getAddress() const;
+    int getPort() const;
 
     // overrided model functions
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;

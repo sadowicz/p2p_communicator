@@ -36,15 +36,15 @@ void Contact::addToHistory(Message* message) {
     history.push_back(message);
 }
 
-std::string& Contact::getName() {
+std::string Contact::getName() const {
     return this->name;
 }
 
-std::string& Contact::getAddress() {
+std::string Contact::getAddress() const {
     return this->address;
 }
 
-int Contact::getPort() {
+int Contact::getPort()  const{
     return this->port;
 }
 

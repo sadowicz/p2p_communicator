@@ -3,8 +3,9 @@
 
 #include <QObject>
 #include <QStyledItemDelegate>
+#include <QApplication>
 #include <QPainter>
-#include <QPointer>
+#include <QFont>
 
 #include <contacts/Message.h>
 
@@ -19,9 +20,9 @@ public:
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
 private:
-
     QSize padding;
 
+    void paintMessage(const Message* message, QPainter* painter, const QStyleOptionViewItem &option) const;
 };
 
 #endif // MESSAGELISTDELEGATE_H

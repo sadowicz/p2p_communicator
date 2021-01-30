@@ -26,21 +26,21 @@ public:
     QJsonObject serialize();
     void downloadFile();
     void save();
-    string getTimestamp();
+    string getTimestamp() const;
 
-    string& getContent() {
+    string getContent() const {
         return content;
     }
 
-    string& getFilename() {
+    string getFilename() const {
         return filename;
     }
 
-    Type getType() {
+    Type getType() const {
         return type;
     }
 
-    string& getAddress() {
+    string getAddress() const {
         return address;
     }
 
