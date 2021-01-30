@@ -12,6 +12,8 @@ namespace contacts {
 class ContactValidator
 {
 public:
+    static const QString unchangedName;
+
     ContactValidator();
     ~ContactValidator() = default;
 
@@ -29,12 +31,12 @@ private:
 
     QString _validationErrMsg;
 
-    static QString headerErrMsg;
-    static QString nameErrMsg;
-    static QString IPErrMsg;
-    static QString portErrMsg;
-    static QString uniqNameErrMsg;
-    static QString uniqIPErrMsg;
+    static const QString headerErrMsg;
+    static const QString nameErrMsg;
+    static const QString IPErrMsg;
+    static const QString portErrMsg;
+    static const QString uniqNameErrMsg;
+    static const QString uniqIPErrMsg;
 
     void validateName(QString name);
     void validateIP(QString ip);

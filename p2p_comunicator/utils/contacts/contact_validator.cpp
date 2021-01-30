@@ -2,12 +2,14 @@
 
 using namespace contacts;
 
-QString ContactValidator::headerErrMsg = "Unable to add new contact.\n";
-QString ContactValidator::nameErrMsg = "\nInvalid contact name format.";
-QString ContactValidator::IPErrMsg = "\nInvalid IP address format.";
-QString ContactValidator::portErrMsg = "\nInvalid port format.";
-QString ContactValidator::uniqNameErrMsg = "\nContact name already exists.";
-QString ContactValidator::uniqIPErrMsg = "\nIP occupied by existing contact.";
+const QString ContactValidator::unchangedName = "\name";
+
+const QString ContactValidator::headerErrMsg = "Unable to submit contact.\n";
+const QString ContactValidator::nameErrMsg = "\nInvalid contact name format.";
+const QString ContactValidator::IPErrMsg = "\nInvalid IP address format.";
+const QString ContactValidator::portErrMsg = "\nInvalid port format.";
+const QString ContactValidator::uniqNameErrMsg = "\nContact name already exists.";
+const QString ContactValidator::uniqIPErrMsg = "\nIP occupied by existing contact.";
 
 ContactValidator::ContactValidator()
 {
