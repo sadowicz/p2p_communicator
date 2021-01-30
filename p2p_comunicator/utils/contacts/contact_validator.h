@@ -17,6 +17,8 @@ public:
 
     bool validateContactForm(QString name, QString ip, QString port,
                              std::unordered_map<std::string, Contact*>& contacts);
+
+    bool validateContactForm(QString name, QString port, std::unordered_map<std::string, Contact*>& contacts);
     QString validationErrMsg() { return _validationErrMsg; }
 
 private:
@@ -38,6 +40,7 @@ private:
     void validateIP(QString ip);
     void validatePort(QString port);
     void validateUnique(QString name, QString ip, std::unordered_map<std::string, Contact*>& contacts);
+    void validateUnique(QString name, std::unordered_map<std::string, Contact*>& contacts);
 };
 
 

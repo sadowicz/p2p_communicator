@@ -25,6 +25,16 @@ bool ContactValidator::validateContactForm(QString name, QString ip, QString por
     return isValidName && isValidIP && isValidPort && isUnique;
 }
 
+bool ContactValidator::validateContactForm(QString name, QString port,
+                                           std::unordered_map<std::string, Contact*>& contacts)
+{
+    validateName(name);
+    validatePort(port);
+    validateUnique(name, contacts);
+
+    return isValidName && isValidPort && isUnique;
+}
+
 void ContactValidator::validateName(QString name)
 {
     isValidName = (!name.isEmpty() &&
@@ -69,4 +79,18 @@ void ContactValidator::validateUnique(QString name, QString ip, std::unordered_m
     }
     else
         _validationErrMsg += ContactValidator::uniqIPErrMsg;
+}
+
+void ContactValidator::validateUnique(QString name, std::unordered_map<std::string, Contact*>& contacts)
+{
+    for(auto& contact : contacts)
+    {
+        if(contact.second->getName().c_str() == name)
+        {
+            _validationErrMsg += ContactValidator::uniqNameErrMsg;
+            return;
+        }
+    }
+
+    isUnique = true;
 }
