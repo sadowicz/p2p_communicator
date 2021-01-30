@@ -1,7 +1,9 @@
 #include "Contact.h"
 
+using namespace contacts;
+
 Contact::Contact(std::string name, std::string address, unsigned port, QObject* parent)
-    : QAbstractListModel(parent) ,name(name), address(address), port(port) {}
+    : QAbstractListModel(parent) ,name(name), address(address), port(port), active(false) {}
 
 void Contact::read(const QJsonObject &json) {
     name = json["name"].toString().toStdString();
@@ -48,6 +50,15 @@ int Contact::getPort()  const{
     return this->port;
 }
 
+bool Contact::isActive() {
+    return this->active;
+}
+
+void Contact::setActiveState(bool state) {
+    this->active = state;
+}
+
+
 int Contact::rowCount(const QModelIndex &parent) const{
     if(parent.isValid()){
         return 0;
@@ -60,6 +71,7 @@ QVariant Contact::data(const QModelIndex &index, int role) const{
 
    // if(index.isValid())
      //   return QVariant();
+
 
     if(role != Qt::DisplayRole)
         return QVariant();

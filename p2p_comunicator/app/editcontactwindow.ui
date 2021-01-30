@@ -34,13 +34,16 @@
     </property>
     <item row="0" column="0">
      <widget class="QLabel" name="lbIP">
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
       <property name="text">
-       <string>IP Address</string>
+       <string>Contact's IP Address:</string>
       </property>
      </widget>
-    </item>
-    <item row="0" column="1">
-     <widget class="QLineEdit" name="leIP"/>
     </item>
     <item row="3" column="1">
      <widget class="QLineEdit" name="leName"/>
@@ -61,6 +64,19 @@
     </item>
     <item row="4" column="1">
      <widget class="QLineEdit" name="lePort"/>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLabel" name="ipLabel">
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

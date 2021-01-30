@@ -9,12 +9,14 @@
 #include <MessageListDelegate.h>
 #include <add_contact_window.h>
 #include <editcontactwindow.h>
+#include <settingswindow.h>
 #include <error_window.h>
 #include <config/Config.h>
+#include <Logger.h>
 #include "ui_mainwindow.h"
 
 #include <contacts/Storage.h>
-#include <tcp/TCPConnection.h>
+#include <contacts/ContactController.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -40,7 +42,8 @@ signals:
 
 private slots:
     void on_pbNewContact_clicked();
-    void on_contactAddSuccess(std::string ip);
+    void on_contactAddSuccess(Contact* contact);
+    void on_contactEditSuccess(Contact* contact);
     void on_contactAddCancel();
     void on_error(QString errorMessage);
     void on_errorRead();
@@ -52,10 +55,15 @@ private slots:
 
     void on_pbEditContact_clicked();
 
+    void on_pbSettings_clicked();
+
+    void on_pbSend_clicked();
+
 private:
     Ui::MainWindow *ui;
     AddContactWindow *addContactWin;
     EditContactWindow *editContactWin;
+    SettingsWindow *settingsWin;
     ErrorWindow *errWin;
 
     QStateMachine* stateMachine;
@@ -66,6 +74,9 @@ private:
     QState* Connected;
     QState* ValidateSendable;
     QState* Sendable;
+
+    ContactController* contactController;
+    Logger log;
 
     std::unordered_map<std::string, Contact*> contacts;
     Contact* activeContact;

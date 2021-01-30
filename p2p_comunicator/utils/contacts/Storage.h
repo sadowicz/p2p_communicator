@@ -10,6 +10,8 @@
 #include <unordered_map>
 #include <util/util.h>
 
+namespace contacts {
+
 class Storage
 {
 public:
@@ -21,10 +23,8 @@ public:
     bool save() const;  // save contacts to .json file
     void clear();
 
-
     void addContact(Contact* newContact);
     void deleteContact(const std::string& ip);
-    void editContact(std::string ip, std::string newName, std::string newAddress, unsigned newPort);
     std::unordered_map<std::string, Contact*>& getContacts();
     Contact* getContact(std::string& ip);
     bool contactExists(std::string& ip);
@@ -37,3 +37,5 @@ private:
     void read(const QJsonObject &json);
     void write(QJsonObject &json) const;
 };
+
+}

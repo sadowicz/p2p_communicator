@@ -1,13 +1,5 @@
 #include <config/Config.h>
 
-string& Config::get(string& key) {
-    return values.at(key);
-}
-
-string& Config::get(const char* key) {
-    return values.at(string(key));
-}
-
 Config::Config() {
     configFile = CONFIG_DEFAULT_FILE_PATH;
     if (shouldCreateDefaultConfig()) {
@@ -29,6 +21,7 @@ void Config::loadConfiguration() {
     } else {
         throw new IOException("Failed opening the configuration file");
     }
+    isDebugMode = values["debug-mode"] == "true";
     file.close();
 }
 
@@ -38,6 +31,22 @@ void Config::writeDefaultConfig() {
         throw new IOException("Failed creating default configuration file");
     }
     file << CONFIG_DEFAULT_FILE_CONTENTS;
+    file.close();
+}
+
+void Config::save() {
+    ofstream file(configFile);
+    if (!file.is_open()) {
+        throw new IOException("Failed opening configuration file");
+    }
+
+    std::string res = "";
+
+    for (std::pair<std::string, std::string> element : values) {
+        res += element.first + "=" + element.second + "\n";
+    }
+
+    file << res;
     file.close();
 }
 

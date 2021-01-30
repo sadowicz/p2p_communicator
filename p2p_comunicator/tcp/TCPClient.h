@@ -5,9 +5,10 @@
 #include <QAbstractSocket>
 #include <QHostAddress>
 #include <QObject>
+#include <QDebug>
 
-#include <contacts/Storage.h>
-#include <config/Config.h>
+#include <Logger.h>
+#include <TCPException.h>
 
 using namespace std;
 
@@ -15,23 +16,28 @@ class TCPClient : public QObject {
 
     Q_OBJECT
 public:
-    TCPClient(Contact* contact);
+    TCPClient(Logger& log, string ip, short port);
 
     ~TCPClient() { delete socket; }
 
     void send(string& packet);
+    void tryConnect();
+    void forceDisconnect();
 
 private:
-    Contact* contact;
+    string ip;
+    short port;
     QTcpSocket* socket;
+    Logger& log;
 
 private slots:
     void onDisconnect();
     void onConnect();
+    void onError(QAbstractSocket::SocketError e);
 
 signals:
-    void failed(Contact* contact, TCPException e);
-    void connected(Contact* contact);
-    void disconnected(Contact* contact);
+    void failed(string ip, TCPException e);
+    void connected(string ip, short port);
+    void disconnected(string ip);
 
 };

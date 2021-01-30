@@ -2,7 +2,7 @@
 #include <QtTest>
 #include <QByteArray>
 
-#include <tcp/TCPPacket.h>
+#include <TCPPacket.h>
 
 class tcp_packet_test : public QObject
 {

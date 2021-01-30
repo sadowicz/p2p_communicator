@@ -1,6 +1,7 @@
 #include <QtTest>
 #include "contacts/Contact.h"
 
+using namespace contacts;
 
 class ContactTest : public QObject
 {

@@ -10,6 +10,7 @@
 
 #include <contacts/Message.h>
 #include <vector>
+namespace contacts {
 
 class Contact : public QAbstractListModel{
 
@@ -31,6 +32,8 @@ public:
     std::string getName() const;
     std::string getAddress() const;
     int getPort() const;
+    bool isActive();
+    void setActiveState(bool state);
 
     // overrided model functions
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -41,5 +44,7 @@ private:
     std::string address;
     int port;
     std::vector<Message*> history;
-
+    bool active;
 };
+
+}

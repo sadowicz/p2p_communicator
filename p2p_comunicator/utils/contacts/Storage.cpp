@@ -1,5 +1,6 @@
 #include "Storage.h"
 
+using namespace contacts;
 
 Storage& Storage::storage(){
     static Storage s;
@@ -7,7 +8,7 @@ Storage& Storage::storage(){
 }
 
 bool Storage::load() {
-    QString filename = QString(Config::config().get("history-log-file").c_str());
+    QString filename = QString::fromStdString(Config::config()["history-log-file"]);
     QFile loadFile(filename);
 
     if (!loadFile.open(QIODevice::ReadOnly)) {
@@ -25,7 +26,7 @@ bool Storage::load() {
 }
 
 bool Storage::save() const {
-    QFile saveFile(QString(Config::config().get("history-log-file").c_str()));
+    QFile saveFile(QString::fromStdString(Config::config("history-log-file")));
 
     if (!saveFile.open(QIODevice::WriteOnly)) {
         qWarning("Couldn't open save file.");
@@ -42,11 +43,14 @@ bool Storage::save() const {
 
 void Storage::read(const QJsonObject &json) {
 
+    for (pair<std::string, Contact*> pair : contacts) {
+        delete pair.second;
+    }
     contacts.clear();
     QJsonArray contactsArray = json["contacts"].toArray();
     for (int i = 0; i < contactsArray.size(); ++i) {
         QJsonObject contactObject = contactsArray[i].toObject();
-        Contact* contact = new Contact("example", "127.0.0.1", 8080);
+        Contact* contact = new Contact();
         contact->read(contactObject);
         contacts[contact->getAddress()] = contact;
     }
@@ -86,19 +90,7 @@ void Storage::clear(){
 }
 
 void Storage::deleteContact(const std::string& ip) {
+    delete contacts[ip];
     contacts.erase(ip);
     save();
-}
-
-void Storage::editContact(std::string ip, std::string newName, std::string newAddress, unsigned newPort) {
-    auto oldContact = getContact(ip);
-    auto editedContact = new Contact(newName, newAddress, newPort);
-
-    auto history = oldContact->getHistory();
-
-    for(auto entry : history)
-        editedContact->addToHistory(entry);
-
-    deleteContact(oldContact->getAddress());
-    addContact(editedContact);
 }

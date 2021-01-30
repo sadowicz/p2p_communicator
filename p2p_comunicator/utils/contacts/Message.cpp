@@ -1,7 +1,10 @@
 #include <contacts/Message.h>
 
+using namespace contacts;
+
 Message::Message(TCPPacket packet, QObject* parent)
-    : QObject(parent){
+        : QObject(parent){
+    log = Logger(Config::config("log-file"), Config::config().debugMode());
     this->type = packet.getType() == TCPPacket::PacketType::TEXT
             ? Message::Type::TEXT
             : Message::Type::FILE;
@@ -10,8 +13,9 @@ Message::Message(TCPPacket packet, QObject* parent)
     this->filename = packet.getFilename();
 }
 
-Message::Message(QJsonObject& object, QObject* parent)
-    : QObject(parent) {
+Message::Message(QJsonObject& object QObject* parent)
+        : QObject(parent) {
+    log = Logger(Config::config("log-file"), Config::config().debugMode());
     this->type = object["type"].toString().toStdString() == "TEXT"
             ? Message::Type::TEXT
             : Message::Type::FILE;
@@ -19,11 +23,6 @@ Message::Message(QJsonObject& object, QObject* parent)
     this->content = object["content"].toString().toStdString();
     this->timestamp = QDateTime::fromString(object["timestamp"].toString());
     this->address = object["address"].toString().toStdString();
-}
-
-void Message::downloadFile() {
-    // string fullPath = strbuilder() << Config::get("downloads-directory") << "/" << filename << strbuilder::end();
-    //TODO: download file
 }
 
 QJsonObject Message::serialize() {
@@ -41,9 +40,9 @@ QJsonObject Message::serialize() {
 }
 
 void Message::save() {
-    if(type == FILE) {
+    if (type == FILE) {
         QDir dir;
-        QString dirPath = Config::config().get("downloads-directory").c_str();
+        QString dirPath = Config::config("downloads-directory").c_str();
         if(!dir.exists(dirPath)) {
             dir.mkpath(dirPath);
         }
@@ -56,6 +55,8 @@ void Message::save() {
         }
         file << content;
         file.close();
+
+        log.info("Saved file '" + filename.toStdString() + "'");
     }
 }
 

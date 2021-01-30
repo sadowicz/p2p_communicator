@@ -1,6 +1,8 @@
 #include <QtTest>
 #include "contacts/Storage.h"
 
+using namespace contacts;
+
 class StorageTest : public QObject
 {
     Q_OBJECT
@@ -109,7 +111,7 @@ private slots:
 
         QCOMPARE(2, storage.getContacts().size());
 
-        auto contact = storage.getContact(address);
+        Contact* contact = storage.getContact(address);
 
         QCOMPARE(name, contact->getName());
         QCOMPARE(address, contact->getAddress());

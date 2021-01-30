@@ -4,10 +4,8 @@
 #include <QTcpServer>
 #include <QObject>
 
-#include <contacts/Storage.h>
-#include <contacts/Contact.h>
-#include <config/Config.h>
-#include <tcp/TCPPacket.h>
+#include <TCPPacket.h>
+#include <Logger.h>
 
 #include <unordered_map>
 
@@ -15,11 +13,12 @@ class TCPServer : public QObject {
     Q_OBJECT
 
 public:
-    TCPServer();
+    TCPServer(Logger& log, short port);
 
 private:
     QTcpServer* server;
-    unordered_map<QTcpSocket*, Contact*> contacts;
+    unordered_map<QTcpSocket*, string> clientIPs;
+    Logger& log;
 
 private slots:
     void onAcceptConnection();
@@ -27,9 +26,9 @@ private slots:
     void onDisconnected();
 
 signals:
-    void recieved(Contact*, TCPPacket);
-    void connected(Contact*);
-    void disconnected(Contact*);
+    void recieved(string, TCPPacket);
+    void connected(string, short);
+    void disconnected(string);
 
 };
 
