@@ -1,4 +1,4 @@
-#include <logger/Logger.h>
+#include <Logger.h>
 
 #define DEBUG "[DEBUG]"
 #define INFO "[INFO]"
@@ -18,16 +18,16 @@ void Logger::error(std::string message) {
 }
 
 void Logger::write(std::string message, LogType type) {
-    if (type == DEBUG_TYPE && !Config::config().debugMode()) {
+    if (type == DEBUG_TYPE && !debugMode) {
         return;
     }
-    ofstream file;
-    file.open(filename, ios_base::app | ios_base::out);
+    std::ofstream file;
+    file.open(filename, std::ios_base::app | std::ios_base::out);
     if (file.is_open()) {
         file << buildHeader(type) + message + "\n";
         file.close();
     } else {
-        throw IOException("Log file opening failed");
+        throw std::logic_error("Log file opening failed");
     }
 }
 

@@ -7,18 +7,16 @@
 #include <QObject>
 #include <QDebug>
 
-#include <contacts/Storage.h>
-#include <config/Config.h>
-#include <logger/Logger.h>
+#include <Logger.h>
+#include <TCPException.h>
 
 using namespace std;
-using namespace contacts;
 
 class TCPClient : public QObject {
 
     Q_OBJECT
 public:
-    TCPClient(string ip, short port);
+    TCPClient(Logger& log, string ip, short port);
 
     ~TCPClient() { delete socket; }
 
@@ -30,6 +28,7 @@ private:
     string ip;
     short port;
     QTcpSocket* socket;
+    Logger& log;
 
 private slots:
     void onDisconnect();

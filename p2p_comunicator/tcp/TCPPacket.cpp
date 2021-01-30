@@ -1,4 +1,4 @@
-#include <tcp/TCPPacket.h>
+#include <TCPPacket.h>
 
 #define TEXT_PACKET_HEADER "TEXT"
 #define FILE_PACKET_HEADER "FILE"
@@ -35,10 +35,10 @@ std::string TCPPacket::encode(TCPPacket::PacketType type, std::string filename, 
     }
     std::string packet = "";
     if (type == PacketType::TEXT) {
-        packet = strbuilder() + "<" TEXT_PACKET_HEADER "> " + content + strbuilder::end();
+        packet = std::string("<" TEXT_PACKET_HEADER "> ") + content;
 
     } else if (type == PacketType::FILE) {
-        packet = strbuilder() + "<" FILE_PACKET_HEADER ":" + filename + "> " + content + strbuilder::end();
+        packet = std::string("<" FILE_PACKET_HEADER ":") + filename + std::string("> ") + content;
 
     } else {
         throw TCPException("Packet encoding failed: incorrect packet type");

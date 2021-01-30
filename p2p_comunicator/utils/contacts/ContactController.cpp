@@ -2,8 +2,8 @@
 
 using namespace contacts;
 
-ContactController::ContactController() {
-    connection = new TCPConnection();
+ContactController::ContactController(Logger& log) : log(log) {
+    connection = new TCPConnection(log);
     connect(connection, SIGNAL(connected(string, short)), SLOT(onConnect(string,short)));
     connect(connection, SIGNAL(disconnected(string)), SLOT(onDisconnect(string)));
     connect(connection, SIGNAL(recieved(string,TCPPacket)), SLOT(onRecieve(string,TCPPacket)));
@@ -13,6 +13,7 @@ ContactController::ContactController() {
     // load all saved contacts and try to connect to them
     for (auto& entry : Storage::storage().getContacts()) {
         Contact* contact = entry.second;
+        log.debug("Loaded contact: " + contact->getAddress() + ":" + std::to_string(contact->getPort()) + ", trying to connect...");
         connection->registerClient(contact->getAddress(), contact->getPort())->tryConnect();
     }
 }
@@ -52,7 +53,7 @@ void ContactController::send(Contact* contact, string& message) {
 }
 
 void ContactController::onConnect(string ip, short port) {
-    Logger::log().info("Adding new contact: " + ip + ":" + std::to_string(port));
+    log.info("Adding new contact: " + ip + ":" + std::to_string(port));
 
     if (!Storage::storage().contactExists(ip)) {
         Contact* newContact = new Contact(ip, ip, port);
@@ -80,11 +81,11 @@ void ContactController::onDisconnect(string ip) {
 }
 
 void ContactController::onSendError(string ip, TCPException e) {
-    Logger::log().error("Error sending message to: " + ip + ", reason: " + e.what());
+    log.error("Error sending message to: " + ip + ", reason: " + e.what());
     // TODO: handle error here
 }
 
 void ContactController::onRecieve(string ip, TCPPacket packet) {
-    Logger::log().debug("Recieved message from: " + ip);
+    log.debug("Recieved message from: " + ip);
     // TODO: add message to history and such
 }

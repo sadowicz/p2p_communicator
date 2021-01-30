@@ -4,25 +4,21 @@
 #include <QTcpServer>
 #include <QObject>
 
-#include <contacts/Storage.h>
-#include <contacts/Contact.h>
-#include <config/Config.h>
-#include <tcp/TCPPacket.h>
-#include <logger/Logger.h>
+#include <TCPPacket.h>
+#include <Logger.h>
 
 #include <unordered_map>
-
-using namespace contacts;
 
 class TCPServer : public QObject {
     Q_OBJECT
 
 public:
-    TCPServer(short port);
+    TCPServer(Logger& log, short port);
 
 private:
     QTcpServer* server;
     unordered_map<QTcpSocket*, string> clientIPs;
+    Logger& log;
 
 private slots:
     void onAcceptConnection();

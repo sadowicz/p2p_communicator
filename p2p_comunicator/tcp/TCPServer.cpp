@@ -1,9 +1,9 @@
-#include <tcp/TCPServer.h>
+#include <TCPServer.h>
 
-TCPServer::TCPServer(short port) {
+TCPServer::TCPServer(Logger& log, short port) : log(log) {
     this->server = new QTcpServer(this);
     this->server->listen(QHostAddress::Any, port);
-    Logger::log().info("Server listening on port " + std::to_string(port));
+    log.info("Server listening on port " + std::to_string(port));
 
     connect(this->server, SIGNAL(newConnection()), SLOT(onAcceptConnection()));
 }
@@ -14,7 +14,7 @@ void TCPServer::onAcceptConnection() {
         std::string address = connection->peerAddress().toString().toStdString();
         short peerPort = connection->peerPort();
 
-        Logger::log().debug("Server accepting connection from: " + address);
+        log.debug("Server accepting connection from: " + address);
 
         clientIPs[connection] = address;
 
@@ -28,7 +28,7 @@ void TCPServer::onAcceptConnection() {
 void TCPServer::onDisconnected() {
     QTcpSocket* socket = (QTcpSocket*) sender();
     string ip = clientIPs[socket];
-    Logger::log().debug("Server disconnected from: " + ip);
+    log.debug("Server disconnected from: " + ip);
 
     emit disconnected(ip);
 }
@@ -44,7 +44,7 @@ void TCPServer::onReadyRead() {
     }
 
     string ip = clientIPs[socket];
-    Logger::log().debug("Server recieved a message from: " + ip);
+    log.debug("Server recieved a message from: " + ip);
 
     emit recieved(ip, TCPPacket::decode(content));
 }

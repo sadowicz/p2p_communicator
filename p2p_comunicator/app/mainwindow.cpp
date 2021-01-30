@@ -10,7 +10,6 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    Logger::log().info("------------ App started ------------");
     ui->setupUi(this);
 
     setUpStateMachine();
@@ -21,7 +20,9 @@ MainWindow::MainWindow(QWidget *parent)
     loadContacts();
     loadListItems();
 
-    contactController = new ContactController();
+    log = Logger(Config::config("log-file"), Config::config().debugMode());
+    log.info("------------ App started ------------");
+    contactController = new ContactController(log);
 }
 
 MainWindow::~MainWindow()

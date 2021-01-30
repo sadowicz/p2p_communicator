@@ -7,9 +7,11 @@
 #include <QFile>
 #include <QDir>
 
-#include <tcp/TCPPacket.h>
 #include <config/Config.h>
 #include <util/strbuilder.h>
+
+#include <TCPPacket.h>
+#include <Logger.h>
 
 using namespace std;
 
@@ -55,8 +57,7 @@ private:
     string content;
     string filename;
     string* address;
-
-    Message(string* address, QDateTime timestamp, Type type, string content, string filename) : address(address), timestamp(timestamp), type(type), content(content), filename(filename) {}
+    Logger log;
 
 };
 

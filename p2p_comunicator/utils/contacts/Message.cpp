@@ -3,6 +3,7 @@
 using namespace contacts;
 
 Message::Message(TCPPacket packet) {
+    log = Logger(Config::config("log-file"), Config::config().debugMode());
     this->type = packet.getType() == TCPPacket::PacketType::TEXT
             ? Message::Type::TEXT
             : Message::Type::FILE;
@@ -12,6 +13,7 @@ Message::Message(TCPPacket packet) {
 }
 
 Message::Message(QJsonObject& object) {
+    log = Logger(Config::config("log-file"), Config::config().debugMode());
     this->type = object["type"].toString().toStdString() == "TEXT"
             ? Message::Type::TEXT
             : Message::Type::FILE;
@@ -51,7 +53,7 @@ void Message::save() {
         file << content;
         file.close();
 
-        Logger::log().info("Saved file '" + filename.toStdString() + "'");
+        log.info("Saved file '" + filename.toStdString() + "'");
     }
 }
 

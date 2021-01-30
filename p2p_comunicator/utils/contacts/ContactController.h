@@ -2,16 +2,18 @@
 
 #include <QObject>
 
-#include <tcp/TCPConnection.h>
-#include <tcp/TCPPacket.h>
+#include <TCPConnection.h>
+#include <TCPPacket.h>
 
 #include <contacts/Storage.h>
+
+namespace contacts {
 
 class ContactController : QObject {
     Q_OBJECT
 
 public:
-    ContactController();
+    ContactController(Logger& log);
     void addContact(Contact* contact);
     void removeContact(string& ip);
     void editContact(Contact* editedContact);
@@ -23,6 +25,7 @@ public:
 
 private:
     TCPConnection* connection;
+    Logger& log;
 
 private slots:
     void onConnect(string, short);
@@ -31,3 +34,5 @@ private slots:
     void onSendError(string, TCPException);
 
 };
+
+}
