@@ -90,5 +90,6 @@ void ContactController::onSendError(const string ip, TCPException e) {
 
 void ContactController::onRecieve(const string ip, TCPPacket packet) {
     log.debug("Recieved message from: " + ip + ", content: " + packet.getContent());
-    // TODO: add message to history and such
+    Contact* contact = Storage::storage().getContact(ip);
+    contact->addToHistory(new Message(packet, contact));
 }
