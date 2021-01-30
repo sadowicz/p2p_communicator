@@ -6,6 +6,7 @@
 #include <QHistoryState>
 #include <QDebug>
 
+#include <MessageListDelegate.h>
 #include <add_contact_window.h>
 #include <editcontactwindow.h>
 #include <error_window.h>

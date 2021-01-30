@@ -18,6 +18,7 @@ Message::Message(QJsonObject& object, QObject* parent)
     this->filename = object["filename"].toString().toStdString();
     this->content = object["content"].toString().toStdString();
     this->timestamp = QDateTime::fromString(object["timestamp"].toString());
+    this->address = object["address"].toString().toStdString();
 }
 
 void Message::downloadFile() {

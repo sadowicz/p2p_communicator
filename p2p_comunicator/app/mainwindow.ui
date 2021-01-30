@@ -362,7 +362,7 @@
          </layout>
         </item>
         <item row="1" column="0">
-         <widget class="QListView" name="listView">
+         <widget class="QListView" name="msgListView">
           <property name="minimumSize">
            <size>
             <width>0</width>
@@ -370,9 +370,13 @@
            </size>
           </property>
           <property name="styleSheet">
-           <string notr="true">Qframe{
-	padding: 0
-}</string>
+           <string notr="true"/>
+          </property>
+          <property name="autoScroll">
+           <bool>true</bool>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::EditKeyPressed</set>
           </property>
          </widget>
         </item>

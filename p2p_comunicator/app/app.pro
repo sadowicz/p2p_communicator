@@ -16,6 +16,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    MessageListDelegate.cpp \
     add_contact_window.cpp \
     editcontactwindow.cpp \
     error_window.cpp \
@@ -23,6 +24,7 @@ SOURCES += \
     mainwindow.cpp
 
 HEADERS += \
+    MessageListDelegate.h \
     add_contact_window.h \
     editcontactwindow.h \
     error_window.h \

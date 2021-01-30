@@ -6,6 +6,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QAbstractListModel>
+#include <QPointer>
 
 #include <contacts/Message.h>
 #include <vector>

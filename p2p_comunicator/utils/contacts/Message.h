@@ -15,7 +15,7 @@
 using namespace std;
 
 class Message : public QObject{
-
+    Q_OBJECT
 public:
     enum Type {
         TEXT, FILE
@@ -41,10 +41,10 @@ public:
     }
 
     string& getAddress() {
-        return *address;
+        return address;
     }
 
-    Message& withAddress(string* sender) {
+    Message& withAddress(const string& sender) {
         this->address = sender;
         return *this;
     }
@@ -54,8 +54,10 @@ private:
     Type type;
     string content;
     string filename;
-    string* address;
+    string address;
 
-    Message(string* address, QDateTime timestamp, Type type, string content, string filename) : address(address), timestamp(timestamp), type(type), content(content), filename(filename) {}
+    Message(const string& address, QDateTime timestamp, Type type, const string& content, const string& filename) : address(address), timestamp(timestamp), type(type), content(content), filename(filename) {}
 
 };
+
+Q_DECLARE_METATYPE(Message*)

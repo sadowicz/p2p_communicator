@@ -26,6 +26,9 @@ MainWindow::MainWindow(QWidget *parent)
     loadContacts();
     loadListItems();
 
+    ui->msgListView->setItemDelegate(new MessageListDelegate);
+    ui->msgListView->setSelectionMode(QListView::NoSelection);
+
     TCPConnection::init();
     // connect(this, SIGNAL(sendMsg(string&, string&)), TCPConnection::get(), SLOT(send(string&, string&)));
     //  sending example:
@@ -195,6 +198,7 @@ void MainWindow::on_validateSendable()
 void MainWindow::on_lwContacts_itemClicked(QListWidgetItem *item)
 {
     activeContact = contacts[item->text().toStdString()];
+    ui->msgListView->setModel(activeContact);
 }
 
 void MainWindow::on_pbDeleteContact_clicked()
