@@ -4,6 +4,8 @@
     - two more packet types FILE-REQUEST and NEW-CONTACT
     - state to locked after emieting error form constructor (loadContacts() method)
     - improve TCPPacket encoding: [packetType:1][filenameLength:1][filename:filenameLength][contentLength:4][content:contentLength]
+    - test if sending messages works
+    - implement sending files
 */
 
 MainWindow::MainWindow(QWidget *parent)
