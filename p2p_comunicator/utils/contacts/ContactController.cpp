@@ -6,7 +6,8 @@ ContactController::ContactController(Logger& log) : log(log) {
     connection = new TCPConnection(log);
     connect(connection, SIGNAL(connected(string, short)), SLOT(onConnect(string,short)));
     connect(connection, SIGNAL(disconnected(string)), SLOT(onDisconnect(string)));
-    connect(connection, SIGNAL(recieved(string,TCPPacket)), SLOT(onRecieve(string,TCPPacket)));
+    connect(connection, SIGNAL(recieved(string, TCPPacket)), SLOT(onRecieve(string, TCPPacket)));
+    connect(connection, SIGNAL(sendingError(string, TCPException)), SLOT(onSendError(string, TCPException)));
 
     connection->startServer(std::stoi(Config::config("port")));
 
@@ -48,8 +49,8 @@ void ContactController::editContact(Contact* editedContact) {
     }
 }
 
-void ContactController::send(Contact* contact, string& message) {
-    connection->send(contact->getAddress(), message);
+void ContactController::send(string& ip, string& message) {
+    connection->send(ip, message);
 }
 
 void ContactController::onConnect(string ip, short port) {

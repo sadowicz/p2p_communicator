@@ -17,7 +17,7 @@ public:
     void addContact(Contact* contact);
     void removeContact(string& ip);
     void editContact(Contact* editedContact);
-    void send(Contact* contact, string& message);
+    void send(string& ip, string& message);
     bool isActive(string& ip);
 
     void tryConnect(string& ip);

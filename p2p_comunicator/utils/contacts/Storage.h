@@ -23,7 +23,6 @@ public:
     bool save() const;  // save contacts to .json file
     void clear();
 
-
     void addContact(Contact* newContact);
     void deleteContact(std::string& ip);
     std::unordered_map<std::string, Contact*>& getContacts();

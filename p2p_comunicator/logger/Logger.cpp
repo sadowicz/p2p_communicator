@@ -24,7 +24,12 @@ void Logger::write(std::string message, LogType type) {
     std::ofstream file;
     file.open(filename, std::ios_base::app | std::ios_base::out);
     if (file.is_open()) {
-        file << buildHeader(type) + message + "\n";
+        std::string msg = buildHeader(type) + message + "\n";
+        file << msg;
+        if (debugMode) {
+            std::cout << msg;
+            std::cout.flush();
+        }
         file.close();
     } else {
         throw std::logic_error("Log file opening failed");
@@ -36,7 +41,7 @@ std::string Logger::getTimestamp() {
     auto tm = *std::localtime(&t);
 
     std::ostringstream oss;
-    oss << std::put_time(&tm, "[%d-%m-%Y %H-%M-%S]");
+    oss << std::put_time(&tm, "[%d/%m/%Y %H:%M:%S]");
     return oss.str();
 }
 
