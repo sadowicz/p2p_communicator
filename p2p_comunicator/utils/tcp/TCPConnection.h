@@ -19,6 +19,7 @@ class TCPConnection : public QObject {
 public:
     TCPConnection();
     static TCPConnection& get();
+    TCPClient* registerClient(Contact* contact);
 
 private:
     TCPServer* server;
