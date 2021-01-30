@@ -14,14 +14,20 @@ TCPConnection::TCPConnection() {
     connect(server, SIGNAL(recieved(Contact*, TCPPacket)), SIGNAL(recieved(Contact*, TCPPacket)));
 
     for (auto& contact : storage.getContacts()) {
-        TCPClient* client = new TCPClient(contact.second);
-        client->tryConnect();
-
-        clients[contact.first] = client;
-        connect(client, SIGNAL(failed(Contact*, TCPException)), SIGNAL(sendingError(Contact*, TCPException)));
-        connect(client, SIGNAL(connected(Contact*)), SIGNAL(connected(Contact*)));
-        connect(client, SIGNAL(disconnected(Contact*)), SIGNAL(disconnected(Contact*)));
+        TCPClient* newClient = addClient(contact.second);
+        newClient->tryConnect();
     }
+}
+
+TCPClient* TCPConnection::addClient(Contact* contact) {
+    TCPClient* client = new TCPClient(contact);
+
+    clients[contact->getAddress()] = client;
+    connect(client, SIGNAL(failed(Contact*, TCPException)), SIGNAL(sendingError(Contact*, TCPException)));
+    connect(client, SIGNAL(connected(Contact*)), SIGNAL(connected(Contact*)));
+    connect(client, SIGNAL(disconnected(Contact*)), SIGNAL(disconnected(Contact*)));
+
+    return client;
 }
 
 void TCPConnection::closeConnection(string& ip) {
