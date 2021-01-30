@@ -5,6 +5,8 @@
 #include <contacts/contact_validator.h>
 #include <contacts/Storage.h>
 
+#include <config/Config.h>
+
 using namespace contacts;
 
 namespace Ui {
@@ -25,6 +27,7 @@ private:
 
     std::string ip;
     std::string name;
+    Logger log;
     int port;
 
 signals:

@@ -31,7 +31,7 @@ void TCPConnection::closeConnection(string& ip) {
 
     TCPClient* client = clients[ip];
     client->forceDisconnect();
-    delete client;
+    client->deleteLater();
     clients.erase(ip);
 }
 
