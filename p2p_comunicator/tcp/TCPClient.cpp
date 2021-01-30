@@ -1,7 +1,7 @@
 #include <TCPClient.h>
 
 TCPClient::TCPClient(Logger& log, string ip, short port) : ip(ip), port(port), log(log) {
-    this->socket = new QTcpSocket(this);
+    this->socket = new QTcpSocket();
     connect(socket, SIGNAL(disconnected()), this, SLOT(onDisconnect()));
     connect(socket, SIGNAL(connected()), this, SLOT(onConnect()));
     connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onError(QAbstractSocket::SocketError)));

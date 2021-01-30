@@ -42,7 +42,7 @@ void ContactController::editContact(Contact* editedContact) {
         Storage::storage().deleteContact(editedContact->getAddress());
         Storage::storage().addContact(editedContact);
     } else {
-        // if port was changed client be recreated and try connecting again
+        // if port was changed client should be recreated and try connecting again
         removeContact(editedContact->getAddress());
         addContact(editedContact);
         tryConnect(editedContact->getAddress());
@@ -77,8 +77,9 @@ bool ContactController::isActive(string& ip) {
 }
 
 void ContactController::onDisconnect(string ip) {
-    Contact* contact = Storage::storage().getContact(ip);
-    contact->setActiveState(false);
+    if (Storage::storage().contactExists(ip)) {
+        Storage::storage().getContact(ip)->setActiveState(false);
+    }
 }
 
 void ContactController::onSendError(string ip, TCPException e) {
