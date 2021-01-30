@@ -2,6 +2,8 @@
 
 #include <contacts/contact_validator.h>
 
+using namespace contacts;
+
 class ContactValidatorTest : public QObject
 {
     Q_OBJECT

@@ -1,5 +1,7 @@
 #include <contacts/Message.h>
 
+using namespace contacts;
+
 Message::Message(TCPPacket packet) {
     this->type = packet.getType() == TCPPacket::PacketType::TEXT
             ? Message::Type::TEXT

@@ -1,5 +1,7 @@
 #include "contact_validator.h"
 
+using namespace contacts;
+
 QString ContactValidator::headerErrMsg = "Unable to add new contact.\n";
 QString ContactValidator::nameErrMsg = "\nInvalid contact name format.";
 QString ContactValidator::IPErrMsg = "\nInvalid IP address format.";

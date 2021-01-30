@@ -3,6 +3,8 @@
 
 #include <QRegularExpression>
 
+namespace contacts {
+
 class ContactValidator
 {
 public:
@@ -29,4 +31,8 @@ private:
     void validatePort(QString port);
 };
 
+
+}
 #endif // CONTACTVALIDATOR_H
+
+

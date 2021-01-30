@@ -10,6 +10,8 @@
 #include <unordered_map>
 #include <util/util.h>
 
+namespace contacts {
+
 class Storage
 {
 public:
@@ -37,3 +39,5 @@ private:
     void read(const QJsonObject &json);
     void write(QJsonObject &json) const;
 };
+
+}

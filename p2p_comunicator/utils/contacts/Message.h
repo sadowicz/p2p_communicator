@@ -13,6 +13,8 @@
 
 using namespace std;
 
+namespace contacts {
+
 class Message {
 
 public:
@@ -57,3 +59,5 @@ private:
     Message(string* address, QDateTime timestamp, Type type, string content, string filename) : address(address), timestamp(timestamp), type(type), content(content), filename(filename) {}
 
 };
+
+}

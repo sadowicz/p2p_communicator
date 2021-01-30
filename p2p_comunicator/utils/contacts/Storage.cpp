@@ -1,5 +1,7 @@
 #include "Storage.h"
 
+using namespace contacts;
+
 Storage& Storage::storage(){
     static Storage s;
     return s;

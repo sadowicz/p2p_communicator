@@ -5,6 +5,8 @@
 #include <contacts/contact_validator.h>
 #include <contacts/Storage.h>
 
+using namespace contacts;
+
 namespace Ui {
 class EditContactWindow;
 }
