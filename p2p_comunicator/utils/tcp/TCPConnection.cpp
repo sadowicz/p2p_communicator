@@ -6,14 +6,13 @@ TCPConnection& TCPConnection::get() {
 }
 
 TCPConnection::TCPConnection() {
-    Storage& storage = Storage::storage();
     server = new TCPServer();
 
-    connect(server, SIGNAL(connected(Contact*)), SIGNAL(connected(Contact*)));
-    connect(server, SIGNAL(disconnected(Contact*)), SIGNAL(disconnected(Contact*)));
+    connect(server, SIGNAL(connected(Contact*)), SLOT(onConnect(Contact*)));
+    connect(server, SIGNAL(disconnected(Contact*)), SLOT(onDisconnect(Contact*)));
     connect(server, SIGNAL(recieved(Contact*, TCPPacket)), SIGNAL(recieved(Contact*, TCPPacket)));
 
-    for (auto& contact : storage.getContacts()) {
+    for (auto& contact : Storage::storage().getContacts()) {
         registerClient(contact.second)->tryConnect();
     }
 }
@@ -23,8 +22,8 @@ TCPClient* TCPConnection::registerClient(Contact* contact) {
 
     clients[contact->getAddress()] = client;
     connect(client, SIGNAL(failed(Contact*, TCPException)), SIGNAL(sendingError(Contact*, TCPException)));
-    connect(client, SIGNAL(connected(Contact*)), SIGNAL(connected(Contact*)));
-    connect(client, SIGNAL(disconnected(Contact*)), SIGNAL(disconnected(Contact*)));
+    connect(client, SIGNAL(connected(Contact*)), SLOT(onConnect(Contact*)));
+    connect(client, SIGNAL(disconnected(Contact*)), SLOT(onDisconnect(Contact*)));
 
     return client;
 }
