@@ -138,7 +138,9 @@ void MainWindow::loadListItems()
 {
     for(auto& contact : contacts)
     {
-        new QListWidgetItem(contact.first.c_str(), ui->lwContacts);
+        auto loaded = new QListWidgetItem(contact.first.c_str(), ui->lwContacts);
+        if(contact.second->isActive()) loaded->setTextColor(Qt::green);
+        else loaded->setTextColor(Qt::red);
     }
 }
 
@@ -190,6 +192,18 @@ void MainWindow::on_error(QString errorMessage)
 void MainWindow::on_errorRead()
 {
     emit errorCatched();
+}
+
+void MainWindow::on_connected(std::string ip, short port)
+{
+    Storage::storage().getContact(ip)->setActiveState(true);
+    refreshContactsList();
+}
+
+void MainWindow::on_disconnected(std::string ip)
+{
+    Storage::storage().getContact(ip)->setActiveState(false);
+    refreshContactsList();
 }
 
 void MainWindow::on_validateSendable()

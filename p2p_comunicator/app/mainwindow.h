@@ -40,20 +40,21 @@ signals:
     void edited(std::string ip, std::string name, int port);
 
 private slots:
-    void on_pbNewContact_clicked();
     void on_contactAddSuccess(Contact* contact);
     void on_contactEditSuccess(Contact* contact);
     void on_contactAddCancel();
+
     void on_error(QString errorMessage);
     void on_errorRead();
     void on_validateSendable();
 
+    void on_connected(std::string ip, short port);
+    void on_disconnected(std::string ip);
+
+    void on_pbNewContact_clicked();
     void on_lwContacts_itemClicked(QListWidgetItem *item);
-
     void on_pbDeleteContact_clicked();
-
     void on_pbEditContact_clicked();
-
     void on_pbSettings_clicked();
 
 private:
