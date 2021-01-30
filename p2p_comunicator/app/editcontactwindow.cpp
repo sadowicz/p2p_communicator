@@ -26,7 +26,12 @@ EditContactWindow::~EditContactWindow()
 
 void EditContactWindow::on_bbAddContact_accepted()
 {
-    if(validator->validateContactForm(ui->leName->text(), ui->lePort->text(),
+    QString validationName = ui->leName->text();
+
+    if(validationName == Storage::storage().getContact(ip)->getName().c_str())
+        validationName = ContactValidator::unchangedName;
+
+    if(validator->validateContactForm(validationName, ui->lePort->text(),
                                       Storage::storage().getContacts()))
     {
         Contact* editedContact = new Contact(ui->leName->text().toStdString(), ip,
