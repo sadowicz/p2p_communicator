@@ -6,6 +6,7 @@
 #include <QApplication>
 #include <QPainter>
 #include <QFont>
+#include <QPushButton>
 
 #include <contacts/Message.h>
 
@@ -22,7 +23,9 @@ public:
 private:
     QSize padding;
 
+
     void paintMessage(const Message* message, QPainter* painter, const QStyleOptionViewItem &option) const;
+    void paintDownload(const Message* message, QPainter* painter, const QStyleOptionViewItem &option) const;
 };
 
 #endif // MESSAGELISTDELEGATE_H
