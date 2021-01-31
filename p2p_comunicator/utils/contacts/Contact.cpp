@@ -35,8 +35,10 @@ void Contact::write(QJsonObject &json) {
 }
 
 void Contact::addToHistory(Message* message) {
+    beginResetModel();
     message->setParent(this);
     history.push_back(message);
+    endResetModel();
 }
 
 std::string Contact::getName() const {
@@ -55,11 +57,11 @@ void Contact::setPort(unsigned int port) {
     this->port = port;
 }
 
-bool Contact::isActive() {
+bool Contact::isActive() const {
     return this->active;
 }
 
-bool Contact::hasUnreadMsg() {
+bool Contact::hasUnreadMsg() const {
     return this->unreadMsg;
 }
 
@@ -71,7 +73,6 @@ void Contact::setActiveState(bool state) {
     this->active = state;
 }
 
-
 int Contact::rowCount(const QModelIndex &parent) const {
     if(parent.isValid()){
         return 0;
@@ -80,7 +81,7 @@ int Contact::rowCount(const QModelIndex &parent) const {
     return history.size();
 }
 
-QVariant Contact::data(const QModelIndex &index, int role) const{
+QVariant Contact::data(const QModelIndex &index, int role) const {
 
    // if(index.isValid())
      //   return QVariant();

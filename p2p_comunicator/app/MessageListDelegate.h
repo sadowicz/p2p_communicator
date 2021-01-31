@@ -9,6 +9,7 @@
 #include <QPushButton>
 
 #include <contacts/Message.h>
+#include <contacts/Contact.h>
 
 using namespace contacts;
 
@@ -26,8 +27,14 @@ private:
     QSize padding;
 
 
-    void paintMessage(const Message* message, QPainter* painter, const QStyleOptionViewItem &option) const;
+    void paintMessage(const Message* message, const Contact* contact, QPainter* painter, const QStyleOptionViewItem &option) const;
     void paintDownload(const Message* message, QPainter* painter, const QStyleOptionViewItem &option) const;
+
+    int getSenderHeight(const QString& contactName, const QStyleOptionViewItem &option) const;
+    int getMessageHeight(const Message* message, const QStyleOptionViewItem &option) const;
+    int getDownloadHeight(const Message* message, const QStyleOptionViewItem &option) const;
+
+
 };
 
 #endif // MESSAGELISTDELEGATE_H

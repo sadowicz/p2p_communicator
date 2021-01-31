@@ -33,8 +33,8 @@ public:
     std::string getAddress() const;
     unsigned int getPort() const;
     void setPort(unsigned int port);
-    bool isActive();
-    bool hasUnreadMsg();
+    bool isActive() const;
+    bool hasUnreadMsg() const;
     void setActiveState(bool state);
     void setUnreadMsgState(bool state);
 

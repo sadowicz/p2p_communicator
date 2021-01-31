@@ -82,7 +82,7 @@ void ContactController::forceDisconnect(const string& ip) {
     connection->closeConnection(ip);
 }
 
-bool ContactController::isActive(const string& ip) {
+bool ContactController::isActive(const string& ip) const{
     return Storage::storage().getContact(ip)->isActive();
 }
 

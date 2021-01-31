@@ -18,7 +18,7 @@ public:
     void removeContact(const string& ip);
     void editContact(Contact* editedContact);
     void sendTextMessage(const string& ip, const string& message);
-    bool isActive(const string& ip);
+    bool isActive(const string& ip) const;
     void tryConnect(const string& ip);
     void forceDisconnect(const string& ip);
 
