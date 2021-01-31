@@ -22,6 +22,9 @@ public:
     void tryConnect(const string& ip);
     void forceDisconnect(const string& ip);
 
+signals:
+    void contactStatusChanged();
+
 private:
     TCPConnection* connection;
     Logger& log;

@@ -62,7 +62,6 @@ void MainWindow::assignStatesProperties()
     Unlocked->assignProperty(ui->pbSend, "enabled", true);
     Unlocked->assignProperty(ui->pbAttachFile, "enabled", true);
     Unlocked->assignProperty(ui->lwContacts, "enabled", true);
-    //Unlocked->assignProperty(ui->teChat, "enabled", true);
     Unlocked->assignProperty(ui->teSend, "enabled", true);
     Unlocked->assignProperty(ui->pbDeleteContact, "enabled", false);
     Unlocked->assignProperty(ui->pbEditContact, "enabled", false);
@@ -71,7 +70,6 @@ void MainWindow::assignStatesProperties()
     Disconnected->assignProperty(ui->pbSend, "enabled", false);
     Disconnected->assignProperty(ui->pbAttachFile, "enabled", false);
     Disconnected->assignProperty(ui->lwContacts, "enabled", true);
-    //Disconnected->assignProperty(ui->teChat, "enabled", false);
     Disconnected->assignProperty(ui->teSend, "enabled", false);
     Disconnected->assignProperty(ui->pbDeleteContact, "enabled", false);
     Disconnected->assignProperty(ui->pbEditContact, "enabled", false);
@@ -80,7 +78,6 @@ void MainWindow::assignStatesProperties()
     Connected->assignProperty(ui->pbSend, "enabled", false);
     Connected->assignProperty(ui->pbAttachFile, "enabled", true);
     Connected->assignProperty(ui->lwContacts, "enabled", true);
-    //Connected->assignProperty(ui->teChat, "enabled", true);
     Connected->assignProperty(ui->teSend, "enabled", true);
     Connected->assignProperty(ui->pbDeleteContact, "enabled", false);
     Connected->assignProperty(ui->pbEditContact, "enabled", false);
@@ -89,7 +86,6 @@ void MainWindow::assignStatesProperties()
     Sendable->assignProperty(ui->pbSend, "enabled", true);
     Sendable->assignProperty(ui->pbAttachFile, "enabled", true);
     Sendable->assignProperty(ui->lwContacts, "enabled", true);
-    //Sendable->assignProperty(ui->teChat, "enabled", true);
     Sendable->assignProperty(ui->teSend, "enabled", true);
     Sendable->assignProperty(ui->pbDeleteContact, "enabled", false);
     Sendable->assignProperty(ui->pbEditContact, "enabled", false);
@@ -98,7 +94,6 @@ void MainWindow::assignStatesProperties()
     Locked->assignProperty(ui->pbSend, "enabled", false);
     Locked->assignProperty(ui->pbAttachFile, "enabled", false);
     Locked->assignProperty(ui->lwContacts, "enabled", false);
-    //Locked->assignProperty(ui->teChat, "enabled", false);
     Locked->assignProperty(ui->teSend, "enabled", false);
     Locked->assignProperty(ui->pbDeleteContact, "enabled", false);
     Locked->assignProperty(ui->pbEditContact, "enabled", false);
@@ -196,18 +191,6 @@ void MainWindow::on_error(QString errorMessage)
 void MainWindow::on_errorRead()
 {
     emit errorCatched();
-}
-
-void MainWindow::on_connected(std::string ip, short port)
-{
-    Storage::storage().getContact(ip)->setActiveState(true);
-    refreshContactsList();
-}
-
-void MainWindow::on_disconnected(std::string ip)
-{
-    Storage::storage().getContact(ip)->setActiveState(false);
-    refreshContactsList();
 }
 
 void MainWindow::on_validateSendable()

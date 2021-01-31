@@ -49,9 +49,6 @@ private slots:
     void on_errorRead();
     void on_validateSendable();
 
-    void on_connected(std::string ip, short port);
-    void on_disconnected(std::string ip);
-
     void on_pbNewContact_clicked();
     void on_lwContacts_itemClicked(QListWidgetItem *item);
     void on_pbDeleteContact_clicked();
