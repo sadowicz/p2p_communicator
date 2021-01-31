@@ -27,6 +27,8 @@ MainWindow::MainWindow(QWidget *parent)
     log = Logger(Config::config("log-file"), Config::config().debugMode());
     log.info("------------ App started ------------");
     contactController = new ContactController(log);
+
+    connect(contactController, SIGNAL(contactStatusChanged()), this, SLOT(on_contactStatusChanged()));
 }
 
 MainWindow::~MainWindow()
@@ -62,7 +64,6 @@ void MainWindow::assignStatesProperties()
     Unlocked->assignProperty(ui->pbSend, "enabled", true);
     Unlocked->assignProperty(ui->pbAttachFile, "enabled", true);
     Unlocked->assignProperty(ui->lwContacts, "enabled", true);
-    //Unlocked->assignProperty(ui->teChat, "enabled", true);
     Unlocked->assignProperty(ui->teSend, "enabled", true);
     Unlocked->assignProperty(ui->pbDeleteContact, "enabled", false);
     Unlocked->assignProperty(ui->pbEditContact, "enabled", false);
@@ -71,7 +72,6 @@ void MainWindow::assignStatesProperties()
     Disconnected->assignProperty(ui->pbSend, "enabled", false);
     Disconnected->assignProperty(ui->pbAttachFile, "enabled", false);
     Disconnected->assignProperty(ui->lwContacts, "enabled", true);
-    //Disconnected->assignProperty(ui->teChat, "enabled", false);
     Disconnected->assignProperty(ui->teSend, "enabled", false);
     Disconnected->assignProperty(ui->pbDeleteContact, "enabled", false);
     Disconnected->assignProperty(ui->pbEditContact, "enabled", false);
@@ -80,7 +80,6 @@ void MainWindow::assignStatesProperties()
     Connected->assignProperty(ui->pbSend, "enabled", false);
     Connected->assignProperty(ui->pbAttachFile, "enabled", true);
     Connected->assignProperty(ui->lwContacts, "enabled", true);
-    //Connected->assignProperty(ui->teChat, "enabled", true);
     Connected->assignProperty(ui->teSend, "enabled", true);
     Connected->assignProperty(ui->pbDeleteContact, "enabled", false);
     Connected->assignProperty(ui->pbEditContact, "enabled", false);
@@ -89,7 +88,6 @@ void MainWindow::assignStatesProperties()
     Sendable->assignProperty(ui->pbSend, "enabled", true);
     Sendable->assignProperty(ui->pbAttachFile, "enabled", true);
     Sendable->assignProperty(ui->lwContacts, "enabled", true);
-    //Sendable->assignProperty(ui->teChat, "enabled", true);
     Sendable->assignProperty(ui->teSend, "enabled", true);
     Sendable->assignProperty(ui->pbDeleteContact, "enabled", false);
     Sendable->assignProperty(ui->pbEditContact, "enabled", false);
@@ -98,7 +96,6 @@ void MainWindow::assignStatesProperties()
     Locked->assignProperty(ui->pbSend, "enabled", false);
     Locked->assignProperty(ui->pbAttachFile, "enabled", false);
     Locked->assignProperty(ui->lwContacts, "enabled", false);
-    //Locked->assignProperty(ui->teChat, "enabled", false);
     Locked->assignProperty(ui->teSend, "enabled", false);
     Locked->assignProperty(ui->pbDeleteContact, "enabled", false);
     Locked->assignProperty(ui->pbEditContact, "enabled", false);
@@ -140,9 +137,15 @@ void MainWindow::loadContacts()
 
 void MainWindow::loadListItems()
 {
+    log.debug("Loading contact list items:");
+
     for(auto& contact : contacts)
     {
-        new QListWidgetItem(contact.first.c_str(), ui->lwContacts);
+        auto loaded = new QListWidgetItem(contact.first.c_str(), ui->lwContacts);
+        if(contact.second->isActive() == true) loaded->setTextColor(Qt::darkGreen);
+        else if(contact.second->isActive() == false) loaded->setTextColor(Qt::darkRed);
+
+        log.debug("\t> " + contact.first + "\tactive : " + std::to_string(contact.second->isActive()));
     }
 }
 
@@ -171,6 +174,11 @@ void MainWindow::on_contactAddSuccess(Contact* newContact) {
     refreshContactsList();
 
     emit contactAdded();
+}
+
+void MainWindow::on_contactStatusChanged()
+{
+    refreshContactsList();
 }
 
 void MainWindow::refreshContactsList() {

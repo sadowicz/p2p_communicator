@@ -9,7 +9,7 @@
 
 namespace contacts {
 
-class ContactController : QObject {
+class ContactController : public QObject {
     Q_OBJECT
 
 public:
@@ -21,6 +21,9 @@ public:
     bool isActive(const string& ip);
     void tryConnect(const string& ip);
     void forceDisconnect(const string& ip);
+
+signals:
+    void contactStatusChanged();
 
 private:
     TCPConnection* connection;
