@@ -5,6 +5,7 @@
 #include <QStateMachine>
 #include <QHistoryState>
 #include <QDebug>
+#include <QFont>
 
 #include <MessageListDelegate.h>
 #include <add_contact_window.h>
@@ -37,6 +38,7 @@ signals:
     void errorCatched();
     void msgSendable();
     void msgUnsendable();
+    void msgRead(std::string ip);
     void sendMsg(string& ip, string& content);
     void edited(std::string ip, std::string name, int port);
 

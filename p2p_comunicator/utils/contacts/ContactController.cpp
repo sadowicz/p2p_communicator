@@ -101,4 +101,7 @@ void ContactController::onRecieve(const string ip, TCPPacket packet) {
 
     Storage::storage().getContact(ip)->addToHistory(new Message(packet));
     Storage::storage().save();
+
+    Storage::storage().getContact(ip)->setUnreadMsgState(true);
+    emit contactStatusChanged();
 }

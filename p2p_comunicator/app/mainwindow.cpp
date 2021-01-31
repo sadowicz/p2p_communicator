@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
     contactController = new ContactController(log);
 
     connect(contactController, SIGNAL(contactStatusChanged()), this, SLOT(on_contactStatusChanged()));
+
 }
 
 MainWindow::~MainWindow()
@@ -143,10 +144,20 @@ void MainWindow::loadListItems()
     for(auto& contact : contacts)
     {
         auto loaded = new QListWidgetItem(contact.first.c_str(), ui->lwContacts);
+
         if(contact.second->isActive() == true) loaded->setTextColor(Qt::darkGreen);
         else if(contact.second->isActive() == false) loaded->setTextColor(Qt::darkRed);
 
-        log.debug("\t> " + contact.first + "\tactive : " + std::to_string(contact.second->isActive()));
+        if(contact.second->hasUnreadMsg() == true)
+        {
+            QFont font{};
+            font.setBold(true);
+            loaded->setFont(font);
+        }
+
+        log.debug("\t> " + contact.first +
+                  "\tactive : " + std::to_string(contact.second->isActive()) +
+                  "\tunread : " + std::to_string(contact.second->hasUnreadMsg()));
     }
 }
 
@@ -223,6 +234,10 @@ void MainWindow::on_lwContacts_itemClicked(QListWidgetItem *item)
     // try connecting to contact if it's inactive
     if (!activeContact->isActive()) {
         contactController->tryConnect(activeContact->getAddress());
+    }
+
+    if(activeContact->hasUnreadMsg() == true) {
+        emit msgRead(activeContact->getAddress());
     }
 }
 

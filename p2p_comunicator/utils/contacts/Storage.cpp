@@ -53,6 +53,7 @@ void Storage::read(const QJsonObject &json) {
         if (contactExists(contact->getAddress())) {
             Contact* oldContact = getContact(contact->getAddress());
             contact->setActiveState(oldContact->isActive());
+            contact->setUnreadMsgState(oldContact->hasUnreadMsg());
             delete oldContact;
         }
         contacts.erase(contact->getAddress());
