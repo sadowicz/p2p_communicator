@@ -3,7 +3,7 @@
 using namespace contacts;
 
 Contact::Contact(std::string name, std::string address, unsigned port, QObject* parent)
-    : QAbstractListModel(parent), name(name), address(address), port(port), active(false) {}
+    : QAbstractListModel(parent), name(name), address(address), port(port), active(false), unreadMsg(false) {}
 
 void Contact::read(const QJsonObject &json) {
     name = json["name"].toString().toStdString();
@@ -55,10 +55,17 @@ bool Contact::isActive() {
     return this->active;
 }
 
+bool Contact::hasUnreadMsg() {
+    return this->unreadMsg;
+}
+
 void Contact::setActiveState(bool state) {
     this->active = state;
 }
 
+void Contact::setUnreadMsgState(bool state) {
+    this->unreadMsg = state;
+}
 
 int Contact::rowCount(const QModelIndex &parent) const{
     if(parent.isValid()){

@@ -22,6 +22,9 @@ public:
     void tryConnect(const string& ip);
     void forceDisconnect(const string& ip);
 
+public slots:
+    void onMsgRead(const string);
+
 signals:
     void contactStatusChanged();
 
