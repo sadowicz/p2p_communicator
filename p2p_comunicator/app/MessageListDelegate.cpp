@@ -19,9 +19,12 @@ QSize MessageListDelegate::sizeHint(const QStyleOptionViewItem &option, const QM
         return QSize();
 
     Message* message =index.data().value<Message*>();
+    auto contact = dynamic_cast<const Contact*>(index.model());
 
     QString content = QString::fromStdString(message->getContent());
-    QString sender =  QString::fromStdString(message->getAddress());
+    QString sender = message->getSender() == Message::CONTACT
+            ? QString::fromStdString(contact->getName()) : "Me";
+    sender.append(':');
 
     int lineSpace = option.fontMetrics.lineSpacing();
     const QFontMetrics& fMetrics = option.fontMetrics;
@@ -68,6 +71,7 @@ void MessageListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
         return;
 
     Message* message = qvariant_cast<Message*>(index.data());
+    auto contact = dynamic_cast<const Contact*>(index.model());
 
     // set styles
     QStyleOptionViewItem opt = option;
@@ -76,7 +80,7 @@ void MessageListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
     style->drawControl(QStyle::CE_ItemViewItem,&opt,painter,widget);
 
     //draw Message
-    paintMessage(message, painter, opt);
+    paintMessage(message, contact ,painter, opt);
 
     if(message->getType() == Message::FILE)
     {
@@ -86,10 +90,12 @@ void MessageListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 
 }
 
-void MessageListDelegate::paintMessage(const Message* message, QPainter* painter, const QStyleOptionViewItem &option) const{
+void MessageListDelegate::paintMessage(const Message* message, const Contact* contact, QPainter* painter, const QStyleOptionViewItem &option) const{
 
     QString content = QString::fromStdString(message->getContent());
-    QString sender = QString::fromStdString(message->getAddress());
+    QString sender = message->getSender() == Message::CONTACT
+            ? QString::fromStdString(contact->getName()) : "Me";
+    sender.append(':');
 
     int lineSpace = option.fontMetrics.lineSpacing();
     QRect textRect = option.rect;

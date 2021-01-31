@@ -25,6 +25,10 @@ public:
         TEXT, FILE
     };
 
+    enum Sender{
+        ME, CONTACT
+    };
+
     Message(TCPPacket packet, QObject* parent = nullptr);
     Message(QJsonObject& object, QObject* parent = nullptr);
     QJsonObject serialize();
@@ -43,21 +47,17 @@ public:
         return type;
     }
 
-    string getAddress() const {
-        return address;
+    Sender getSender() const{
+        return sender;
     }
 
-    Message& withAddress(const string& sender) {
-        this->address = sender;
-        return *this;
-    }
 
 private:
     QDateTime timestamp;
     Type type;
+    Sender sender;
     string content;
     string filename;
-    string address;
     Logger log;
 
 };
