@@ -27,7 +27,6 @@ public slots:
 
 signals:
     void refreshContactList();
-    void msgReceived();
 
 private:
     TCPConnection* connection;

@@ -113,7 +113,6 @@ void ContactController::onTextMessage(const string ip, TCPPacket packet) {
     Storage::storage().getContact(ip)->setUnreadMsgState(true);
     Storage::storage().save();
     emit refreshContactList();
-    emit msgReceived();
 }
 
 void ContactController::onFileMessage(const string ip, TCPPacket packet) {

@@ -170,8 +170,11 @@ void MainWindow::loadListItems()
 
     ui->lwContacts->sortItems();
 
-    if(!activeContact.empty())
-        ui->msgListView->setModel(Storage::storage().getContact(activeContact));
+    if(!activeContact.empty()){
+        auto contact = Storage::storage().getContact(activeContact);
+        ui->msgListView->setModel(contact);
+        connect(contact, &Contact::onHistoryChange, this, &MainWindow::onMessageListChange);
+    }
 }
 
 void MainWindow::on_pbNewContact_clicked()
