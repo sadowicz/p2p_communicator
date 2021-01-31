@@ -105,3 +105,9 @@ void ContactController::onRecieve(const string ip, TCPPacket packet) {
     Storage::storage().getContact(ip)->setUnreadMsgState(true);
     emit contactStatusChanged();
 }
+
+void ContactController::onMsgRead(const string ip) {
+    log.debug("Read message from: " + ip);
+    Storage::storage().getContact(ip)->setUnreadMsgState(false);
+    emit contactStatusChanged();
+}

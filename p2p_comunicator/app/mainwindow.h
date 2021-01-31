@@ -38,7 +38,7 @@ signals:
     void errorCatched();
     void msgSendable();
     void msgUnsendable();
-    void msgRead(std::string ip);
+    void msgRead(const string ip);
     void sendMsg(string& ip, string& content);
     void edited(std::string ip, std::string name, int port);
 

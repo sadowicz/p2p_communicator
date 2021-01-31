@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
     contactController = new ContactController(log);
 
     connect(contactController, SIGNAL(contactStatusChanged()), this, SLOT(on_contactStatusChanged()));
+    connect(this, SIGNAL(msgRead(const string)), contactController, SLOT(onMsgRead(const string)));
 
 }
 
