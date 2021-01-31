@@ -4,7 +4,7 @@ using namespace contacts;
 
 ContactController::ContactController(Logger& log) : log(log) {
     connection = new TCPConnection(log);
-    connect(connection, SIGNAL(connected(string, short)), SLOT(onConnect(string,short)));
+    connect(connection, SIGNAL(connected(string, unsigned int)), SLOT(onConnect(string, unsigned int)));
     connect(connection, SIGNAL(disconnected(string)), SLOT(onDisconnect(string)));
     connect(connection, SIGNAL(recieved(string, TCPPacket)), SLOT(onRecieve(string, TCPPacket)));
     connect(connection, SIGNAL(sendingError(string, TCPException)), SLOT(onSendError(string, TCPException)));
@@ -55,23 +55,25 @@ void ContactController::sendTextMessage(const string& ip, const string& message)
     connection->send(ip, TCPPacket::encode(TCPPacket::PacketType::TEXT, "", message));
 }
 
-void ContactController::onConnect(const string ip, short port) {
+void ContactController::onConnect(const string ip, unsigned int port) {
     if (!Storage::storage().contactExists(ip)) {
         log.info("Adding new contact: " + ip + ":" + std::to_string(port));
 
         Contact* newContact = new Contact(ip, ip, port);
         Storage::storage().addContact(newContact);
+        emit refreshContactList();
     }
 
     if (Storage::storage().getContact(ip)->isActive() == false) {
         Storage::storage().getContact(ip)->setActiveState(true);
-        emit contactStatusChanged();
+        emit refreshContactList();
     }
 }
 
 void ContactController::tryConnect(const string& ip) {
     // dont reconnect if contact is already active
-    if (!isActive(ip)) {
+    Contact* contact = Storage::storage().getContact(ip);
+    if (!contact->isActive()) {
         connection->reconnect(ip);
     }
 }
@@ -87,7 +89,6 @@ bool ContactController::isActive(const string& ip) {
 void ContactController::onDisconnect(const string ip) {
     if (Storage::storage().contactExists(ip)) {
         Storage::storage().getContact(ip)->setActiveState(false);
-        emit contactStatusChanged();
     }
 }
 
@@ -99,6 +100,30 @@ void ContactController::onSendError(const string ip, TCPException e) {
 void ContactController::onRecieve(const string ip, TCPPacket packet) {
     log.debug("Recieved message from: " + ip + ", content: " + packet.getContent());
 
-    Storage::storage().getContact(ip)->addToHistory(new Message(packet));
-    Storage::storage().save();
+    switch(packet.getType()) {
+    case TCPPacket::PacketType::TEXT: {
+        Storage::storage().getContact(ip)->addToHistory(new Message(packet));
+        Storage::storage().save();
+        break;
+    }
+    case TCPPacket::PacketType::FILE: {
+        //TODO
+        break;
+    }
+    case TCPPacket::PacketType::NEW_CONTACT: {
+        if (Storage::storage().contactExists(ip)) {
+            Contact* old = Storage::storage().getContact(ip);
+            unsigned int port = std::stoul(packet.getContent());
+
+            if (old->getPort() != port) {
+                log.debug("Changing port of existing contact: " + ip + " to: " + std::to_string(port));
+                old->setPort(port);
+                Storage::storage().save();
+
+                connection->registerClient(ip, port)->tryConnect();
+            }
+        }
+        break;
+    }
+    }
 }

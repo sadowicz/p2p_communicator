@@ -12,7 +12,7 @@ class TCPPacket {
 
 public:
     enum PacketType {
-        TEXT, FILE
+        TEXT, FILE, NEW_CONTACT
     };
 
     static TCPPacket decode(std::string packet);
@@ -61,6 +61,8 @@ private:
     static const char* getContentFromRaw(const char* cstr);
     static bool tryParseFilePacket(const char* cstr, char* filename);
     static bool tryParseTextPacket(const char* cstr);
+    static bool tryParseNewContactPacket(const char* cstr, char* port);
+    
 };
 
 

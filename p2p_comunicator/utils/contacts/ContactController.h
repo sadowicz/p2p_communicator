@@ -23,14 +23,14 @@ public:
     void forceDisconnect(const string& ip);
 
 signals:
-    void contactStatusChanged();
+    void refreshContactList();
 
 private:
     TCPConnection* connection;
     Logger& log;
 
 private slots:
-    void onConnect(const string, short);
+    void onConnect(const string, unsigned int);
     void onDisconnect(const string);
     void onRecieve(const string, TCPPacket);
     void onSendError(const string, TCPException);

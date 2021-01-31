@@ -2,6 +2,7 @@
 
 #define TEXT_PACKET_HEADER "TEXT"
 #define FILE_PACKET_HEADER "FILE"
+#define NEW_CONTACT_PACKET_HEADER "NEW_CONTACT"
 
 TCPPacket TCPPacket::decode(std::string packet) {
     if (packet.empty()) {
@@ -12,8 +13,13 @@ TCPPacket TCPPacket::decode(std::string packet) {
 
     const char* cstr = packet.c_str();
     char filename[260] = "";
+    char port[20] = "";
 
-    if (tryParseFilePacket(cstr, filename)) {
+    if (tryParseNewContactPacket(cstr, port)) {
+        return TCPPacket(packet)
+                .withContent(std::string(port))
+                .withType(PacketType::NEW_CONTACT);
+    } else if (tryParseFilePacket(cstr, filename)) {
         const char* content = getContentFromRaw(cstr);
         return TCPPacket(packet)
                 .withContent(std::string(content + 1))
@@ -40,6 +46,9 @@ std::string TCPPacket::encode(TCPPacket::PacketType type, std::string filename, 
     } else if (type == PacketType::FILE) {
         packet = std::string("<" FILE_PACKET_HEADER ":") + filename + std::string("> ") + content;
 
+    } else if (type == PacketType::NEW_CONTACT) {
+        packet = std::string("<" NEW_CONTACT_PACKET_HEADER ":" + content + std::string("> "));
+
     } else {
         throw TCPException("Packet encoding failed: incorrect packet type");
     }
@@ -59,8 +68,8 @@ const char* TCPPacket::getContentFromRaw(const char* cstr) {
 }
 
 bool TCPPacket::tryParseFilePacket(const char* cstr, char* filename) {
-    char header[10] = "";
-    int parsingResult = sscanf(cstr, "<%9[^:]:%259[^>]>", header, filename);
+    char header[20] = "";
+    int parsingResult = sscanf(cstr, "<%19[^:]:%259[^>]>", header, filename);
 
     if (parsingResult == 2) {
         if (strcmp(header, FILE_PACKET_HEADER) != 0) {
@@ -73,12 +82,26 @@ bool TCPPacket::tryParseFilePacket(const char* cstr, char* filename) {
 }
 
 bool TCPPacket::tryParseTextPacket(const char* cstr) {
-    char header[10] = "";
-    int parsingResult = sscanf(cstr, "<%9[^>]>", header);
+    char header[20] = "";
+    int parsingResult = sscanf(cstr, "<%19[^>]>", header);
 
     if (parsingResult == 1) {
         if (strcmp(header, TEXT_PACKET_HEADER) != 0) {
             throw TCPException("Packet decoding failed: packet header incorrect, use " TEXT_PACKET_HEADER);
+        } else {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool TCPPacket::tryParseNewContactPacket(const char* cstr, char* port) {
+    char header[20] = "";
+    int parsingResult = sscanf(cstr, "<%19[^:]:%9[^>]>", header, port);
+
+    if (parsingResult == 2) {
+        if (strcmp(header, NEW_CONTACT_PACKET_HEADER) != 0) {
+            throw TCPException("Packet decoding failed: packet header incorrect, use " NEW_CONTACT_PACKET_HEADER);
         } else {
             return true;
         }

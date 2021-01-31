@@ -1,6 +1,6 @@
 #include <TCPClient.h>
 
-TCPClient::TCPClient(Logger& log, string ip, short port) : ip(ip), port(port), log(log) {
+TCPClient::TCPClient(Logger& log, string ip, unsigned int myPort, unsigned int port) : ip(ip), port(port), myPort(myPort), log(log) {
     socket = new QTcpSocket();
     connect(socket, SIGNAL(disconnected()), this, SLOT(onDisconnect()));
     connect(socket, SIGNAL(connected()), this, SLOT(onConnect()));
@@ -33,6 +33,8 @@ void TCPClient::onDisconnect() {
 }
 
 void TCPClient::onConnect() {
+    send(TCPPacket::encode(TCPPacket::PacketType::NEW_CONTACT, "", std::to_string(myPort)));
+
     emit connected(ip, port);
     log.debug("Client connected to contact: " + ip + ":" + std::to_string(port));
 }

@@ -13,7 +13,7 @@ class TCPServer : public QObject {
     Q_OBJECT
 
 public:
-    TCPServer(Logger& log, short port);
+    TCPServer(Logger& log, unsigned int port);
 
 private:
     QTcpServer* server;
@@ -27,7 +27,7 @@ private slots:
 
 signals:
     void recieved(const string, TCPPacket);
-    void connected(const string, short);
+    void connected(const string, unsigned int);
     void disconnected(const string);
 
 };
