@@ -68,6 +68,7 @@ void MainWindow::assignStatesProperties()
     Unlocked->assignProperty(ui->pbAttachFile, "enabled", true);
     Unlocked->assignProperty(ui->lwContacts, "enabled", true);
     Unlocked->assignProperty(ui->teSend, "enabled", true);
+    Unlocked->assignProperty(ui->lbAttachFile, "enabled", true);
     Unlocked->assignProperty(ui->pbDeleteContact, "enabled", false);
     Unlocked->assignProperty(ui->pbEditContact, "enabled", false);
 
@@ -76,6 +77,7 @@ void MainWindow::assignStatesProperties()
     Disconnected->assignProperty(ui->pbAttachFile, "enabled", false);
     Disconnected->assignProperty(ui->lwContacts, "enabled", true);
     Disconnected->assignProperty(ui->teSend, "enabled", false);
+    Disconnected->assignProperty(ui->lbAttachFile, "enabled", false);
     Disconnected->assignProperty(ui->pbDeleteContact, "enabled", false);
     Disconnected->assignProperty(ui->pbEditContact, "enabled", false);
 
@@ -84,6 +86,7 @@ void MainWindow::assignStatesProperties()
     Connected->assignProperty(ui->pbAttachFile, "enabled", true);
     Connected->assignProperty(ui->lwContacts, "enabled", true);
     Connected->assignProperty(ui->teSend, "enabled", true);
+    Connected->assignProperty(ui->lbAttachFile, "enabled", true);
     Connected->assignProperty(ui->pbDeleteContact, "enabled", false);
     Connected->assignProperty(ui->pbEditContact, "enabled", false);
 
@@ -92,6 +95,7 @@ void MainWindow::assignStatesProperties()
     Sendable->assignProperty(ui->pbAttachFile, "enabled", true);
     Sendable->assignProperty(ui->lwContacts, "enabled", true);
     Sendable->assignProperty(ui->teSend, "enabled", true);
+    Sendable->assignProperty(ui->lbAttachFile, "enabled", true);
     Sendable->assignProperty(ui->pbDeleteContact, "enabled", false);
     Sendable->assignProperty(ui->pbEditContact, "enabled", false);
 
@@ -100,6 +104,7 @@ void MainWindow::assignStatesProperties()
     Locked->assignProperty(ui->pbAttachFile, "enabled", false);
     Locked->assignProperty(ui->lwContacts, "enabled", false);
     Locked->assignProperty(ui->teSend, "enabled", false);
+    Locked->assignProperty(ui->lbAttachFile, "enabled", false);
     Locked->assignProperty(ui->pbDeleteContact, "enabled", false);
     Locked->assignProperty(ui->pbEditContact, "enabled", false);
 }
@@ -112,11 +117,13 @@ void MainWindow::setStatesTransistions()
     Disconnected->addTransition(ui->lwContacts, SIGNAL(itemClicked(QListWidgetItem*)), Connected);
 
     Connected->addTransition(ui->teSend, SIGNAL(textChanged()), ValidateSendable);
+    Connected->addTransition(this, SIGNAL(fileChanged()), ValidateSendable);
 
     connect(ValidateSendable, SIGNAL(entered()), this, SLOT(on_validateSendable()));
     ValidateSendable->addTransition(this, SIGNAL(msgSendable()), Sendable);
     ValidateSendable->addTransition(this, SIGNAL(msgUnsendable()), Connected);
 
+    Sendable->addTransition(this, SIGNAL(fileChanged()), ValidateSendable);
     Sendable->addTransition(ui->teSend, SIGNAL(textChanged()), ValidateSendable);
 
     Locked->addTransition(this, SIGNAL(contactAdded()), Connected);
@@ -219,10 +226,11 @@ void MainWindow::on_errorRead()
 
 void MainWindow::on_validateSendable()
 {
-    if(ui->teSend->toPlainText().isEmpty())
+    if(ui->teSend->toPlainText().isEmpty() && ui->lbAttachFile->text().isEmpty())
         emit msgUnsendable();
     else
         emit msgSendable();
+
 }
 
 void MainWindow::on_lwContacts_itemClicked(QListWidgetItem *item)
@@ -270,4 +278,57 @@ void MainWindow::on_pbSettings_clicked()
 
 void MainWindow::on_pbSend_clicked() {
     contactController->sendTextMessage(activeContact->getAddress(), ui->teSend->toPlainText().toStdString());
+}
+
+void MainWindow::on_pbAttachFile_clicked()
+{
+    if(ui->pbAttachFile->text() == "Attach File"){
+        attachFile();
+    }else if(ui->pbAttachFile->text() == "Remove"){
+        removeFile();
+    }
+}
+
+void MainWindow::attachFile(){
+    QString filePath = QFileDialog::getOpenFileName(this,"Open file", QDir::homePath());
+    QFile file(filePath);
+
+    if(filePath == "")
+        return;
+
+    if(!file.open(QIODevice::ReadOnly)){
+        log.error(filePath.prepend("Failed to open File: ").toStdString());
+        emit error(file.fileName().prepend("Failed to open: "));
+        return;
+    }
+
+    // load bytes and get file name
+    qint64 size = file.size();
+    std::string* fileContent = new std::string;
+    *fileContent = file.readAll().toStdString();
+
+    if(size < static_cast<int>(fileContent->size()))
+    {
+        log.error(filePath.prepend("Failed to read File: ").toStdString());
+        emit error(file.fileName().prepend("Failed to open: "));
+        return;
+    }
+
+    QString fileName = QFileInfo(file).fileName();
+
+    log.info(filePath.prepend("File ready to send: ").toStdString());
+    ui->lbAttachFile->setText(fileName);
+    ui->pbAttachFile->setText("Remove");
+
+    emit fileChanged();
+    emit fileReady(fileName.toStdString(), fileContent);
+}
+
+void MainWindow::removeFile(){
+
+    ui->lbAttachFile->setText("");
+    ui->pbAttachFile->setText("Attach File");
+
+    emit fileChanged();
+    emit fileRemoved();
 }

@@ -25,6 +25,10 @@ public:
         TEXT, FILE
     };
 
+    enum Sender{
+        ME, CONTACT
+    };
+
     static Message* createTextMessage(string content, QObject* parent = nullptr);
     static Message* createFileMessage(string filename, QObject* parent = nullptr);
     Message(TCPPacket packet, QObject* parent = nullptr);
@@ -45,24 +49,20 @@ public:
         return type;
     }
 
-    string getAddress() const {
-        return address;
+    Sender getSender() const{
+        return sender;
     }
 
-    Message& withAddress(const string& sender) {
-        this->address = sender;
-        return *this;
-    }
 
 private:
     QDateTime timestamp;
     Type type;
+    Sender sender;
     string content;
     string filename;
-    string address;
     Logger log;
 
-    Message(Type type, string filename, string content, string address, QObject* parent = nullptr);
+    Message(Type type, string filename, string content, Sender sender, QObject* parent = nullptr);
 
 };
 

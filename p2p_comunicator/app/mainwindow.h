@@ -6,6 +6,8 @@
 #include <QHistoryState>
 #include <QDebug>
 #include <QFont>
+#include <QFileDialog>
+#include <QDir>
 
 #include <MessageListDelegate.h>
 #include <add_contact_window.h>
@@ -42,6 +44,10 @@ signals:
     void sendMsg(string& ip, string& content);
     void edited(std::string ip, std::string name, int port);
 
+    void fileChanged();
+    void fileRemoved();
+    void fileReady(std::string fileName, const std::string* fileContent);
+
 private slots:
     void on_contactAddSuccess(Contact* contact);
     void on_contactEditSuccess(Contact* contact);
@@ -60,6 +66,9 @@ private slots:
     void on_pbSettings_clicked();
 
     void on_pbSend_clicked();
+
+    void on_pbAttachFile_clicked();
+
 
 private:
     Ui::MainWindow *ui;
@@ -90,6 +99,9 @@ private:
     void loadContacts();
     void loadListItems();
     void refreshContactsList();
+
+    void attachFile();
+    void removeFile();
 
 };
 #endif // MAINWINDOW_H

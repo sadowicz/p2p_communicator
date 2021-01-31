@@ -35,8 +35,10 @@ void Contact::write(QJsonObject &json) {
 }
 
 void Contact::addToHistory(Message* message) {
+    beginResetModel();
     message->setParent(this);
     history.push_back(message);
+    endResetModel();
 }
 
 std::string Contact::getName() const {
@@ -51,11 +53,11 @@ int Contact::getPort()  const{
     return this->port;
 }
 
-bool Contact::isActive() {
+bool Contact::isActive() const{
     return this->active;
 }
 
-bool Contact::hasUnreadMsg() {
+bool Contact::hasUnreadMsg() const{
     return this->unreadMsg;
 }
 

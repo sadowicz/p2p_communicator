@@ -32,8 +32,8 @@ public:
     std::string getName() const;
     std::string getAddress() const;
     int getPort() const;
-    bool isActive();
-    bool hasUnreadMsg();
+    bool isActive() const;
+    bool hasUnreadMsg() const;
     void setActiveState(bool state);
     void setUnreadMsgState(bool state);
 
