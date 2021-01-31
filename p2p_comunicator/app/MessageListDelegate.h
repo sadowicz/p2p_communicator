@@ -27,7 +27,9 @@ private:
     QSize padding;
 
 
-    void paintMessage(const Message* message, const Contact* contact, QPainter* painter, const QStyleOptionViewItem &option) const;
+    void paintMessage(const Message* message, QPainter* painter, const QStyleOptionViewItem &option) const;
+    void paintSender(const QString sender, QPainter* painter, const QStyleOptionViewItem &option) const;
+    void paintTimeStamp(const Message* message, QPainter* painter, const QStyleOptionViewItem &option) const;
     void paintDownload(const Message* message, QPainter* painter, const QStyleOptionViewItem &option) const;
 
     int getSenderHeight(const QString& contactName, const QStyleOptionViewItem &option) const;
