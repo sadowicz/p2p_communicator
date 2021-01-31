@@ -142,10 +142,10 @@ void MainWindow::loadListItems()
     for(auto& contact : contacts)
     {
         auto loaded = new QListWidgetItem(contact.first.c_str(), ui->lwContacts);
-        if(contact.second->isActive()) loaded->setTextColor(Qt::green);
-        else loaded->setTextColor(Qt::red);
+        if(contact.second->isActive() == true) loaded->setTextColor(Qt::darkGreen);
+        else if(contact.second->isActive() == false) loaded->setTextColor(Qt::darkRed);
 
-        log.debug("\t> " + contact.second->getName() + "\tactive : " + std::to_string(contact.second->isActive()));
+        log.debug("\t> " + contact.first + "\tactive : " + std::to_string(contact.second->isActive()));
     }
 }
 
