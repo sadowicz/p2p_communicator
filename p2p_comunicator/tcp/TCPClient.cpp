@@ -9,9 +9,12 @@ TCPClient::TCPClient(Logger& log, string ip, short port) : ip(ip), port(port), l
 
 void TCPClient::tryConnect() {
     log.debug("Trying to connect to contact: " + ip);
-
-    QHostAddress hostAddress = QHostAddress(QString(ip.c_str()));
-    socket->connectToHost(hostAddress, port);
+    if (socket->state() != QTcpSocket::ConnectingState) {
+        QHostAddress hostAddress = QHostAddress(QString(ip.c_str()));
+        socket->connectToHost(hostAddress, port);
+    } else {
+        log.debug("Client is already trying to connect");
+    }
 }
 
 void TCPClient::forceDisconnect() {
@@ -42,7 +45,7 @@ void TCPClient::send(const string& packet) {
         return;
     }
 
-    size_t writingResult = socket->write(packet.c_str());
+    int writingResult = socket->write(packet.c_str());
 
     if (writingResult == -1 || writingResult != packet.size()) {
         string error = "Client error: writing failed, "
