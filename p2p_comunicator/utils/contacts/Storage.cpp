@@ -43,15 +43,19 @@ bool Storage::save() const {
 
 void Storage::read(const QJsonObject &json) {
 
-    for (pair<std::string, Contact*> pair : contacts) {
-        delete pair.second;
-    }
-    contacts.clear();
     QJsonArray contactsArray = json["contacts"].toArray();
     for (int i = 0; i < contactsArray.size(); ++i) {
         QJsonObject contactObject = contactsArray[i].toObject();
+
         Contact* contact = new Contact();
         contact->read(contactObject);
+
+        if (contactExists(contact->getAddress())) {
+            Contact* oldContact = getContact(contact->getAddress());
+            contact->setActiveState(oldContact->isActive());
+            delete oldContact;
+        }
+        contacts.erase(contact->getAddress());
         contacts[contact->getAddress()] = contact;
     }
 }

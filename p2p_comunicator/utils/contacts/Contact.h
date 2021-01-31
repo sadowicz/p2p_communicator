@@ -18,7 +18,7 @@ class Contact : public QAbstractListModel{
 
 public:
 
-    Contact() {}
+    Contact() : name(""), address(""), port(0), active(false) {}
     Contact(std::string name, std::string address, unsigned port, QObject* parent = nullptr);
 
     void read(const QJsonObject &json);
@@ -42,7 +42,7 @@ public:
 private:
     std::string name;
     std::string address;
-    int port;
+    unsigned port;
     std::vector<Message*> history;
     bool active;
 };

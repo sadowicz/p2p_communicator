@@ -63,7 +63,7 @@ void ContactController::onConnect(const string ip, short port) {
         Storage::storage().addContact(newContact);
     }
 
-    if(Storage::storage().getContact(ip)->isActive() == false) {
+    if (Storage::storage().getContact(ip)->isActive() == false) {
         Storage::storage().getContact(ip)->setActiveState(true);
         emit contactStatusChanged();
     }

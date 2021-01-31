@@ -24,7 +24,7 @@ void Contact::read(const QJsonObject &json) {
 void Contact::write(QJsonObject &json) {
     json["name"] = QString(name.c_str());
     json["address"] = QString(address.c_str());
-    json["port"] = port;
+    json["port"] = (int) port;
 
     QJsonArray historyArray;
     for (Message* message : history) {

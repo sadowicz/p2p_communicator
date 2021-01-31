@@ -6,6 +6,7 @@
 #include <QJsonDocument>
 #include <QFile>
 #include <QMap>
+#include <QDebug>
 
 #include <unordered_map>
 
