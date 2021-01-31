@@ -27,6 +27,7 @@ public slots:
 
 signals:
     void contactStatusChanged();
+    void msgReceived();
 
 private:
     TCPConnection* connection;
