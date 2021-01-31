@@ -33,7 +33,9 @@ public:
     std::string getAddress() const;
     int getPort() const;
     bool isActive();
+    bool hasUnreadMsg();
     void setActiveState(bool state);
+    void setUnreadMsgState(bool state);
 
     // overrided model functions
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -45,6 +47,7 @@ private:
     unsigned port;
     std::vector<Message*> history;
     bool active;
+    bool unreadMsg;
 };
 
 }

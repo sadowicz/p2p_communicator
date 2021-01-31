@@ -55,10 +55,17 @@ bool Contact::isActive() {
     return this->active;
 }
 
+bool Contact::hasUnreadMsg() {
+    return this->unreadMsg;
+}
+
 void Contact::setActiveState(bool state) {
     this->active = state;
 }
 
+void Contact::setUnreadMsgState(bool state) {
+    this->unreadMsg = state;
+}
 
 int Contact::rowCount(const QModelIndex &parent) const{
     if(parent.isValid()){
