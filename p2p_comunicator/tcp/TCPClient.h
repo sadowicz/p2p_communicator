@@ -24,6 +24,7 @@ public:
     void send(const string& packet);
     void tryConnect();
     void forceDisconnect();
+    bool isConnected();
 
 private:
     string ip;

@@ -20,6 +20,7 @@ public:
     TCPConnection(Logger& log) : log(log) {}
     TCPClient* registerClient(const string ip, unsigned int port);
     void startServer(unsigned int port);
+    bool isClientConnected(const string& ip);
 
 private:
     TCPServer* server;

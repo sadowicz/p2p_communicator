@@ -90,6 +90,7 @@ void ContactController::onDisconnect(const string ip) {
     if (Storage::storage().contactExists(ip)) {
         Storage::storage().getContact(ip)->setActiveState(false);
     }
+    emit refreshContactList();
 }
 
 void ContactController::onSendError(const string ip, TCPException e) {
@@ -113,6 +114,8 @@ void ContactController::onRecieve(const string ip, TCPPacket packet) {
         break;
     }
     case TCPPacket::PacketType::NEW_CONTACT: {
+        // connection attempt from a contact
+
         if (Storage::storage().contactExists(ip)) {
             Contact* old = Storage::storage().getContact(ip);
             unsigned int port = std::stoul(packet.getContent());
@@ -121,9 +124,13 @@ void ContactController::onRecieve(const string ip, TCPPacket packet) {
                 log.debug("Changing port of existing contact: " + ip + " to: " + std::to_string(port));
                 old->setPort(port);
                 Storage::storage().save();
-
-                connection->registerClient(ip, port)->tryConnect();
+                connection->registerClient(ip, port);
             }
+        }
+
+        // if client is not connected (can't send) -> try connecting
+        if (!connection->isClientConnected(ip)) {
+            connection->reconnect(ip);
         }
         break;
     }

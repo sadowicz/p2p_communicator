@@ -20,6 +20,10 @@ TCPClient* TCPConnection::registerClient(const string ip, unsigned int port) {
     return client;
 }
 
+bool TCPConnection::isClientConnected(const string& ip) {
+    return clients[ip]->isConnected();
+}
+
 void TCPConnection::closeConnection(const string& ip) {
     /* TODO: client gets disconnected but server is still connected,
      *       the next message recieved from the contact will not be

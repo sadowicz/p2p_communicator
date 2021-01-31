@@ -17,6 +17,10 @@ void TCPClient::tryConnect() {
     }
 }
 
+bool TCPClient::isConnected() {
+    return socket->state() == QTcpSocket::ConnectedState;
+}
+
 void TCPClient::forceDisconnect() {
     log.debug("Force disconnected from contact: " + ip);
     socket->disconnectFromHost();
