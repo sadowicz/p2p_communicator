@@ -173,6 +173,14 @@ void MainWindow::loadListItems()
                   "\tactive : " + std::to_string(contact.second->isActive()) +
                   "\tunread : " + std::to_string(contact.second->hasUnreadMsg()));
     }
+
+    ui->lwContacts->sortItems();
+
+    if(!activeContact.empty()){
+        auto contact = Storage::storage().getContact(activeContact);
+        ui->msgListView->setModel(contact);
+        connect(contact, &Contact::onHistoryChange, this, &MainWindow::onMessageListChange);
+    }
 }
 
 void MainWindow::on_pbNewContact_clicked()
@@ -240,25 +248,37 @@ void MainWindow::on_validateSendable()
 
 void MainWindow::on_lwContacts_itemClicked(QListWidgetItem *item)
 {
-    activeContact = contacts[item->text().toStdString()];
-    ui->pbDeleteContact->setEnabled(true);
-    ui->pbEditContact->setEnabled(true);
-    ui->msgListView->setModel(activeContact);
-
-    // try connecting to contact if it's inactive
-    if (!activeContact->isActive()) {
-        contactController->tryConnect(activeContact->getAddress());
+    if(!activeContact.empty()){
+        disconnect(Storage::storage().getContact(activeContact), &Contact::onHistoryChange,
+                   this, &MainWindow::onMessageListChange);
     }
 
-    if(activeContact->hasUnreadMsg() == true) {
-        emit msgRead(activeContact->getAddress());
+    Contact* contact =  contacts[item->text().toStdString()];
+    activeContact = contact->getAddress();
+
+    connect(contact, &Contact::onHistoryChange, this, &MainWindow::onMessageListChange);
+
+    ui->pbDeleteContact->setEnabled(true);
+    ui->pbEditContact->setEnabled(true);
+
+    ui->msgListView->setModel(contact);
+    ui->msgListView->scrollToBottom();
+
+    // try connecting to contact if it's inactive
+    if (!contact->isActive()) {
+        contactController->tryConnect(contact->getAddress());
+    }
+
+    if(contact->hasUnreadMsg() == true) {
+        emit msgRead(contact->getAddress());
     }
 }
 
 void MainWindow::on_pbDeleteContact_clicked()
 {
     // remove contact from storage and close TCP/IP connection
-    contactController->removeContact(activeContact->getAddress());
+    auto contact = Storage::storage().getContact(activeContact);
+    contactController->removeContact(contact->getAddress());
 
     // refresh GUI
     refreshContactsList();
@@ -271,8 +291,8 @@ void MainWindow::on_pbEditContact_clicked()
 {
     editContactWin = new EditContactWindow{this};
     editContactWin->show();
-
-    emit edited(activeContact->getAddress(), activeContact->getName(), activeContact->getPort());
+    auto contact = Storage::storage().getContact(activeContact);
+    emit edited(contact->getAddress(), contact->getName(), contact->getPort());
 }
 
 void MainWindow::on_pbSettings_clicked()
@@ -282,7 +302,8 @@ void MainWindow::on_pbSettings_clicked()
 }
 
 void MainWindow::on_pbSend_clicked() {
-    contactController->sendTextMessage(activeContact->getAddress(), ui->teSend->toPlainText().toStdString());
+    auto contact = Storage::storage().getContact(activeContact);
+    contactController->sendTextMessage(contact->getAddress(), ui->teSend->toPlainText().toStdString());
 }
 
 void MainWindow::on_pbAttachFile_clicked()
@@ -336,4 +357,8 @@ void MainWindow::removeFile(){
 
     emit fileChanged();
     emit fileRemoved();
+}
+
+void MainWindow::onMessageListChange(){
+    ui->msgListView->scrollToBottom();
 }

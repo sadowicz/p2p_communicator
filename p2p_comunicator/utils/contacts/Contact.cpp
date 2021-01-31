@@ -30,7 +30,6 @@ void Contact::write(QJsonObject &json) {
     for (Message* message : history) {
         historyArray.append(message->serialize());
     }
-
     json["history"] = historyArray;
 }
 
@@ -39,6 +38,8 @@ void Contact::addToHistory(Message* message) {
     message->setParent(this);
     history.push_back(message);
     endResetModel();
+
+    emit onHistoryChange();
 }
 
 std::string Contact::getName() const {
