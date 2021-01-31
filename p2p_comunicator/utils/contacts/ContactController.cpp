@@ -92,4 +92,5 @@ void ContactController::onRecieve(const string ip, TCPPacket packet) {
     log.debug("Recieved message from: " + ip + ", content: " + packet.getContent());
     Contact* contact = Storage::storage().getContact(ip);
     contact->addToHistory(new Message(packet, contact));
+    Storage::storage().save();
 }

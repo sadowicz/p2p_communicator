@@ -1,3 +1,4 @@
+
 #include "Contact.h"
 
 using namespace contacts;
@@ -35,7 +36,9 @@ void Contact::write(QJsonObject &json) {
 }
 
 void Contact::addToHistory(Message* message) {
+    beginResetModel();
     history.push_back(message);
+    endResetModel();
 }
 
 std::string Contact::getName() const {
