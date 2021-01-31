@@ -8,7 +8,6 @@
 #include <QMap>
 
 #include <unordered_map>
-#include <util/util.h>
 
 namespace contacts {
 
@@ -24,10 +23,10 @@ public:
     void clear();
 
     void addContact(Contact* newContact);
-    void deleteContact(std::string& ip);
+    void deleteContact(const std::string& ip);
     std::unordered_map<std::string, Contact*>& getContacts();
-    Contact* getContact(std::string& ip);
-    bool contactExists(std::string& ip);
+    Contact* getContact(const std::string& ip);
+    bool contactExists(const std::string& ip);
 
 private:
     Storage() = default;

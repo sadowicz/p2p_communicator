@@ -18,7 +18,7 @@ class TCPConnection : public QObject {
 
 public:
     TCPConnection(Logger& log) : log(log) {}
-    TCPClient* registerClient(string ip, short port);
+    TCPClient* registerClient(const string ip, short port);
     void startServer(short port);
 
 private:
@@ -27,14 +27,14 @@ private:
     Logger& log;
 
 signals:
-    void recieved(string, TCPPacket);
-    void connected(string, short);
-    void disconnected(string);
-    void sendingError(string, TCPException);
+    void recieved(const string, TCPPacket);
+    void connected(const string, short);
+    void disconnected(const string);
+    void sendingError(const string, TCPException);
 
 public slots:
-    void closeConnection(string& ip);
-    void reconnect(string& ip);
-    void send(string& ip, string& content);
+    void closeConnection(const string& ip);
+    void reconnect(const string& ip);
+    void send(const string& ip, const string& content);
 
 };

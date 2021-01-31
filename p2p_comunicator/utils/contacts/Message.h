@@ -7,6 +7,7 @@
 #include <QFile>
 #include <QDir>
 
+#include <QObject>
 #include <config/Config.h>
 
 #include <TCPPacket.h>
@@ -16,36 +17,37 @@ using namespace std;
 
 namespace contacts {
 
-class Message {
+class Message : public QObject{
+        Q_OBJECT
 
 public:
     enum Type {
         TEXT, FILE
     };
 
-    Message(TCPPacket packet);
-    Message(QJsonObject& object);
+    Message(TCPPacket packet, QObject* parent = nullptr);
+    Message(QJsonObject& object, QObject* parent = nullptr);
     QJsonObject serialize();
     void save();
-    string getTimestamp();
+    string getTimestamp() const;
 
-    string& getContent() {
+    string getContent() const {
         return content;
     }
 
-    string& getFilename() {
+    string getFilename() const {
         return filename;
     }
 
-    Type getType() {
+    Type getType() const {
         return type;
     }
 
-    string& getAddress() {
-        return *address;
+    string getAddress() const {
+        return address;
     }
 
-    Message& withAddress(string* sender) {
+    Message& withAddress(const string& sender) {
         this->address = sender;
         return *this;
     }
@@ -55,9 +57,12 @@ private:
     Type type;
     string content;
     string filename;
-    string* address;
+    string address;
     Logger log;
 
 };
 
+
 }
+
+Q_DECLARE_METATYPE(contacts::Message*)

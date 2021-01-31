@@ -24,7 +24,7 @@ void ContactController::addContact(Contact* contact) {
     connection->registerClient(contact->getAddress(), contact->getPort());
 }
 
-void ContactController::removeContact(string& ip) {
+void ContactController::removeContact(const string& ip) {
     Storage::storage().deleteContact(ip);
     connection->closeConnection(ip);
 }
@@ -32,9 +32,9 @@ void ContactController::removeContact(string& ip) {
 void ContactController::editContact(Contact* editedContact) {
     Contact* oldContact = Storage::storage().getContact(editedContact->getAddress());
 
-    std::vector<Message> history = oldContact->getHistory();
+    std::vector<Message*> history = oldContact->getHistory();
 
-    for(Message msg : history) {
+    for(Message* msg : history) {
         editedContact->addToHistory(msg);
     }
 
@@ -49,11 +49,12 @@ void ContactController::editContact(Contact* editedContact) {
     }
 }
 
-void ContactController::send(string& ip, string& message) {
+void ContactController::send(const string& ip, const
+                             string& message) {
     connection->send(ip, message);
 }
 
-void ContactController::onConnect(string ip, short port) {
+void ContactController::onConnect(const string ip, short port) {
     log.info("Adding new contact: " + ip + ":" + std::to_string(port));
 
     if (!Storage::storage().contactExists(ip)) {
@@ -64,30 +65,31 @@ void ContactController::onConnect(string ip, short port) {
     Storage::storage().getContact(ip)->setActiveState(true);
 }
 
-void ContactController::tryConnect(string& ip) {
+void ContactController::tryConnect(const string& ip) {
     connection->reconnect(ip);
 }
 
-void ContactController::forceDisconnect(string& ip) {
+void ContactController::forceDisconnect(const string& ip) {
     connection->closeConnection(ip);
 }
 
-bool ContactController::isActive(string& ip) {
+bool ContactController::isActive(const string& ip) {
     return Storage::storage().getContact(ip)->isActive();
 }
 
-void ContactController::onDisconnect(string ip) {
+void ContactController::onDisconnect(const string ip) {
     if (Storage::storage().contactExists(ip)) {
         Storage::storage().getContact(ip)->setActiveState(false);
     }
 }
 
-void ContactController::onSendError(string ip, TCPException e) {
+void ContactController::onSendError(const string ip, TCPException e) {
     log.error("Error sending message to: " + ip + ", reason: " + e.what());
     // TODO: handle error here
 }
 
-void ContactController::onRecieve(string ip, TCPPacket packet) {
+void ContactController::onRecieve(const string ip, TCPPacket packet) {
     log.debug("Recieved message from: " + ip + ", content: " + packet.getContent());
-    // TODO: add message to history and such
+    Contact* contact = Storage::storage().getContact(ip);
+    contact->addToHistory(new Message(packet, contact));
 }

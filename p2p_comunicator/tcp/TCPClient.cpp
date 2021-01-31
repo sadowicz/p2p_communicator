@@ -34,7 +34,7 @@ void TCPClient::onConnect() {
     log.debug("Client connected to contact: " + ip);
 }
 
-void TCPClient::send(string& packet) {
+void TCPClient::send(const string& packet) {
     log.debug("Sending message to contact: " + ip + " ...");
 
     if (socket->state() != QAbstractSocket::ConnectedState) {

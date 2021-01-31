@@ -2,7 +2,8 @@
 
 using namespace contacts;
 
-Message::Message(TCPPacket packet) {
+Message::Message(TCPPacket packet, QObject* parent)
+        : QObject(parent){
     log = Logger(Config::config("log-file"), Config::config().debugMode());
     this->type = packet.getType() == TCPPacket::PacketType::TEXT
             ? Message::Type::TEXT
@@ -12,7 +13,8 @@ Message::Message(TCPPacket packet) {
     this->filename = packet.getFilename();
 }
 
-Message::Message(QJsonObject& object) {
+Message::Message(QJsonObject& object, QObject* parent)
+        : QObject(parent) {
     log = Logger(Config::config("log-file"), Config::config().debugMode());
     this->type = object["type"].toString().toStdString() == "TEXT"
             ? Message::Type::TEXT
@@ -20,6 +22,7 @@ Message::Message(QJsonObject& object) {
     this->filename = object["filename"].toString().toStdString();
     this->content = object["content"].toString().toStdString();
     this->timestamp = QDateTime::fromString(object["timestamp"].toString());
+    this->address = object["address"].toString().toStdString();
 }
 
 QJsonObject Message::serialize() {
@@ -57,6 +60,6 @@ void Message::save() {
     }
 }
 
-string Message::getTimestamp() {
+string Message::getTimestamp() const {
     return timestamp.toString().toStdString();
 }

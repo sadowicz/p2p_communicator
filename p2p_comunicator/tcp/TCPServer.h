@@ -26,9 +26,9 @@ private slots:
     void onDisconnected();
 
 signals:
-    void recieved(string, TCPPacket);
-    void connected(string, short);
-    void disconnected(string);
+    void recieved(const string, TCPPacket);
+    void connected(const string, short);
+    void disconnected(const string);
 
 };
 
