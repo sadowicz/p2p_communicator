@@ -37,7 +37,7 @@ void TCPClient::onDisconnect() {
 }
 
 void TCPClient::onConnect() {
-    send(TCPPacket::encode(TCPPacket::PacketType::NEW_CONTACT, "", std::to_string(myPort)));
+    send(TCPPacket::encode(TCPPacket::PacketType::CONNECTION, "", std::to_string(myPort)));
 
     emit connected(ip, port);
     log.debug("Client connected to contact: " + ip + ":" + std::to_string(port));

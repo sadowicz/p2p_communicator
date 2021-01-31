@@ -32,6 +32,10 @@ private:
     TCPConnection* connection;
     Logger& log;
 
+    void onTextMessage(const string ip, TCPPacket packet);
+    void onFileMessage(const string ip, TCPPacket packet);
+    void onConnectMessage(const string ip, TCPPacket packet);
+
 private slots:
     void onConnect(const string, unsigned int);
     void onDisconnect(const string);

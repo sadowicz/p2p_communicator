@@ -2,7 +2,7 @@
 
 #define TEXT_PACKET_HEADER "TEXT"
 #define FILE_PACKET_HEADER "FILE"
-#define NEW_CONTACT_PACKET_HEADER "NEW_CONTACT"
+#define CONNECTION_PACKET_HEADER "CONNECTION"
 
 TCPPacket TCPPacket::decode(std::string packet) {
     if (packet.empty()) {
@@ -15,10 +15,10 @@ TCPPacket TCPPacket::decode(std::string packet) {
     char filename[260] = "";
     char port[20] = "";
 
-    if (tryParseNewContactPacket(cstr, port)) {
+    if (tryParseConnectionPacket(cstr, port)) {
         return TCPPacket(packet)
                 .withContent(std::string(port))
-                .withType(PacketType::NEW_CONTACT);
+                .withType(PacketType::CONNECTION);
     } else if (tryParseFilePacket(cstr, filename)) {
         const char* content = getContentFromRaw(cstr);
         return TCPPacket(packet)
@@ -40,17 +40,11 @@ std::string TCPPacket::encode(TCPPacket::PacketType type, std::string filename, 
         throw TCPException("Packet encoding failed: content cannot be empty");
     }
     std::string packet = "";
-    if (type == PacketType::TEXT) {
-        packet = std::string("<" TEXT_PACKET_HEADER "> ") + content;
-
-    } else if (type == PacketType::FILE) {
-        packet = std::string("<" FILE_PACKET_HEADER ":") + filename + std::string("> ") + content;
-
-    } else if (type == PacketType::NEW_CONTACT) {
-        packet = std::string("<" NEW_CONTACT_PACKET_HEADER ":" + content + std::string("> "));
-
-    } else {
-        throw TCPException("Packet encoding failed: incorrect packet type");
+    switch (type) {
+    case TEXT:          packet = std::string("<" TEXT_PACKET_HEADER "> ") + content; break;
+    case FILE:          packet = std::string("<" FILE_PACKET_HEADER ":") + filename + std::string("> ") + content; break;
+    case CONNECTION:    packet = std::string("<" CONNECTION_PACKET_HEADER ":" + content + std::string("> ")); break;
+    default:            throw TCPException("Packet encoding failed: incorrect packet type");
     }
     return QByteArray(packet.c_str()).toBase64().toStdString();
 }
@@ -79,10 +73,10 @@ bool TCPPacket::tryParseTextPacket(const char* cstr) {
             && (strcmp(header, TEXT_PACKET_HEADER) == 0);
 }
 
-bool TCPPacket::tryParseNewContactPacket(const char* cstr, char* port) {
+bool TCPPacket::tryParseConnectionPacket(const char* cstr, char* port) {
     char header[20] = "";
     return (sscanf(cstr, "<%19[^:]:%9[^>]>", header, port) == 2)
-            && (strcmp(header, NEW_CONTACT_PACKET_HEADER) == 0);
+            && (strcmp(header, CONNECTION_PACKET_HEADER) == 0);
 }
 
 
