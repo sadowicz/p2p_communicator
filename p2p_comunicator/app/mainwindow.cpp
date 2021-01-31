@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     stateMachine->start();
 
     connect(this, SIGNAL(error(QString)), this, SLOT(on_error(QString)));
+    connect(contactController, SIGNAL(contactStatusChanged()), this, SLOT(on_contactStatusChanged()));
 
     loadContacts();
     loadListItems();
@@ -168,6 +169,11 @@ void MainWindow::on_contactAddSuccess(Contact* newContact) {
     refreshContactsList();
 
     emit contactAdded();
+}
+
+void MainWindow::on_contactStatusChanged()
+{
+    refreshContactsList();
 }
 
 void MainWindow::refreshContactsList() {

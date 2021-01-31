@@ -9,7 +9,7 @@
 
 namespace contacts {
 
-class ContactController : QObject {
+class ContactController : public QObject {
     Q_OBJECT
 
 public:

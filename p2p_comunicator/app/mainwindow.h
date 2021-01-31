@@ -45,6 +45,8 @@ private slots:
     void on_contactEditSuccess(Contact* contact);
     void on_contactAddCancel();
 
+    void on_contactStatusChanged();
+
     void on_error(QString errorMessage);
     void on_errorRead();
     void on_validateSendable();
