@@ -103,6 +103,8 @@ void ContactController::onRecieve(const string ip, TCPPacket packet) {
     switch(packet.getType()) {
     case TCPPacket::PacketType::TEXT: {
         Storage::storage().getContact(ip)->addToHistory(new Message(packet));
+        Storage::storage().getContact(ip)->setUnreadMsgState(true);
+        emit contactStatusChanged();
         Storage::storage().save();
         break;
     }
@@ -126,4 +128,10 @@ void ContactController::onRecieve(const string ip, TCPPacket packet) {
         break;
     }
     }
+}
+
+void ContactController::onMsgRead(const string ip) {
+    log.debug("Read message from: " + ip);
+    Storage::storage().getContact(ip)->setUnreadMsgState(false);
+    emit contactStatusChanged();
 }
