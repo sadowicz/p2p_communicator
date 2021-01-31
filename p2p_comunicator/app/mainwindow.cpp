@@ -1,12 +1,16 @@
 #include "mainwindow.h"
 
 /*TODO:
-    - two more packet types FILE-REQUEST and NEW-CONTACT
+    - FILE_REQUEST package type
     - state to locked after emieting error form constructor (loadContacts() method)
     - improve TCPPacket encoding: [packetType:1][filenameLength:1][filename:filenameLength][contentLength:4][content:contentLength]
-    - test if sending messages works
     - implement sending files
-    - BUG: socket->peerPort() returns random port
+
+    - @Filip: sortowanie listy piotrek zrobił, wyłączanie czatu też naprawił, da się zrobić żeby się
+              kontakt nie pogrubiał jak mam otwarty z nim czat?
+    - @Tomasz: crash jak się usunie kontakt do którego jestem podłączony
+    - @Tomasz: jak się zmieni nazwę kontaktu to się rozłącza ale dalej można wysyłać wiadomości
+    - @Tomasz: kontakt niekatywny się odznacza jak kliknę na niego
 */
 
 MainWindow::MainWindow(QWidget *parent)
