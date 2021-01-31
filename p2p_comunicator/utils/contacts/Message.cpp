@@ -3,17 +3,22 @@
 using namespace contacts;
 
 Message* Message::createTextMessage(string content, QObject* parent) {
-    return new Message(TEXT, "", content, "", parent);
+    return new Message(TEXT, "", content, Message::ME, parent);
 }
 
 Message* Message::createFileMessage(string filename, QObject* parent) {
-    return new Message(FILE, filename, "", "", parent);
+    return new Message(FILE, filename, "", Message::ME, parent);
 }
 
 Message::Message(Type type, string filename, string content, Sender sender, QObject* parent)
-    : type(type), filename(filename), content(content), sender(sender),
-      log(util::getLogger()), timestamp(QDateTime::currentDateTime()), QObject(parent) {
-}
+    : QObject(parent),
+      timestamp(QDateTime::currentDateTime()),
+      type(type),
+      sender(sender),
+      content(content),
+      filename(filename),
+      log(util::getLogger())
+{}
 
 Message::Message(TCPPacket packet, QObject* parent)
         : QObject(parent){
