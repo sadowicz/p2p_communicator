@@ -2,7 +2,7 @@
 
 using namespace contacts;
 
-Contact::Contact(std::string name, std::string address, unsigned port, QObject* parent)
+Contact::Contact(std::string name, std::string address, unsigned int port, QObject* parent)
     : QAbstractListModel(parent), name(name), address(address), port(port), active(false), unreadMsg(false) {}
 
 void Contact::read(const QJsonObject &json) {
@@ -50,27 +50,31 @@ std::string Contact::getAddress() const {
     return this->address;
 }
 
-int Contact::getPort()  const{
+unsigned int Contact::getPort() const {
     return this->port;
 }
 
-bool Contact::isActive() const{
+void Contact::setPort(unsigned int port) {
+    this->port = port;
+}
+
+bool Contact::isActive() const {
     return this->active;
 }
 
-bool Contact::hasUnreadMsg() const{
+bool Contact::hasUnreadMsg() const {
     return this->unreadMsg;
-}
-
-void Contact::setActiveState(bool state) {
-    this->active = state;
 }
 
 void Contact::setUnreadMsgState(bool state) {
     this->unreadMsg = state;
 }
 
-int Contact::rowCount(const QModelIndex &parent) const{
+void Contact::setActiveState(bool state) {
+    this->active = state;
+}
+
+int Contact::rowCount(const QModelIndex &parent) const {
     if(parent.isValid()){
         return 0;
     }
@@ -78,7 +82,7 @@ int Contact::rowCount(const QModelIndex &parent) const{
     return history.size();
 }
 
-QVariant Contact::data(const QModelIndex &index, int role) const{
+QVariant Contact::data(const QModelIndex &index, int role) const {
 
    // if(index.isValid())
      //   return QVariant();

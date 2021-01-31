@@ -26,15 +26,19 @@ public slots:
     void onMsgRead(const string);
 
 signals:
-    void contactStatusChanged();
+    void refreshContactList();
     void msgReceived();
 
 private:
     TCPConnection* connection;
     Logger& log;
 
+    void onTextMessage(const string ip, TCPPacket packet);
+    void onFileMessage(const string ip, TCPPacket packet);
+    void onConnectMessage(const string ip, TCPPacket packet);
+
 private slots:
-    void onConnect(const string, short);
+    void onConnect(const string, unsigned int);
     void onDisconnect(const string);
     void onRecieve(const string, TCPPacket);
     void onSendError(const string, TCPException);

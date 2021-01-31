@@ -4,7 +4,7 @@ using namespace contacts;
 
 ContactController::ContactController(Logger& log) : log(log) {
     connection = new TCPConnection(log);
-    connect(connection, SIGNAL(connected(string, short)), SLOT(onConnect(string,short)));
+    connect(connection, SIGNAL(connected(string, unsigned int)), SLOT(onConnect(string, unsigned int)));
     connect(connection, SIGNAL(disconnected(string)), SLOT(onDisconnect(string)));
     connect(connection, SIGNAL(recieved(string, TCPPacket)), SLOT(onRecieve(string, TCPPacket)));
     connect(connection, SIGNAL(sendingError(string, TCPException)), SLOT(onSendError(string, TCPException)));
@@ -55,23 +55,25 @@ void ContactController::sendTextMessage(const string& ip, const string& message)
     connection->send(ip, TCPPacket::encode(TCPPacket::PacketType::TEXT, "", message));
 }
 
-void ContactController::onConnect(const string ip, short port) {
+void ContactController::onConnect(const string ip, unsigned int port) {
     if (!Storage::storage().contactExists(ip)) {
         log.info("Adding new contact: " + ip + ":" + std::to_string(port));
 
         Contact* newContact = new Contact(ip, ip, port);
         Storage::storage().addContact(newContact);
+        emit refreshContactList();
     }
 
     if (Storage::storage().getContact(ip)->isActive() == false) {
         Storage::storage().getContact(ip)->setActiveState(true);
-        emit contactStatusChanged();
+        emit refreshContactList();
     }
 }
 
 void ContactController::tryConnect(const string& ip) {
     // dont reconnect if contact is already active
-    if (!isActive(ip)) {
+    Contact* contact = Storage::storage().getContact(ip);
+    if (!contact->isActive()) {
         connection->reconnect(ip);
     }
 }
@@ -87,8 +89,8 @@ bool ContactController::isActive(const string& ip) const{
 void ContactController::onDisconnect(const string ip) {
     if (Storage::storage().contactExists(ip)) {
         Storage::storage().getContact(ip)->setActiveState(false);
-        emit contactStatusChanged();
     }
+    emit refreshContactList();
 }
 
 void ContactController::onSendError(const string ip, TCPException e) {
@@ -99,16 +101,48 @@ void ContactController::onSendError(const string ip, TCPException e) {
 void ContactController::onRecieve(const string ip, TCPPacket packet) {
     log.debug("Recieved message from: " + ip + ", content: " + packet.getContent());
 
-    Storage::storage().getContact(ip)->addToHistory(new Message(packet));
-    Storage::storage().save();
+    switch(packet.getType()) {
+    case TCPPacket::PacketType::TEXT:           onTextMessage(ip, packet); break;
+    case TCPPacket::PacketType::FILE:           onFileMessage(ip, packet); break;
+    case TCPPacket::PacketType::CONNECTION:    onConnectMessage(ip, packet); break;
+    }
+}
 
+void ContactController::onTextMessage(const string ip, TCPPacket packet) {
+    Storage::storage().getContact(ip)->addToHistory(new Message(packet));
     Storage::storage().getContact(ip)->setUnreadMsgState(true);
-    emit contactStatusChanged();
+    Storage::storage().save();
+    emit refreshContactList();
     emit msgReceived();
+}
+
+void ContactController::onFileMessage(const string ip, TCPPacket packet) {
+    // TODO
+}
+
+void ContactController::onConnectMessage(const string ip, TCPPacket packet) {
+    // connection attempt from a contact
+
+    if (Storage::storage().contactExists(ip)) {
+        Contact* old = Storage::storage().getContact(ip);
+        unsigned int port = std::stoul(packet.getContent());
+
+        if (old->getPort() != port) {
+            log.debug("Changing port of existing contact: " + ip + " to: " + std::to_string(port));
+            old->setPort(port);
+            Storage::storage().save();
+            connection->registerClient(ip, port);
+        }
+    }
+
+    // if client is not connected (can't send) -> try connecting
+    if (!connection->isClientConnected(ip)) {
+        connection->reconnect(ip);
+    }
 }
 
 void ContactController::onMsgRead(const string ip) {
     log.debug("Read message from: " + ip);
     Storage::storage().getContact(ip)->setUnreadMsgState(false);
-    emit contactStatusChanged();
+    emit refreshContactList();
 }

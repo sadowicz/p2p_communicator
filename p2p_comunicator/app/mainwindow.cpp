@@ -29,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent)
     log.info("------------ App started ------------");
     contactController = new ContactController(log);
 
-    connect(contactController, SIGNAL(contactStatusChanged()), this, SLOT(on_contactStatusChanged()));
+    connect(contactController, &ContactController::refreshContactList, this, &MainWindow::on_refreshContactsList);
     connect(this, SIGNAL(msgRead(const string)), contactController, SLOT(onMsgRead(const string)));
 
 }
@@ -195,14 +195,13 @@ void MainWindow::on_contactAddSuccess(Contact* newContact) {
     contactController->addContact(newContact);
     contactController->tryConnect(newContact->getAddress());
 
-    // refresh gui list
+    // refresh GUI
     refreshContactsList();
 
     emit contactAdded();
 }
 
-void MainWindow::on_contactStatusChanged()
-{
+void MainWindow::on_refreshContactsList() {
     refreshContactsList();
 }
 

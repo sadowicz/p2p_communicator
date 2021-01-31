@@ -1,6 +1,6 @@
 #include <TCPServer.h>
 
-TCPServer::TCPServer(Logger& log, short port) : log(log) {
+TCPServer::TCPServer(Logger& log, unsigned int port) : log(log) {
     this->server = new QTcpServer(this);
     this->server->listen(QHostAddress::Any, port);
     log.info("Server listening on port " + std::to_string(port));
@@ -12,7 +12,7 @@ void TCPServer::onAcceptConnection() {
     while (server->hasPendingConnections()) {
         QTcpSocket* connection = this->server->nextPendingConnection();
         std::string address = QHostAddress(connection->peerAddress().toIPv4Address()).toString().toStdString();
-        unsigned short peerPort = connection->peerPort();
+        unsigned int peerPort = connection->peerPort();
 
         log.debug("Server accepting connection from: " + address + ":" + std::to_string(peerPort));
 

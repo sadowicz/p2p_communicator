@@ -19,7 +19,7 @@ class Contact : public QAbstractListModel{
 public:
 
     Contact() : name(""), address(""), port(0), active(false), unreadMsg(false) {}
-    Contact(std::string name, std::string address, unsigned port, QObject* parent = nullptr);
+    Contact(std::string name, std::string address, unsigned int port, QObject* parent = nullptr);
 
     void read(const QJsonObject &json);
     void write(QJsonObject &json);
@@ -31,7 +31,8 @@ public:
 
     std::string getName() const;
     std::string getAddress() const;
-    int getPort() const;
+    unsigned int getPort() const;
+    void setPort(unsigned int port);
     bool isActive() const;
     bool hasUnreadMsg() const;
     void setActiveState(bool state);
@@ -48,7 +49,7 @@ signals:
 private:
     std::string name;
     std::string address;
-    unsigned port;
+    unsigned int port;
     std::vector<Message*> history;
     bool active;
     bool unreadMsg;

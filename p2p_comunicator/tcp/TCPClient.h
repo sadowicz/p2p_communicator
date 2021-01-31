@@ -9,6 +9,7 @@
 
 #include <Logger.h>
 #include <TCPException.h>
+#include <TCPPacket.h>
 
 using namespace std;
 
@@ -16,17 +17,19 @@ class TCPClient : public QObject {
 
     Q_OBJECT
 public:
-    TCPClient(Logger& log, string ip, short port);
+    TCPClient(Logger& log, string ip, unsigned int myPort, unsigned int port);
 
     ~TCPClient() { delete socket; }
 
     void send(const string& packet);
     void tryConnect();
     void forceDisconnect();
+    bool isConnected();
 
 private:
     string ip;
-    short port;
+    unsigned int port;
+    unsigned int myPort;
     QTcpSocket* socket;
     Logger& log;
 
@@ -37,7 +40,7 @@ private slots:
 
 signals:
     void failed(const string ip, TCPException e);
-    void connected(const string ip, short port);
+    void connected(const string ip, unsigned int port);
     void disconnected(const string ip);
 
 };

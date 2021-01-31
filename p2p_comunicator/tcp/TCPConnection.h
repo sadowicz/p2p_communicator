@@ -18,17 +18,19 @@ class TCPConnection : public QObject {
 
 public:
     TCPConnection(Logger& log) : log(log) {}
-    TCPClient* registerClient(const string ip, short port);
-    void startServer(short port);
+    TCPClient* registerClient(const string ip, unsigned int port);
+    void startServer(unsigned int port);
+    bool isClientConnected(const string& ip);
 
 private:
     TCPServer* server;
     unordered_map<string, TCPClient*> clients;
     Logger& log;
+    unsigned int myPort;
 
 signals:
     void recieved(const string, TCPPacket);
-    void connected(const string, short);
+    void connected(const string, unsigned int);
     void disconnected(const string);
     void sendingError(const string, TCPException);
 
