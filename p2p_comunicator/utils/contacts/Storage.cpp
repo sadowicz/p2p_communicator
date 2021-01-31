@@ -2,7 +2,7 @@
 
 using namespace contacts;
 
-Storage& Storage::storage(){
+Storage& Storage::storage() {
     static Storage s;
     return s;
 }

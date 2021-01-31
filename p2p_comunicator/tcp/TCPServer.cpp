@@ -12,9 +12,9 @@ void TCPServer::onAcceptConnection() {
     while (server->hasPendingConnections()) {
         QTcpSocket* connection = this->server->nextPendingConnection();
         std::string address = QHostAddress(connection->peerAddress().toIPv4Address()).toString().toStdString();
-        short peerPort = connection->peerPort();
+        unsigned short peerPort = connection->peerPort();
 
-        log.debug("Server accepting connection from: " + address);
+        log.debug("Server accepting connection from: " + address + ":" + std::to_string(peerPort));
 
         clientIPs[connection] = address;
 

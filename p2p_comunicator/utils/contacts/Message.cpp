@@ -2,9 +2,22 @@
 
 using namespace contacts;
 
+Message* Message::createTextMessage(string content, QObject* parent) {
+    return new Message(TEXT, "", content, "", parent);
+}
+
+Message* Message::createFileMessage(string filename, QObject* parent) {
+    return new Message(FILE, filename, "", "", parent);
+}
+
+Message::Message(Type type, string filename, string content, string address, QObject* parent)
+    : type(type), filename(filename), content(content), address(address),
+      log(util::getLogger()), timestamp(QDateTime::currentDateTime()), QObject(parent) {
+}
+
 Message::Message(TCPPacket packet, QObject* parent)
         : QObject(parent){
-    log = Logger(Config::config("log-file"), Config::config().debugMode());
+    log = util::getLogger();
     this->type = packet.getType() == TCPPacket::PacketType::TEXT
             ? Message::Type::TEXT
             : Message::Type::FILE;
@@ -15,7 +28,7 @@ Message::Message(TCPPacket packet, QObject* parent)
 
 Message::Message(QJsonObject& object, QObject* parent)
         : QObject(parent) {
-    log = Logger(Config::config("log-file"), Config::config().debugMode());
+    log = util::getLogger();
     this->type = object["type"].toString().toStdString() == "TEXT"
             ? Message::Type::TEXT
             : Message::Type::FILE;

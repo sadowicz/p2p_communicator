@@ -23,7 +23,8 @@ SOURCES += \
     contacts/Storage.cpp \
     contacts/Message.cpp \
     config/Config.cpp \
-    contacts/ContactController.cpp
+    contacts/ContactController.cpp \
+    util/LoggerHelper.cpp
 
 HEADERS += \
     contacts/contact_validator.h \
@@ -32,7 +33,8 @@ HEADERS += \
     contacts/Message.h \
     config/Config.h \
     IOException.h \
-    contacts/ContactController.h
+    contacts/ContactController.h \
+    util/LoggerHelper.h
 
 # Default rules for deployment.
 unix {

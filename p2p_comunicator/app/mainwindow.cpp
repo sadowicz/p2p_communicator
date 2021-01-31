@@ -6,6 +6,7 @@
     - improve TCPPacket encoding: [packetType:1][filenameLength:1][filename:filenameLength][contentLength:4][content:contentLength]
     - test if sending messages works
     - implement sending files
+    - BUG: socket->peerPort() returns random port
 */
 
 MainWindow::MainWindow(QWidget *parent)
@@ -252,6 +253,5 @@ void MainWindow::on_pbSettings_clicked()
 }
 
 void MainWindow::on_pbSend_clicked() {
-    std::string packet = TCPPacket::encode(TCPPacket::PacketType::TEXT, "", ui->teSend->toPlainText().toStdString());
-    contactController->send(activeContact->getAddress(), packet);
+    contactController->sendTextMessage(activeContact->getAddress(), ui->teSend->toPlainText().toStdString());
 }

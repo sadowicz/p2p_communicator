@@ -3,7 +3,7 @@
 using namespace contacts;
 
 Contact::Contact(std::string name, std::string address, unsigned port, QObject* parent)
-    : QAbstractListModel(parent) ,name(name), address(address), port(port), active(false) {}
+    : QAbstractListModel(parent), name(name), address(address), port(port), active(false) {}
 
 void Contact::read(const QJsonObject &json) {
     name = json["name"].toString().toStdString();
@@ -35,6 +35,7 @@ void Contact::write(QJsonObject &json) {
 }
 
 void Contact::addToHistory(Message* message) {
+    message->setParent(this);
     history.push_back(message);
 }
 

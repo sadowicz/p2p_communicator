@@ -9,7 +9,7 @@
 
 #include <QObject>
 #include <config/Config.h>
-
+#include <util/LoggerHelper.h>
 #include <TCPPacket.h>
 #include <Logger.h>
 
@@ -25,6 +25,8 @@ public:
         TEXT, FILE
     };
 
+    static Message* createTextMessage(string content, QObject* parent = nullptr);
+    static Message* createFileMessage(string filename, QObject* parent = nullptr);
     Message(TCPPacket packet, QObject* parent = nullptr);
     Message(QJsonObject& object, QObject* parent = nullptr);
     QJsonObject serialize();
@@ -59,6 +61,8 @@ private:
     string filename;
     string address;
     Logger log;
+
+    Message(Type type, string filename, string content, string address, QObject* parent = nullptr);
 
 };
 

@@ -1,7 +1,7 @@
 #include <TCPClient.h>
 
 TCPClient::TCPClient(Logger& log, string ip, short port) : ip(ip), port(port), log(log) {
-    this->socket = new QTcpSocket();
+    socket = new QTcpSocket();
     connect(socket, SIGNAL(disconnected()), this, SLOT(onDisconnect()));
     connect(socket, SIGNAL(connected()), this, SLOT(onConnect()));
     connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onError(QAbstractSocket::SocketError)));
@@ -21,7 +21,7 @@ void TCPClient::forceDisconnect() {
 
 void TCPClient::onError(QAbstractSocket::SocketError e) {
     emit disconnected(ip);
-    log.debug("Couldn't connect to contact: " + ip + ", reason: " + std::to_string(e));
+    log.debug("Couldn't connect to contact: " + ip + ", error code: " + std::to_string(e));
 }
 
 void TCPClient::onDisconnect() {
@@ -31,7 +31,7 @@ void TCPClient::onDisconnect() {
 
 void TCPClient::onConnect() {
     emit connected(ip, port);
-    log.debug("Client connected to contact: " + ip);
+    log.debug("Client connected to contact: " + ip + ":" + std::to_string(port));
 }
 
 void TCPClient::send(const string& packet) {
