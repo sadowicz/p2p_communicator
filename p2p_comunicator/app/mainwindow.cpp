@@ -18,7 +18,6 @@ MainWindow::MainWindow(QWidget *parent)
     stateMachine->start();
 
     connect(this, SIGNAL(error(QString)), this, SLOT(on_error(QString)));
-    connect(contactController, SIGNAL(contactStatusChanged()), this, SLOT(on_contactStatusChanged()));
 
     loadContacts();
     loadListItems();
@@ -28,6 +27,8 @@ MainWindow::MainWindow(QWidget *parent)
     log = Logger(Config::config("log-file"), Config::config().debugMode());
     log.info("------------ App started ------------");
     contactController = new ContactController(log);
+
+    connect(contactController, SIGNAL(contactStatusChanged()), this, SLOT(on_contactStatusChanged()));
 }
 
 MainWindow::~MainWindow()
