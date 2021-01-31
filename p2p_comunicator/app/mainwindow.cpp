@@ -11,6 +11,8 @@
     - @Tomasz: crash jak się usunie kontakt do którego jestem podłączony
     - @Tomasz: jak się zmieni nazwę kontaktu to się rozłącza ale dalej można wysyłać wiadomości
     - @Tomasz: kontakt niekatywny się odznacza jak kliknę na niego
+    - [OK] @Tomasz: nie da się przesyłać wiadomości długości więcej niż około 50k znaków (nie powinno się dać, dodać walidację)
+    - [OK] @Tomasz: nie powinno się dać pisać do kontaktu który jest nieaktywny
 */
 
 MainWindow::MainWindow(QWidget *parent)
@@ -29,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->msgListView->setItemDelegate(new MessageListDelegate);
 
-    log = Logger(Config::config("log-file"), Config::config().debugMode());
+    log = util::getLogger();
     log.info("------------ App started ------------");
     contactController = new ContactController(log);
 

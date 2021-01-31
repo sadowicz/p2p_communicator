@@ -1,5 +1,7 @@
 #include <contacts/ContactController.h>
 
+#define MAX_TEXT_MSG_LENGTH 2048
+
 using namespace contacts;
 
 ContactController::ContactController(Logger& log) : log(log) {
@@ -50,9 +52,17 @@ void ContactController::editContact(Contact* editedContact) {
 }
 
 void ContactController::sendTextMessage(const string& ip, const string& message) {
-    Storage::storage().getContact(ip)->addToHistory(Message::createTextMessage(message));
-    Storage::storage().save();
-    connection->send(ip, TCPPacket::encode(TCPPacket::PacketType::TEXT, "", message));
+    if (connection->isClientConnected(ip)) {
+        if (message.size() > MAX_TEXT_MSG_LENGTH) {
+            log.error("Message was too long, cannot send");
+            return;
+        }
+        Storage::storage().getContact(ip)->addToHistory(Message::createTextMessage(message));
+        Storage::storage().save();
+        connection->send(ip, TCPPacket::encode(TCPPacket::PacketType::TEXT, "", message));
+    } else {
+        log.error("Client was not connected, can't send message");
+    }
 }
 
 void ContactController::onConnect(const string ip, unsigned int port) {
@@ -126,6 +136,12 @@ void ContactController::onConnectMessage(const string ip, TCPPacket packet) {
         Contact* old = Storage::storage().getContact(ip);
         unsigned int port = std::stoul(packet.getContent());
 
+        /* If saved port is different from what was sent -> replace the contacts port.
+           This is done because on connecting, QTcpSocket chooses a random port for itself
+           and connects to the server through it, then it's aviable through socket->peerPort(),
+           but since we need the other server's port to connect to, the peer's server's port
+           is sent in a TCP/IP packet right after connection.
+        */
         if (old->getPort() != port) {
             log.debug("Changing port of existing contact: " + ip + " to: " + std::to_string(port));
             old->setPort(port);

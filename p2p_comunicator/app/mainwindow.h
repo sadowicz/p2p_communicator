@@ -16,6 +16,7 @@
 #include <error_window.h>
 #include <config/Config.h>
 #include <Logger.h>
+#include <util/LoggerHelper.h>
 #include "ui_mainwindow.h"
 
 #include <contacts/Storage.h>

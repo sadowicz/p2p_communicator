@@ -2,9 +2,9 @@
 
 TCPClient::TCPClient(Logger& log, string ip, unsigned int myPort, unsigned int port) : ip(ip), port(port), myPort(myPort), log(log) {
     socket = new QTcpSocket();
-    connect(socket, SIGNAL(disconnected()), this, SLOT(onDisconnect()));
-    connect(socket, SIGNAL(connected()), this, SLOT(onConnect()));
-    connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onError(QAbstractSocket::SocketError)));
+    QObject::connect(socket, &QTcpSocket::disconnected, this, &TCPClient::onDisconnect);
+    QObject::connect(socket, &QTcpSocket::connected, this, &TCPClient::onConnect);
+    QObject::connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onError(QAbstractSocket::SocketError)));
 }
 
 void TCPClient::tryConnect() {
