@@ -29,7 +29,8 @@ MainWindow::MainWindow(QWidget *parent)
     loadContacts();
     loadListItems();
 
-    ui->msgListView->setItemDelegate(new MessageListDelegate);
+    this->messageListDelegate = new MessageListDelegate;
+    ui->msgListView->setItemDelegate(this->messageListDelegate);
 
     log = util::getLogger();
     log.info("------------ App started ------------");

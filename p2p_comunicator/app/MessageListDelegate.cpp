@@ -1,11 +1,5 @@
 #include "MessageListDelegate.h"
 
-#include <QDebug>
-
-/*
-    3. Signal z download
-*/
-
 MessageListDelegate::MessageListDelegate(QObject* parent)
     : QStyledItemDelegate(parent),
       padding(10,10),

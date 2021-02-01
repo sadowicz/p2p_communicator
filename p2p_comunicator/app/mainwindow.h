@@ -88,6 +88,7 @@ private:
     QState* ValidateSendable;
     QState* Sendable;
 
+    MessageListDelegate* messageListDelegate;
     ContactController* contactController;
     Logger log;
 
