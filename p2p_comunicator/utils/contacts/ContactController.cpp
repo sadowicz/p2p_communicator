@@ -82,6 +82,10 @@ void ContactController::tryConnect(const string& ip) {
     }
 }
 
+bool ContactController::contactExists(const string& ip) {
+    return Storage::storage().contactExists(ip);
+}
+
 void ContactController::forceDisconnect(const string& ip) {
     connection->closeConnection(ip);
 }

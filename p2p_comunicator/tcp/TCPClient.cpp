@@ -23,7 +23,9 @@ bool TCPClient::isConnected() {
 
 void TCPClient::forceDisconnect() {
     log.debug("Force disconnected from contact: " + ip);
-    socket->disconnectFromHost();
+//    if (isConnected()) {
+//        socket->abort();
+//    }
 }
 
 void TCPClient::onError(QAbstractSocket::SocketError e) {

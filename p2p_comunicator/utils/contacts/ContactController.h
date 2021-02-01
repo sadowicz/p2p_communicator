@@ -21,6 +21,7 @@ public:
     bool isActive(const string& ip) const;
     void tryConnect(const string& ip);
     void forceDisconnect(const string& ip);
+    bool contactExists(const string& ip);
 
 public slots:
     void onMsgRead(const string);

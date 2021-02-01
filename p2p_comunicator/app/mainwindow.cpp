@@ -8,9 +8,10 @@
 
     - @Filip: sortowanie listy piotrek zrobił, wyłączanie czatu też naprawił, da się zrobić żeby się
               kontakt nie pogrubiał jak mam otwarty z nim czat?
-    - @Tomasz: crash jak się usunie kontakt do którego jestem podłączony
+    - [OK] @Tomasz: crash jak się usunie kontakt do którego jestem podłączony
     - @Tomasz: jak się zmieni nazwę kontaktu to się rozłącza ale dalej można wysyłać wiadomości
     - @Tomasz: kontakt niekatywny się odznacza jak kliknę na niego
+    - [OK] @Tomasz: kontakt niekatywny się odznacza jak kliknę na niego
     - [OK] @Tomasz: nie da się przesyłać wiadomości długości więcej niż około 50k znaków (nie powinno się dać, dodać walidację)
     - [OK] @Tomasz: nie powinno się dać pisać do kontaktu który jest nieaktywny
 */
@@ -177,7 +178,7 @@ void MainWindow::loadListItems()
 
     ui->lwContacts->sortItems();
 
-    if(!activeContact.empty()){
+    if(!activeContact.empty() && Storage::storage().contactExists(activeContact)){
         auto contact = Storage::storage().getContact(activeContact);
         ui->msgListView->setModel(contact);
         connect(contact, &Contact::onHistoryChange, this, &MainWindow::onMessageListChange);
@@ -220,6 +221,26 @@ void MainWindow::refreshContactsList() {
     ui->lwContacts->clear();
     loadContacts();
     loadListItems();
+
+    reselectContact();
+}
+
+void MainWindow::reselectContact() {
+    Storage& storage = Storage::storage();
+    if (!storage.contactExists(activeContact)) {
+        return;
+    }
+    std::string name = storage.getContact(activeContact)->getName();
+
+    QList<QListWidgetItem*> selectedItems = ui->lwContacts->findItems(QString::fromStdString(name), Qt::MatchWrap);
+    if (selectedItems.size() != 1) {
+        return;
+    }
+    QListWidgetItem* selectedItem = selectedItems.at(0);
+    QList<QListWidgetItem*> allItems = ui->lwContacts->findItems(QString("*"), Qt::MatchWrap | Qt::MatchWildcard);
+
+    size_t index = std::distance(allItems.begin(), std::find(allItems.begin(), allItems.end(), selectedItem));
+    ui->lwContacts->selectionModel()->select(ui->lwContacts->model()->index(index, 0), QItemSelectionModel::Select);
 }
 
 void MainWindow::on_contactAddCancel()

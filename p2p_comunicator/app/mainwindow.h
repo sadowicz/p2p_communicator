@@ -105,6 +105,7 @@ private:
 
     void attachFile();
     void removeFile();
+    void reselectContact();
 
 };
 #endif // MAINWINDOW_H
