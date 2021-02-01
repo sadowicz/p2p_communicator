@@ -70,6 +70,7 @@ private slots:
 
     void on_pbAttachFile_clicked();
 
+    void onMessageListChange();
 
 private:
     Ui::MainWindow *ui;
@@ -87,11 +88,12 @@ private:
     QState* ValidateSendable;
     QState* Sendable;
 
+    MessageListDelegate* messageListDelegate;
     ContactController* contactController;
     Logger log;
 
     std::unordered_map<std::string, Contact*> contacts;
-    Contact* activeContact;
+    std::string activeContact;
 
     void assignStatesProperties();
     void setStatesTransistions();

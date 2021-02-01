@@ -1,14 +1,9 @@
 #include "MessageListDelegate.h"
 
-#include <QDebug>
-
-/*
-    3. Signal z download
-*/
-
 MessageListDelegate::MessageListDelegate(QObject* parent)
     : QStyledItemDelegate(parent),
-      padding(10,10)
+      padding(10,10),
+      btnState(QStyle::State_Raised)
 {
 }
 
@@ -47,6 +42,10 @@ void MessageListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
     Message* message = qvariant_cast<Message*>(index.data());
     auto contact = dynamic_cast<const Contact*>(index.model());
 
+    QString sender = message->getSender() == Message::CONTACT
+            ? QString::fromStdString(contact->getName()) : "Me";
+    sender.append(':');
+
     // set styles
     QStyleOptionViewItem opt = option;
     const QWidget* widget = opt.widget;
@@ -54,7 +53,10 @@ void MessageListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
     style->drawControl(QStyle::CE_ItemViewItem,&opt,painter,widget);
 
     //draw Message
-    paintMessage(message, contact ,painter, opt);
+
+    paintSender(sender,painter,option);
+    paintTimeStamp(message,painter,option);
+    paintMessage(message,painter, opt);
 
     if(message->getType() == Message::FILE)
     {
@@ -64,12 +66,27 @@ void MessageListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 
 }
 
-void MessageListDelegate::paintMessage(const Message* message, const Contact* contact, QPainter* painter, const QStyleOptionViewItem &option) const{
+void MessageListDelegate::paintSender(const QString sender, QPainter* painter, const QStyleOptionViewItem &option) const{
+
+    painter->save();
+
+    QFont font = painter->font();
+    font.setBold(true);
+    painter->setFont(font);
+
+    QRect textRect = option.rect;
+    textRect.setX(option.rect.left() + padding.width());
+    textRect.setY(option.rect.top() + padding.height());
+    textRect.setWidth(textRect.width()/2 - padding.width());
+
+    painter->drawText(textRect,Qt::TextWordWrap, sender);
+
+    painter->restore();
+}
+
+void MessageListDelegate::paintMessage(const Message* message, QPainter* painter, const QStyleOptionViewItem &option) const{
 
     QString content = QString::fromStdString(message->getContent());
-    QString sender = message->getSender() == Message::CONTACT
-            ? QString::fromStdString(contact->getName()) : "Me";
-    sender.append(':');
 
     int lineSpace = option.fontMetrics.lineSpacing();
     QRect textRect = option.rect;
@@ -79,8 +96,6 @@ void MessageListDelegate::paintMessage(const Message* message, const Contact* co
     textRect.setWidth(textRect.width() - padding.width());
 
     // print message
-    painter->drawText(textRect,Qt::TextWrapAnywhere, sender);
-
     if(content != ""){
         textRect.setY(textRect.y() + 2*lineSpace);
         painter->drawText(textRect,Qt::TextWrapAnywhere, content);
@@ -100,6 +115,7 @@ void MessageListDelegate::paintDownload(const Message* message, QPainter* painte
     if(message->getSender() == Message::CONTACT){
         btn.rect = QRect(x,y,w,h);
         btn.text = "Download";
+        btn.state = btnState | QStyle::State_Enabled;
 
         QRect fileNameLabel = QRect(x+w+10,y+5,option.rect.width()-w,h);
         painter->drawText(fileNameLabel,Qt::TextWrapAnywhere,QString::fromStdString(message->getFilename()));
@@ -113,6 +129,29 @@ void MessageListDelegate::paintDownload(const Message* message, QPainter* painte
                     fileName.prepend("File sent: ")
                     );
     }
+}
+
+void MessageListDelegate::paintTimeStamp(const Message *message, QPainter *painter, const QStyleOptionViewItem &option) const{
+
+    painter->save();
+
+    QFont font = painter->font();
+    font.setItalic(true);
+    painter->setFont(font);
+
+    QString timestamp = QString::fromStdString(message->getTimestamp());
+
+    QRect r = option.rect;
+    QRect boundRect = option.fontMetrics.boundingRect(r,Qt::TextWrapAnywhere, timestamp);
+
+    int x = r.left() + r.width() - padding.width()  - boundRect.width();
+    int y = r.top() + padding.width();
+
+    QRect textRect(x,y,boundRect.width(),boundRect.height());
+
+    painter->drawText(textRect,Qt::TextWrapAnywhere, timestamp);
+
+    painter->restore();
 }
 
 int MessageListDelegate::getMessageHeight(const Message* message, const QStyleOptionViewItem &option)const {
@@ -166,7 +205,48 @@ int MessageListDelegate::getSenderHeight(const QString& contactName, const QStyl
     return senderRect.height();
 }
 
+bool MessageListDelegate::editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem &option, const QModelIndex &index){
 
+    if(!index.data().canConvert<Message*>())
+        return false;
+
+    Message* message = qvariant_cast<Message*>(index.data());
+
+    if(message->getType() != Message::FILE || message->getSender() == Message::ME){
+        // ignore click
+        return false;
+    }
+
+    if(event->type() == QEvent::MouseButtonRelease ||
+       event->type() == QEvent::MouseButtonPress){
+        QMouseEvent* mouseEvent = dynamic_cast<QMouseEvent*>(event);
+        QPoint clickPoint = mouseEvent->pos();
+
+        int w = 75;
+        int h = 25;
+        int x = option.rect.left() + padding.width();
+        int y = option.rect.bottom() - h - padding.height();
+
+        QRect btnRect = QRect(x,y,w,h);
+
+        // button clicked
+        if(btnRect.contains(clickPoint)){
+            if(event->type() == QEvent::MouseButtonRelease){
+                btnState = QStyle::State_Raised;
+                emit downloadClicked(message);
+            }else{
+                // pressed change state
+                btnState = QStyle::State_Sunken;
+            }
+
+        }
+    }else{
+        btnState = QStyle::State_Raised;
+        return false;
+    }
+
+    return true;
+}
 
 
 
