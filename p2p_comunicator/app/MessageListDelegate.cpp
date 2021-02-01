@@ -193,7 +193,39 @@ int MessageListDelegate::getSenderHeight(const QString& contactName, const QStyl
     return senderRect.height();
 }
 
+bool MessageListDelegate::editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem &option, const QModelIndex &index){
 
+    if(!index.data().canConvert<Message*>())
+        return false;
+
+    Message* message = qvariant_cast<Message*>(index.data());
+
+    if(message->getType() != Message::FILE || message->getSender() == Message::ME){
+        // ignore click
+        return false;
+    }
+
+    if(event->type() == QEvent::MouseButtonRelease){
+        QMouseEvent* mouseEvent = dynamic_cast<QMouseEvent*>(event);
+        QPoint clickPoint = mouseEvent->pos();
+
+        int w = 75;
+        int h = 25;
+        int x = option.rect.left() + padding.width();
+        int y = option.rect.bottom() - h - padding.height();
+
+        QRect btnRect = QRect(x,y,w,h);
+
+        // button clicked
+        if(btnRect.contains(clickPoint)){
+            // emit signal btn clicked
+            qDebug() << "Clicked!!";
+            emit downloadClicked(message);
+        }
+    }
+
+    return true;
+}
 
 
 

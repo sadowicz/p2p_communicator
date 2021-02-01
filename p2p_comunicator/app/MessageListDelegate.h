@@ -6,7 +6,7 @@
 #include <QApplication>
 #include <QPainter>
 #include <QFont>
-#include <QPushButton>
+
 
 #include <contacts/Message.h>
 #include <contacts/Contact.h>
@@ -15,17 +15,21 @@ using namespace contacts;
 
 class MessageListDelegate : public QStyledItemDelegate
 {
-
+    Q_OBJECT
 public:
     MessageListDelegate(QObject* parent = nullptr);
 
 
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+    bool editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem &option, const QModelIndex &index) override;
+
+signals:
+
+    void downloadClicked(Message* message);
 
 private:
     QSize padding;
-
 
     void paintMessage(const Message* message, QPainter* painter, const QStyleOptionViewItem &option) const;
     void paintSender(const QString sender, QPainter* painter, const QStyleOptionViewItem &option) const;
