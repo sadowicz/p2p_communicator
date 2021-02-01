@@ -68,12 +68,20 @@ void MessageListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 
 void MessageListDelegate::paintSender(const QString sender, QPainter* painter, const QStyleOptionViewItem &option) const{
 
+    painter->save();
+
+    QFont font = painter->font();
+    font.setBold(true);
+    painter->setFont(font);
+
     QRect textRect = option.rect;
     textRect.setX(option.rect.left() + padding.width());
     textRect.setY(option.rect.top() + padding.height());
     textRect.setWidth(textRect.width()/2 - padding.width());
 
     painter->drawText(textRect,Qt::TextWordWrap, sender);
+
+    painter->restore();
 }
 
 void MessageListDelegate::paintMessage(const Message* message, QPainter* painter, const QStyleOptionViewItem &option) const{
