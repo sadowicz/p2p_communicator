@@ -37,6 +37,8 @@ MainWindow::MainWindow(QWidget *parent)
     log.info("------------ App started ------------");
     contactController = new ContactController(log);
 
+    connect(this, &MainWindow::fileReady, contactController, &ContactController::onFileReady);
+    connect(this, &MainWindow::fileRemoved, contactController, &ContactController::onFileCancelled);
     connect(contactController, &ContactController::refreshContactList, this, &MainWindow::on_refreshContactsList);
     connect(this, SIGNAL(msgRead(const string)), contactController, SLOT(onMsgRead(const string)));
 
@@ -299,8 +301,7 @@ void MainWindow::on_lwContacts_itemClicked(QListWidgetItem *item)
 void MainWindow::on_pbDeleteContact_clicked()
 {
     // remove contact from storage and close TCP/IP connection
-    auto contact = Storage::storage().getContact(activeContact);
-    contactController->removeContact(contact->getAddress());
+    contactController->removeContact(activeContact);
 
     // refresh GUI
     refreshContactsList();
@@ -323,8 +324,8 @@ void MainWindow::on_pbSettings_clicked()
 }
 
 void MainWindow::on_pbSend_clicked() {
-    auto contact = Storage::storage().getContact(activeContact);
-    contactController->sendTextMessage(contact->getAddress(), ui->teSend->toPlainText().toStdString());
+    Contact* contact = Storage::storage().getContact(activeContact);
+    contactController->sendMessage(contact->getAddress(), ui->teSend->toPlainText().toStdString());
 }
 
 void MainWindow::on_pbAttachFile_clicked()
@@ -337,7 +338,7 @@ void MainWindow::on_pbAttachFile_clicked()
 }
 
 void MainWindow::attachFile(){
-    QString filePath = QFileDialog::getOpenFileName(this,"Open file", QDir::homePath());
+    QString filePath = QFileDialog::getOpenFileName(this, "Open file", QDir::homePath());
     QFile file(filePath);
 
     if(filePath == "")

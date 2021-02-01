@@ -4,7 +4,7 @@
 
 using namespace contacts;
 
-ContactController::ContactController(Logger& log) : log(log) {
+ContactController::ContactController(Logger& log) : log(log), fileIsReady(false) {
     connection = new TCPConnection(log);
     connect(connection, SIGNAL(connected(string, unsigned int)), SLOT(onConnect(string, unsigned int)));
     connect(connection, SIGNAL(disconnected(string)), SLOT(onDisconnect(string)));
@@ -45,15 +45,27 @@ void ContactController::editContact(const std::string ip, std::string name, unsi
     emit refreshContactList();
 }
 
-void ContactController::sendTextMessage(const string& ip, const string& message) {
+void ContactController::sendMessage(const string& ip, const string& message) {
     if (connection->isClientConnected(ip)) {
-        if (message.size() > MAX_TEXT_MSG_LENGTH) {
-            log.error("Message was too long, cannot send");
-            return;
+        Contact* contact = Storage::storage().getContact(ip);
+
+        // text message
+        if (message.size() > 0 && message.size() <= MAX_TEXT_MSG_LENGTH) {
+            contact->addToHistory(Message::createTextMessage(message));
+            connection->send(ip, TCPPacket::encode(TCPPacket::PacketType::TEXT, "", message));
         }
-        Storage::storage().getContact(ip)->addToHistory(Message::createTextMessage(message));
+        if (message.size() > MAX_TEXT_MSG_LENGTH) {
+            emit msgTooLong();
+        }
+
+        // file message
+        if (fileIsReady) {
+            contact->addToHistory(Message::createFileMessage(filename));
+            connection->send(ip, TCPPacket::encode(TCPPacket::PacketType::FILE, filename, *fileContent));
+            // TODO: dont pass fileContent by value
+        }
+
         Storage::storage().save();
-        connection->send(ip, TCPPacket::encode(TCPPacket::PacketType::TEXT, "", message));
     } else {
         log.error("Client was not connected, can't send message");
     }
@@ -117,14 +129,21 @@ void ContactController::onRecieve(const string ip, TCPPacket packet) {
 }
 
 void ContactController::onTextMessage(const string ip, TCPPacket packet) {
-    Storage::storage().getContact(ip)->addToHistory(new Message(packet));
-    Storage::storage().getContact(ip)->setUnreadMsgState(true);
+    Message* msg = new Message(packet);
+    Contact* contact = Storage::storage().getContact(ip);
+    contact->addToHistory(msg);
+    contact->setUnreadMsgState(true);
     Storage::storage().save();
     emit refreshContactList();
 }
 
 void ContactController::onFileMessage(const string ip, TCPPacket packet) {
-    // TODO
+    Message* msg = new Message(packet);
+    Contact* contact = Storage::storage().getContact(ip);
+    contact->addToHistory(msg);
+    contact->setUnreadMsgState(true);
+    Storage::storage().save();
+    emit refreshContactList();
 }
 
 void ContactController::onConnectMessage(const string ip, TCPPacket packet) {
@@ -152,6 +171,16 @@ void ContactController::onConnectMessage(const string ip, TCPPacket packet) {
     if (!connection->isClientConnected(ip)) {
         connection->reconnect(ip);
     }
+}
+
+void ContactController::onFileReady(string filename, const string* content) {
+    this->fileIsReady = true;
+    this->filename = filename;
+    this->fileContent = content;
+}
+
+void ContactController::onFileCancelled() {
+    this->fileIsReady = false;
 }
 
 void ContactController::onMsgRead(const string ip) {
