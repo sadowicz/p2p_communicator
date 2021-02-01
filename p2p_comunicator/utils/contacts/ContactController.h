@@ -16,7 +16,7 @@ public:
     ContactController(Logger& log);
     void addContact(Contact* contact);
     void removeContact(const string& ip);
-    void editContact(Contact* editedContact);
+    void editContact(const std::string ip, std::string name, unsigned int port);
     void sendTextMessage(const string& ip, const string& message);
     bool isActive(const string& ip) const;
     void tryConnect(const string& ip);

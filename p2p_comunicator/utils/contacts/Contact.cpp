@@ -57,6 +57,10 @@ void Contact::setPort(unsigned int port) {
     this->port = port;
 }
 
+void Contact::setName(std::string name) {
+    this->name = name;
+}
+
 bool Contact::isActive() const {
     return this->active;
 }

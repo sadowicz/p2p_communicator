@@ -31,24 +31,18 @@ void ContactController::removeContact(const string& ip) {
     connection->closeConnection(ip);
 }
 
-void ContactController::editContact(Contact* editedContact) {
-    Contact* oldContact = Storage::storage().getContact(editedContact->getAddress());
-
-    std::vector<Message*> history = oldContact->getHistory();
-
-    for(Message* msg : history) {
-        editedContact->addToHistory(msg);
+void ContactController::editContact(const std::string ip, std::string name, unsigned int port) {
+    Contact* contact = Storage::storage().getContact(ip);
+    contact->setName(name);
+    if (contact->getPort() != port) {
+        // change port -> close client -> register client again -> reconnect
+        contact->setPort(port);
+        connection->closeConnection(ip);
+        connection->registerClient(ip, port);
+        connection->reconnect(ip);
     }
-
-    if (editedContact->getPort() == oldContact->getPort()) {
-        Storage::storage().deleteContact(editedContact->getAddress());
-        Storage::storage().addContact(editedContact);
-    } else {
-        // if port was changed client should be recreated and try connecting again
-        removeContact(editedContact->getAddress());
-        addContact(editedContact);
-        tryConnect(editedContact->getAddress());
-    }
+    Storage::storage().save();
+    emit refreshContactList();
 }
 
 void ContactController::sendTextMessage(const string& ip, const string& message) {

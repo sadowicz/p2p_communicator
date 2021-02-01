@@ -6,6 +6,7 @@
 #include <contacts/Storage.h>
 
 #include <config/Config.h>
+#include <util/LoggerHelper.h>
 
 using namespace contacts;
 
@@ -18,7 +19,7 @@ class EditContactWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit EditContactWindow(QWidget *parent = nullptr);
+    explicit EditContactWindow(std::string ip, std::string name, int port, QWidget *parent = nullptr);
     ~EditContactWindow();
 
 private:
@@ -30,15 +31,17 @@ private:
     Logger log;
     int port;
 
+    void setValues(std::string ip, std::string name, int port);
+
 signals:
-    void contactAddSuccess(Contact* editedContact);
+    void contactAddSuccess(std::string, std::string, unsigned int);
     void contactAddCancel();
     void contactAddFailure(QString errorMessage);
 private slots:
     void on_bbAddContact_accepted();
     void on_EditContactWindow_finished(int result);
     void on_bbAddContact_rejected();
-    void setValues(std::string ip, std::string name, int port);
+
 };
 
 #endif // EDITCONTACTWINDOW_H

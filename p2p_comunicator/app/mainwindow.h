@@ -51,7 +51,7 @@ signals:
 
 private slots:
     void on_contactAddSuccess(Contact* contact);
-    void on_contactEditSuccess(Contact* contact);
+    void on_contactEditSuccess(std::string ip, std::string name, unsigned int port);
     void on_contactAddCancel();
 
     void on_refreshContactsList();

@@ -1,22 +1,23 @@
 #include "editcontactwindow.h"
 #include "ui_editcontactwindow.h"
 
-
-EditContactWindow::EditContactWindow(QWidget *parent) :
+EditContactWindow::EditContactWindow(std::string ip, std::string name, int port, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::EditContactWindow)
 {
-    log = Logger(Config::config("log-file"), Config::config().debugMode());
+    ui->setupUi(this);
+
+    setValues(ip, name, port);
+
+    log = util::getLogger();
     log.debug("Editing contact");
 
     validator = new ContactValidator{};
 
-    ui->setupUi(this);
-
-    QObject::connect(this, SIGNAL(contactAddSuccess(Contact*)), parent, SLOT(on_contactEditSuccess(Contact*)));
+    QObject::connect(this, SIGNAL(contactAddSuccess(std::string, std::string, unsigned int)),
+                     parent, SLOT(on_contactEditSuccess(std::string, std::string, unsigned int)));
     QObject::connect(this, SIGNAL(contactAddCancel()), parent, SLOT(on_contactAddCancel()));
     QObject::connect(this, SIGNAL(contactAddFailure(QString)), parent, SLOT(on_error(QString)));
-    QObject::connect(parent, SIGNAL(edited(std::string,std::string, int)), this, SLOT(setValues(std::string,std::string,int)));
 
     Storage::storage().load();
 }
@@ -38,11 +39,9 @@ void EditContactWindow::on_bbAddContact_accepted()
     if(validator->validateContactForm(validationName, ui->lePort->text(),
                                       Storage::storage().getContacts()))
     {
-        Contact* editedContact = new Contact(ui->leName->text().toStdString(), ip,
-                                             ui->lePort->text().toUInt());
 
         //if storage successful:
-        emit contactAddSuccess(editedContact);
+        emit contactAddSuccess(ip, ui->leName->text().toStdString(), ui->lePort->text().toUInt());
 
         delete this;
     }

@@ -10,7 +10,7 @@
               kontakt nie pogrubiał jak mam otwarty z nim czat?
     - @Tomasz: crash jak się usunie kontakt do którego jestem podłączony
     - @Tomasz: jak się zmieni nazwę kontaktu to się rozłącza ale dalej można wysyłać wiadomości
-    - @Tomasz: kontakt niekatywny się odznacza jak kliknę na niego
+    - [Czekam na zmianę activeContact na IP] @Tomasz: kontakt niekatywny się odznacza jak kliknę na niego
     - [OK] @Tomasz: nie da się przesyłać wiadomości długości więcej niż około 50k znaków (nie powinno się dać, dodać walidację)
     - [OK] @Tomasz: nie powinno się dać pisać do kontaktu który jest nieaktywny
 */
@@ -181,9 +181,9 @@ void MainWindow::on_pbNewContact_clicked()
     addContactWin->show();
 }
 
-void MainWindow::on_contactEditSuccess(Contact* contact) {
+void MainWindow::on_contactEditSuccess(std::string ip, std::string name, unsigned int port) {
     // edit contact
-    contactController->editContact(contact);
+    contactController->editContact(ip, name, port);
 
     // refresh GUI
     refreshContactsList();
@@ -269,10 +269,8 @@ void MainWindow::on_pbDeleteContact_clicked()
 
 void MainWindow::on_pbEditContact_clicked()
 {
-    editContactWin = new EditContactWindow{this};
+    editContactWin = new EditContactWindow{activeContact->getAddress(), activeContact->getName(), activeContact->getPort(), this};
     editContactWin->show();
-
-    emit edited(activeContact->getAddress(), activeContact->getName(), activeContact->getPort());
 }
 
 void MainWindow::on_pbSettings_clicked()
