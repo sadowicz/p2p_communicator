@@ -133,6 +133,12 @@ void MessageListDelegate::paintDownload(const Message* message, QPainter* painte
 
 void MessageListDelegate::paintTimeStamp(const Message *message, QPainter *painter, const QStyleOptionViewItem &option) const{
 
+    painter->save();
+
+    QFont font = painter->font();
+    font.setItalic(true);
+    painter->setFont(font);
+
     QString timestamp = QString::fromStdString(message->getTimestamp());
 
     QRect r = option.rect;
@@ -144,6 +150,8 @@ void MessageListDelegate::paintTimeStamp(const Message *message, QPainter *paint
     QRect textRect(x,y,boundRect.width(),boundRect.height());
 
     painter->drawText(textRect,Qt::TextWrapAnywhere, timestamp);
+
+    painter->restore();
 }
 
 int MessageListDelegate::getMessageHeight(const Message* message, const QStyleOptionViewItem &option)const {
