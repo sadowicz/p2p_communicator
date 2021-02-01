@@ -8,7 +8,8 @@
 
 MessageListDelegate::MessageListDelegate(QObject* parent)
     : QStyledItemDelegate(parent),
-      padding(10,10)
+      padding(10,10),
+      btnState(QStyle::State_Raised)
 {
 }
 
@@ -112,6 +113,7 @@ void MessageListDelegate::paintDownload(const Message* message, QPainter* painte
     if(message->getSender() == Message::CONTACT){
         btn.rect = QRect(x,y,w,h);
         btn.text = "Download";
+        btn.state = btnState | QStyle::State_Enabled;
 
         QRect fileNameLabel = QRect(x+w+10,y+5,option.rect.width()-w,h);
         painter->drawText(fileNameLabel,Qt::TextWrapAnywhere,QString::fromStdString(message->getFilename()));
@@ -205,7 +207,8 @@ bool MessageListDelegate::editorEvent(QEvent* event, QAbstractItemModel* model, 
         return false;
     }
 
-    if(event->type() == QEvent::MouseButtonRelease){
+    if(event->type() == QEvent::MouseButtonRelease ||
+       event->type() == QEvent::MouseButtonPress){
         QMouseEvent* mouseEvent = dynamic_cast<QMouseEvent*>(event);
         QPoint clickPoint = mouseEvent->pos();
 
@@ -218,10 +221,18 @@ bool MessageListDelegate::editorEvent(QEvent* event, QAbstractItemModel* model, 
 
         // button clicked
         if(btnRect.contains(clickPoint)){
-            // emit signal btn clicked
-            qDebug() << "Clicked!!";
-            emit downloadClicked(message);
+            if(event->type() == QEvent::MouseButtonRelease){
+                btnState = QStyle::State_Raised;
+                emit downloadClicked(message);
+            }else{
+                // pressed change state
+                btnState = QStyle::State_Sunken;
+            }
+
         }
+    }else{
+        btnState = QStyle::State_Raised;
+        return false;
     }
 
     return true;

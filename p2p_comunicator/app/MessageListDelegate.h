@@ -30,6 +30,7 @@ signals:
 
 private:
     QSize padding;
+    QStyle::State btnState;
 
     void paintMessage(const Message* message, QPainter* painter, const QStyleOptionViewItem &option) const;
     void paintSender(const QString sender, QPainter* painter, const QStyleOptionViewItem &option) const;
