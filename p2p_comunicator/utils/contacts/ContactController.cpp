@@ -51,7 +51,7 @@ void ContactController::sendMessage(const string& ip, const string& message) {
 
         // text message
         if (message.size() > 0 && message.size() <= MAX_TEXT_MSG_LENGTH) {
-            contact->addToHistory(Message::createTextMessage(message));
+            contact->addToHistory(Message::createTextMessage(new string(message)));
             connection->send(ip, TCPPacket::encode(TCPPacket::PacketType::TEXT, "", message));
         }
         if (message.size() > MAX_TEXT_MSG_LENGTH) {

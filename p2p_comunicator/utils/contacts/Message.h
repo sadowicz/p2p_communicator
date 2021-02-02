@@ -17,7 +17,7 @@ using namespace std;
 
 namespace contacts {
 
-class Message : public QObject{
+class Message : public QObject {
         Q_OBJECT
 
 public:
@@ -29,7 +29,7 @@ public:
         ME, CONTACT
     };
 
-    static Message* createTextMessage(string content, QObject* parent = nullptr);
+    static Message* createTextMessage(string* content, QObject* parent = nullptr);
     static Message* createFileMessage(string filename, QObject* parent = nullptr);
     Message(TCPPacket packet, QObject* parent = nullptr);
     Message(QJsonObject& object, QObject* parent = nullptr);
@@ -37,7 +37,7 @@ public:
     void save();
     string getTimestamp() const;
 
-    string getContent() const {
+    string* getContent() const {
         return content;
     }
 
@@ -53,16 +53,20 @@ public:
         return sender;
     }
 
+    ~Message() {
+        delete content;
+    }
+
 
 private:
     QDateTime timestamp;
     Type type;
     Sender sender;
-    string content;
+    string* content;
     string filename;
     Logger log;
 
-    Message(Type type, string filename, string content, Sender sender, QObject* parent = nullptr);
+    Message(Type type, string filename, string* content, Sender sender, QObject* parent = nullptr);
 
 };
 

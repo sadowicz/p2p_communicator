@@ -66,7 +66,7 @@ void MessageListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 
 }
 
-void MessageListDelegate::paintSender(const QString sender, QPainter* painter, const QStyleOptionViewItem &option) const{
+void MessageListDelegate::paintSender(const QString sender, QPainter* painter, const QStyleOptionViewItem &option) const {
 
     painter->save();
 
@@ -84,10 +84,7 @@ void MessageListDelegate::paintSender(const QString sender, QPainter* painter, c
     painter->restore();
 }
 
-void MessageListDelegate::paintMessage(const Message* message, QPainter* painter, const QStyleOptionViewItem &option) const{
-
-    QString content = QString::fromStdString(message->getContent());
-
+void MessageListDelegate::paintMessage(const Message* message, QPainter* painter, const QStyleOptionViewItem &option) const {
     int lineSpace = option.fontMetrics.lineSpacing();
     QRect textRect = option.rect;
 
@@ -95,15 +92,16 @@ void MessageListDelegate::paintMessage(const Message* message, QPainter* painter
     textRect.setY(option.rect.top() + padding.height());
     textRect.setWidth(textRect.width() - padding.width());
 
-    // print message
-    if(content != ""){
+    if (message->getFilename() == "") {
+        QString content = QString::fromStdString(*message->getContent());
+
+        // print message
         textRect.setY(textRect.y() + 2*lineSpace);
         painter->drawText(textRect,Qt::TextWrapAnywhere, content);
     }
-
 }
 
-void MessageListDelegate::paintDownload(const Message* message, QPainter* painter, const QStyleOptionViewItem &option) const{
+void MessageListDelegate::paintDownload(const Message* message, QPainter* painter, const QStyleOptionViewItem &option) const {
 
     QStyleOptionButton btn;
 
@@ -131,7 +129,7 @@ void MessageListDelegate::paintDownload(const Message* message, QPainter* painte
     }
 }
 
-void MessageListDelegate::paintTimeStamp(const Message *message, QPainter *painter, const QStyleOptionViewItem &option) const{
+void MessageListDelegate::paintTimeStamp(const Message *message, QPainter *painter, const QStyleOptionViewItem &option) const {
 
     painter->save();
 
@@ -142,7 +140,7 @@ void MessageListDelegate::paintTimeStamp(const Message *message, QPainter *paint
     QString timestamp = QString::fromStdString(message->getTimestamp());
 
     QRect r = option.rect;
-    QRect boundRect = option.fontMetrics.boundingRect(r,Qt::TextWrapAnywhere, timestamp);
+    QRect boundRect = option.fontMetrics.boundingRect(r, Qt::TextWrapAnywhere, timestamp);
 
     int x = r.left() + r.width() - padding.width()  - boundRect.width();
     int y = r.top() + padding.width();
@@ -154,18 +152,20 @@ void MessageListDelegate::paintTimeStamp(const Message *message, QPainter *paint
     painter->restore();
 }
 
-int MessageListDelegate::getMessageHeight(const Message* message, const QStyleOptionViewItem &option)const {
+int MessageListDelegate::getMessageHeight(const Message* message, const QStyleOptionViewItem &option) const {
 
     QRect textRect = option.rect;
     textRect.setWidth(textRect.width() - 2*padding.width());
-
-    QString content = QString::fromStdString(message->getContent());
-    QRect contentRect = option.fontMetrics.boundingRect(textRect,Qt::TextWrapAnywhere,content);
+    QString content = "";
+    if (message->getType() == Message::Type::TEXT) {
+        content = QString::fromStdString(*message->getContent());
+    }
+    QRect contentRect = option.fontMetrics.boundingRect(textRect, Qt::TextWrapAnywhere,content);
 
     return contentRect.height();
 }
 
-int MessageListDelegate::getDownloadHeight(const Message* message, const QStyleOptionViewItem &option)const{
+int MessageListDelegate::getDownloadHeight(const Message* message, const QStyleOptionViewItem &option) const{
 
     int height = 0;
     QString fileName = QString::fromStdString(message->getFilename());
@@ -233,7 +233,8 @@ bool MessageListDelegate::editorEvent(QEvent* event, QAbstractItemModel* model, 
         if(btnRect.contains(clickPoint)){
             if(event->type() == QEvent::MouseButtonRelease){
                 btnState = QStyle::State_Raised;
-                emit downloadClicked(message);
+                message->save();
+//                emit downloadClicked(message);
             }else{
                 // pressed change state
                 btnState = QStyle::State_Sunken;

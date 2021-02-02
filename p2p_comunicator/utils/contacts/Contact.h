@@ -9,7 +9,10 @@
 #include <QPointer>
 
 #include <contacts/Message.h>
+
 #include <vector>
+#include <algorithm>
+
 namespace contacts {
 
 class Contact : public QAbstractListModel{
@@ -21,7 +24,8 @@ public:
     Contact() : name(""), address(""), port(0), active(false), unreadMsg(false) {}
     Contact(std::string name, std::string address, unsigned int port, QObject* parent = nullptr);
 
-    void read(const QJsonObject &json);
+    void updateHistory(const QJsonObject &json);
+    void updateData(const QJsonObject& json);
     void write(QJsonObject &json);
 
     void addToHistory(Message* message);

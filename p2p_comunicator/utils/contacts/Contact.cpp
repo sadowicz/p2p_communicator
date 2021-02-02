@@ -5,19 +5,37 @@ using namespace contacts;
 Contact::Contact(std::string name, std::string address, unsigned int port, QObject* parent)
     : QAbstractListModel(parent), name(name), address(address), port(port), active(false), unreadMsg(false) {}
 
-void Contact::read(const QJsonObject &json) {
+void Contact::updateData(const QJsonObject& json) {
     name = json["name"].toString().toStdString();
     address = json["address"].toString().toStdString();
     port = json["port"].toInt();
+}
 
-    history.clear();
+void Contact::updateHistory(const QJsonObject &json) {
     QJsonArray historyArray = json["history"].toArray();
     for (int i = 0; i < historyArray.size(); ++i) {
         QJsonObject contactMessage = historyArray[i].toObject();
 
         // using QJsonDocument to convert QJsonObject to QString
-        Message* msg = new Message(contactMessage,this);
-        history.push_back(msg);
+        Message* msg = new Message(contactMessage, this);
+
+        bool found = false;
+        // no LinkedHashSet :(, have to do O(n) lookups n times, STL is literal garbage
+        // assume that indices are the same?
+        for (Message* message : history) {
+
+            // not sure how to identify messages, using timestamps for now
+            if (message->getTimestamp() == msg->getTimestamp()) {
+                found = true;
+            }
+        }
+        if (!found) {
+            // if message was not already in memory insert and hope the order is preserved
+            history.push_back(msg);
+        } else {
+            // else delete the message because its already in memory
+            delete msg;
+        }
     }
 }
 

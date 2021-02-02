@@ -2,15 +2,15 @@
 
 using namespace contacts;
 
-Message* Message::createTextMessage(string content, QObject* parent) {
+Message* Message::createTextMessage(string* content, QObject* parent) {
     return new Message(TEXT, "", content, Message::ME, parent);
 }
 
 Message* Message::createFileMessage(string filename, QObject* parent) {
-    return new Message(FILE, filename, "", Message::ME, parent);
+    return new Message(FILE, filename, nullptr, Message::ME, parent);
 }
 
-Message::Message(Type type, string filename, string content, Sender sender, QObject* parent)
+Message::Message(Type type, string filename, string* content, Sender sender, QObject* parent)
     : QObject(parent),
       timestamp(QDateTime::currentDateTime()),
       type(type),
@@ -29,7 +29,7 @@ Message::Message(TCPPacket packet, QObject* parent)
 
     this->sender = Sender::CONTACT;
     this->timestamp = QDateTime::currentDateTime();
-    this->content = packet.getContent();
+    this->content = new string(packet.getContent());
     this->filename = packet.getFilename();
 }
 
@@ -45,7 +45,7 @@ Message::Message(QJsonObject& object, QObject* parent)
             : Sender::ME;
 
     this->filename = object["filename"].toString().toStdString();
-    this->content = object["content"].toString().toStdString();
+    this->content = new string(object["content"].toString().toStdString());
     this->timestamp = QDateTime::fromString(object["timestamp"].toString());
 }
 
@@ -63,7 +63,7 @@ QJsonObject Message::serialize() {
     object["timestamp"] = QString(getTimestamp().c_str());
 
     if (getType() == Message::Type::TEXT) {
-        object["content"] = QString(getContent().c_str());
+        object["content"] = QString(getContent()->c_str());
     } else {
         object["filename"] = QString(getFilename().c_str());
     }
@@ -84,7 +84,7 @@ void Message::save() {
         if (!file.is_open()) {
             throw new IOException("Failed saving file.");
         }
-        file << content;
+        file << *content;
         file.close();
 
         log.info("Saved file '" + filename.toStdString() + "'");

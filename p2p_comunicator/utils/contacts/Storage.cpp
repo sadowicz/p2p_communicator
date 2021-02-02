@@ -48,16 +48,15 @@ void Storage::read(const QJsonObject &json) {
         QJsonObject contactObject = contactsArray[i].toObject();
 
         Contact* contact = new Contact();
-        contact->read(contactObject);
+        contact->updateData(contactObject);
 
         if (contactExists(contact->getAddress())) {
             Contact* oldContact = getContact(contact->getAddress());
-            contact->setActiveState(oldContact->isActive());
-            contact->setUnreadMsgState(oldContact->hasUnreadMsg());
-            delete oldContact;
+            oldContact->updateHistory(contactObject);
+            delete contact;
+        } else {
+            contacts[contact->getAddress()] = contact;
         }
-        contacts.erase(contact->getAddress());
-        contacts[contact->getAddress()] = contact;
     }
 }
 
