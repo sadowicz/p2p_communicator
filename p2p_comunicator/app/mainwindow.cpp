@@ -164,29 +164,35 @@ void MainWindow::loadListItems()
     {
         auto loaded = new QListWidgetItem(contact.first.c_str(), ui->lwContacts);
 
-        if(contact.second->isActive() == true) loaded->setTextColor(Qt::darkGreen);
-        else if(contact.second->isActive() == false) loaded->setTextColor(Qt::darkRed);
+        setListItemFrontend(contact.second, loaded);
 
-        if(contact.second->hasUnreadMsg() == true)
-        {
-            QFont font{};
-            font.setBold(true);
-            loaded->setFont(font);
+        if(!activeContact.empty() && Storage::storage().contactExists(activeContact)){
+            auto contact = Storage::storage().getContact(activeContact);
+            ui->msgListView->setModel(contact);
+            connect(contact, &Contact::onHistoryChange, this, &MainWindow::onMessageListChange);
         }
-
-        log.debug("\t> " + contact.first +
-                  "\tactive : " + std::to_string(contact.second->isActive()) +
-                  "\tunread : " + std::to_string(contact.second->hasUnreadMsg()));
     }
 
     ui->lwContacts->sortItems();
-
-    if(!activeContact.empty() && Storage::storage().contactExists(activeContact)){
-        auto contact = Storage::storage().getContact(activeContact);
-        ui->msgListView->setModel(contact);
-        connect(contact, &Contact::onHistoryChange, this, &MainWindow::onMessageListChange);
-    }
 }
+
+void  MainWindow::setListItemFrontend(Contact* contact, QListWidgetItem* loaded)
+{
+    if(contact->isActive() == true) loaded->setTextColor(Qt::darkGreen);
+    else if(contact->isActive() == false) loaded->setTextColor(Qt::darkRed);
+
+    if(contact->hasUnreadMsg() == true && contact->getAddress() != activeContact)
+    {
+        QFont font{};
+        font.setBold(true);
+        loaded->setFont(font);
+    }
+
+    log.debug("\t> " + contact->getAddress() +
+              "\tactive : " + std::to_string(contact->isActive()) +
+              "\tunread : " + std::to_string(contact->hasUnreadMsg()));
+}
+
 
 void MainWindow::on_pbNewContact_clicked()
 {
@@ -314,13 +320,15 @@ void MainWindow::on_pbDeleteContact_clicked()
 
     ui->pbDeleteContact->setEnabled(false);
     ui->pbEditContact->setEnabled(false);
+
+    emit contactDisconnected();
 }
 
 void MainWindow::on_pbEditContact_clicked()
 {
     if (Storage::storage().contactExists(activeContact)) {
         Contact* contact = Storage::storage().getContact(activeContact);
-        editContactWin = new EditContactWindow{contact->getAddress(), contact->getName(), contact->getPort(), this};
+        editContactWin = new EditContactWindow{contact->getAddress(), contact->getName(), static_cast<int>(contact->getPort()), this};
         editContactWin->show();
     }
 }
@@ -332,9 +340,11 @@ void MainWindow::on_pbSettings_clicked()
 }
 
 void MainWindow::on_pbSend_clicked() {
+
     if (Storage::storage().contactExists(activeContact)) {
         Contact* contact = Storage::storage().getContact(activeContact);
         contactController->sendMessage(contact->getAddress(), ui->teSend->toPlainText().toStdString());
+        ui->teSend->clear();    // clear msg text edit after sending
     }
 }
 

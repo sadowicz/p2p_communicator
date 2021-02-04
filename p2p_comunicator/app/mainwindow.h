@@ -106,6 +106,8 @@ private:
     void loadListItems();
     void refreshContactsList();
 
+    void setListItemFrontend(Contact* contact, QListWidgetItem* loaded);
+
     void attachFile();
     void removeFile();
     void reselectContact();
