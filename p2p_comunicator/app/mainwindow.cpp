@@ -124,8 +124,9 @@ void MainWindow::setStatesTransistions()
     Unlocked->addTransition(ui->pbNewContact, SIGNAL(clicked()), Locked);
     Unlocked->addTransition(this, SIGNAL(error(QString)), Locked);
 
-    Disconnected->addTransition(ui->lwContacts, SIGNAL(itemClicked(QListWidgetItem*)), Connected);
+    Disconnected->addTransition(this, SIGNAL(contactConnected()), Connected);
 
+    Connected->addTransition(this, SIGNAL(contactDisconnected()), Disconnected);
     Connected->addTransition(ui->teSend, SIGNAL(textChanged()), ValidateSendable);
     Connected->addTransition(this, SIGNAL(fileChanged()), ValidateSendable);
 
