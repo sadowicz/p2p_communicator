@@ -50,6 +50,7 @@ private slots:
         QCOMPARE("127.0.0.1", contact2.getAddress());
         QCOMPARE(8080, contact2.getPort());
 
+        contact2.updateData(object);
         contact2.updateHistory(object);
 
         QCOMPARE("name", contact2.getName());
@@ -74,12 +75,13 @@ private slots:
         QCOMPARE(8080, contact2->getPort());
         QCOMPARE(true, contact2->getHistory().empty());
 
+        contact2->updateData(object);
         contact2->updateHistory(object);
 
         QCOMPARE("name", contact2->getName());
         QCOMPARE("22.33.11.44", contact2->getAddress());
         QCOMPARE(1234, contact2->getPort());
-        QCOMPARE(10, contact2->getHistory().size());
+        QCOMPARE(1, contact2->getHistory().size());
     }
 };
 
