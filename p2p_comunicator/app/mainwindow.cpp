@@ -1,10 +1,17 @@
 #include "mainwindow.h"
 
+#include <QScrollBar>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    setScrollBarStyles(ui->lwContacts->verticalScrollBar());
+    setScrollBarStyles(ui->msgListView->verticalScrollBar());
+    setScrollBarStyles(ui->teSend->verticalScrollBar());
+
     setAcceptDrops(true);
     setUpStateMachine();
     stateMachine->start();
@@ -409,4 +416,37 @@ void MainWindow::removeFile(){
 
 void MainWindow::onMessageListChange(){
     ui->msgListView->scrollToBottom();
+}
+
+void MainWindow::setScrollBarStyles(QScrollBar* scrollBar){
+
+    scrollBar->setStyleSheet(
+                QString::fromUtf8(
+                    "QScrollBar:vertical {"
+                    "    background-color:#4d657a;"
+                    "    border: none;"
+                    "    width:12px;"
+                    "    margin: 0px 0px 0px 0px;"
+                    "}"
+                    "QScrollBar::handle:vertical {"
+                    "    border: none;"
+                    "    border-radius: 4px;"
+                    "    background: #222831;"
+                    "    min-height: 15px;"
+                    "    margin: 2px;"
+                    "}"
+                    "QScrollBar::handle:vertical:hover {"
+                    "    background: #333942;"
+                    "}"
+                    "QScrollBar::add-line:vertical {"
+                    "    height: 0px;"
+                    "    subcontrol-position: bottom;"
+                    "    subcontrol-origin: margin;"
+                    "}"
+                    "QScrollBar::sub-line:vertical {"
+                    "    height: 0 px;"
+                    "    subcontrol-position: top;"
+                    "    subcontrol-origin: margin;"
+                    "}"
+                    ));
 }

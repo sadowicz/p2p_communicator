@@ -102,6 +102,8 @@ private:
     std::unordered_map<std::string, Contact*> contacts;
     std::string activeContact;
 
+    void setScrollBarStyles(QScrollBar* scrollBar);
+
     void assignStatesProperties();
     void setStatesTransistions();
     void setUpStateMachine();
