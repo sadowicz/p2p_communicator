@@ -8,6 +8,7 @@
 #include <QFont>
 #include <QFileDialog>
 #include <QDir>
+#include <QIcon>
 
 #include <MessageListDelegate.h>
 #include <add_contact_window.h>

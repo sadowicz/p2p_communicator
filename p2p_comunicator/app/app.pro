@@ -76,3 +76,6 @@ else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../tcp/
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../tcp/release/tcp.lib
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../tcp/debug/tcp.lib
 else:unix: PRE_TARGETDEPS += $$OUT_PWD/../tcp/libtcp.a
+
+RESOURCES += \
+    resource.qrc

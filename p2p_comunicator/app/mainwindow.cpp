@@ -162,8 +162,10 @@ void MainWindow::loadListItems()
 
 void  MainWindow::setListItemFrontend(Contact* contact, QListWidgetItem* loaded)
 {
-    if(contact->isActive() == true) loaded->setTextColor(Qt::darkGreen);
-    else if(contact->isActive() == false) loaded->setTextColor(Qt::darkRed);
+    if(contact->isActive() == true)
+        loaded->setIcon(QIcon(":/Icons/icons/active.png"));
+    else if(contact->isActive() == false)
+        loaded->setIcon(QIcon(":/Icons/icons/disconnected.png"));
 
     if(contact->hasUnreadMsg() == true && contact->getAddress() != activeContact)
     {
