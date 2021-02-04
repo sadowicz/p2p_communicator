@@ -58,6 +58,7 @@ private:
         return *this;
     }
 
+    static std::string getContentFromPacket(std::string& packet);
     static const char* getContentFromRaw(const char* cstr);
     static bool tryParseFilePacket(const char* cstr, char* filename);
     static bool tryParseTextPacket(const char* cstr);

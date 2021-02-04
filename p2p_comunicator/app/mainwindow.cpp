@@ -274,8 +274,10 @@ void MainWindow::on_validateSendable()
 void MainWindow::on_lwContacts_itemClicked(QListWidgetItem *item)
 {
     if(!activeContact.empty()){
-        disconnect(Storage::storage().getContact(activeContact), &Contact::onHistoryChange,
+        if (Storage::storage().contactExists(activeContact)) {
+            disconnect(Storage::storage().getContact(activeContact), &Contact::onHistoryChange,
                    this, &MainWindow::onMessageListChange);
+        }
     }
 
     Contact* contact =  contacts[item->text().toStdString()];
@@ -316,9 +318,11 @@ void MainWindow::on_pbDeleteContact_clicked()
 
 void MainWindow::on_pbEditContact_clicked()
 {
-    Contact* contact = Storage::storage().getContact(activeContact);
-    editContactWin = new EditContactWindow{contact->getAddress(), contact->getName(), static_cast<int>(contact->getPort()), this};
-    editContactWin->show();
+    if (Storage::storage().contactExists(activeContact)) {
+        Contact* contact = Storage::storage().getContact(activeContact);
+        editContactWin = new EditContactWindow{contact->getAddress(), contact->getName(), contact->getPort(), this};
+        editContactWin->show();
+    }
 }
 
 void MainWindow::on_pbSettings_clicked()
@@ -328,8 +332,10 @@ void MainWindow::on_pbSettings_clicked()
 }
 
 void MainWindow::on_pbSend_clicked() {
-    Contact* contact = Storage::storage().getContact(activeContact);
-    contactController->sendMessage(contact->getAddress(), ui->teSend->toPlainText().toStdString());
+    if (Storage::storage().contactExists(activeContact)) {
+        Contact* contact = Storage::storage().getContact(activeContact);
+        contactController->sendMessage(contact->getAddress(), ui->teSend->toPlainText().toStdString());
+    }
 }
 
 void MainWindow::on_pbAttachFile_clicked()

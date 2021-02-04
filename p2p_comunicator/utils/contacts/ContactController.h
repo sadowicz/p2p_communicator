@@ -40,8 +40,7 @@ private:
     string filename;
     const string* fileContent;
 
-    void onTextMessage(const string ip, TCPPacket packet);
-    void onFileMessage(const string ip, TCPPacket packet);
+    void onTextAndFileMessage(const string ip, TCPPacket packet);
     void onConnectMessage(const string ip, TCPPacket packet);
 
 private slots:

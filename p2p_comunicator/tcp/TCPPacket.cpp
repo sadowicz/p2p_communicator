@@ -9,7 +9,7 @@ TCPPacket TCPPacket::decode(std::string packet) {
         throw TCPException("Packet decoding failed: packet was empty");
     }
 
-    packet = QByteArray::fromBase64(QByteArray(packet.c_str())).toStdString();
+    packet = QByteArray::fromBase64(QByteArray::fromStdString(packet)).toStdString();
 
     const char* cstr = packet.c_str();
     char filename[260] = "";
@@ -20,15 +20,13 @@ TCPPacket TCPPacket::decode(std::string packet) {
                 .withContent(std::string(port))
                 .withType(PacketType::CONNECTION);
     } else if (tryParseFilePacket(cstr, filename)) {
-        const char* content = getContentFromRaw(cstr);
         return TCPPacket(packet)
-                .withContent(std::string(content + 1))
+                .withContent(getContentFromPacket(packet))
                 .withFilename(std::string(filename))
                 .withType(PacketType::FILE);
     } else if (tryParseTextPacket(cstr)) {
-        const char* content = getContentFromRaw(cstr);
         return TCPPacket(packet)
-                .withContent(std::string(content + 1))
+                .withContent(getContentFromPacket(packet))
                 .withType(PacketType::TEXT);
     } else {
         throw TCPException("Packet decoding failed: unknown error");
@@ -46,19 +44,12 @@ std::string TCPPacket::encode(TCPPacket::PacketType type, std::string filename, 
     case CONNECTION:    packet = std::string("<" CONNECTION_PACKET_HEADER ":" + content + std::string("> ")); break;
     default:            throw TCPException("Packet encoding failed: incorrect packet type");
     }
-    return QByteArray(packet.c_str()).toBase64().toStdString();
+    std::string encodedPacket = QByteArray::fromStdString(packet).toBase64().toStdString();
+    return encodedPacket;
 }
 
-const char* TCPPacket::getContentFromRaw(const char* cstr) {
-    const char* content = strchr(cstr, '>') + 1;
-
-    if (content == NULL || content[0] == '\0') {
-        throw TCPException("Packet decoding failed: no content");
-    }
-    if (content[0] != ' ') {
-        throw TCPException("Packet decoding failed: no space after header");
-    }
-    return content;
+std::string TCPPacket::getContentFromPacket(std::string& packet) {
+    return packet.substr(packet.find('>') + 2);
 }
 
 bool TCPPacket::tryParseFilePacket(const char* cstr, char* filename) {
