@@ -32,7 +32,10 @@ void EditContactWindow::on_bbAddContact_accepted()
 {
     log.debug("Edit contact successful");
     QString validationName = ui->leName->text();
-
+    if (!Storage::storage().contactExists(ip)) {
+        emit contactAddFailure(QString("Contact was not added!!!"));
+        return;
+    }
     if(validationName == Storage::storage().getContact(ip)->getName().c_str())
         validationName = ContactValidator::unchangedName;
 

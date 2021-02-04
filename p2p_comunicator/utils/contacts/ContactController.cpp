@@ -32,6 +32,9 @@ void ContactController::removeContact(const string& ip) {
 }
 
 void ContactController::editContact(const std::string ip, std::string name, unsigned int port) {
+    if (!Storage::storage().contactExists(ip)) {
+        return;
+    }
     Contact* contact = Storage::storage().getContact(ip);
     contact->setName(name);
     if (contact->getPort() != port) {
@@ -47,6 +50,9 @@ void ContactController::editContact(const std::string ip, std::string name, unsi
 
 void ContactController::sendMessage(const string& ip, const string& message) {
     if (connection->isClientConnected(ip)) {
+        if (!Storage::storage().contactExists(ip)) {
+            return;
+        }
         Contact* contact = Storage::storage().getContact(ip);
 
         // text message
@@ -80,7 +86,7 @@ void ContactController::onConnect(const string ip, unsigned int port) {
         emit refreshContactList();
     }
 
-    if (Storage::storage().getContact(ip)->isActive() == false) {
+    if (Storage::storage().contactExists(ip) && Storage::storage().getContact(ip)->isActive() == false) {
         Storage::storage().getContact(ip)->setActiveState(true);
         emit refreshContactList();
     }
@@ -103,7 +109,7 @@ void ContactController::forceDisconnect(const string& ip) {
 }
 
 bool ContactController::isActive(const string& ip) const{
-    return Storage::storage().getContact(ip)->isActive();
+    return Storage::storage().contactExists(ip) && Storage::storage().getContact(ip)->isActive();
 }
 
 void ContactController::onDisconnect(const string ip) {
@@ -122,22 +128,16 @@ void ContactController::onRecieve(const string ip, TCPPacket packet) {
     log.debug("Recieved message from: " + ip + ", content: " + packet.getContent());
 
     switch(packet.getType()) {
-    case TCPPacket::PacketType::TEXT:           onTextMessage(ip, packet); break;
-    case TCPPacket::PacketType::FILE:           onFileMessage(ip, packet); break;
-    case TCPPacket::PacketType::CONNECTION:    onConnectMessage(ip, packet); break;
+    case TCPPacket::PacketType::TEXT:           onTextAndFileMessage(ip, packet); break;
+    case TCPPacket::PacketType::FILE:           onTextAndFileMessage(ip, packet); break;
+    case TCPPacket::PacketType::CONNECTION:     onConnectMessage(ip, packet); break;
     }
 }
 
-void ContactController::onTextMessage(const string ip, TCPPacket packet) {
-    Message* msg = new Message(packet);
-    Contact* contact = Storage::storage().getContact(ip);
-    contact->addToHistory(msg);
-    contact->setUnreadMsgState(true);
-    Storage::storage().save();
-    emit refreshContactList();
-}
-
-void ContactController::onFileMessage(const string ip, TCPPacket packet) {
+void ContactController::onTextAndFileMessage(const string ip, TCPPacket packet) {
+    if (!Storage::storage().contactExists(ip)) {
+        return;
+    }
     Message* msg = new Message(packet);
     Contact* contact = Storage::storage().getContact(ip);
     contact->addToHistory(msg);
@@ -185,6 +185,9 @@ void ContactController::onFileCancelled() {
 
 void ContactController::onMsgRead(const string ip) {
     log.debug("Read message from: " + ip);
+    if (!Storage::storage().contactExists(ip)) {
+        return;
+    }
     Storage::storage().getContact(ip)->setUnreadMsgState(false);
     emit refreshContactList();
 }

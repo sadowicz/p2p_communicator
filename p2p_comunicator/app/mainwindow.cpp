@@ -279,9 +279,11 @@ void MainWindow::on_validateSendable()
 
 void MainWindow::on_lwContacts_itemClicked(QListWidgetItem *item)
 {
-    if(Storage::storage().contactExists(activeContact)){
-        disconnect(Storage::storage().getContact(activeContact), &Contact::onHistoryChange,
+    if(!activeContact.empty()){
+        if (Storage::storage().contactExists(activeContact)) {
+            disconnect(Storage::storage().getContact(activeContact), &Contact::onHistoryChange,
                    this, &MainWindow::onMessageListChange);
+        }
     }
 
     Contact* contact =  contacts[item->text().toStdString()];
@@ -324,9 +326,11 @@ void MainWindow::on_pbDeleteContact_clicked()
 
 void MainWindow::on_pbEditContact_clicked()
 {
-    Contact* contact = Storage::storage().getContact(activeContact);
-    editContactWin = new EditContactWindow{contact->getAddress(), contact->getName(), static_cast<int>(contact->getPort()), this};
-    editContactWin->show();
+    if (Storage::storage().contactExists(activeContact)) {
+        Contact* contact = Storage::storage().getContact(activeContact);
+        editContactWin = new EditContactWindow{contact->getAddress(), contact->getName(), contact->getPort(), this};
+        editContactWin->show();
+    }
 }
 
 void MainWindow::on_pbSettings_clicked()
@@ -336,9 +340,16 @@ void MainWindow::on_pbSettings_clicked()
 }
 
 void MainWindow::on_pbSend_clicked() {
+<<<<<<< HEAD
     Contact* contact = Storage::storage().getContact(activeContact);
     contactController->sendMessage(contact->getAddress(), ui->teSend->toPlainText().toStdString());
     ui->teSend->clear();    // clear msg text edit after sending
+=======
+    if (Storage::storage().contactExists(activeContact)) {
+        Contact* contact = Storage::storage().getContact(activeContact);
+        contactController->sendMessage(contact->getAddress(), ui->teSend->toPlainText().toStdString());
+    }
+>>>>>>> f159bca7e9d4a9046ab0612750e94769dc08cd5f
 }
 
 void MainWindow::on_pbAttachFile_clicked()
