@@ -10,8 +10,11 @@
     <height>300</height>
    </rect>
   </property>
+  <property name="focusPolicy">
+   <enum>Qt::StrongFocus</enum>
+  </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Settings</string>
   </property>
   <widget class="QDialogButtonBox" name="bbAddContact">
    <property name="geometry">
@@ -21,6 +24,9 @@
      <width>332</width>
      <height>24</height>
     </rect>
+   </property>
+   <property name="cursor">
+    <cursorShape>ArrowCursor</cursorShape>
    </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>

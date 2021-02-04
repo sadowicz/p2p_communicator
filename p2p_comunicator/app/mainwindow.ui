@@ -14,9 +14,21 @@
    <string>P2P Communicator</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QMainWindow{
+   <string notr="true">*{
 	background-color: #222831;
+	color: #eee;
+	
+}
 
+QLineEdit{
+	outline: none;
+	background-color: #393e46;
+	border: 1px solid #4a4f57;
+	border-radius: 0;
+}
+
+QLineEdit:focus{
+	border: 1px solid #5b5f68;
 }
 
 QPushButton{
@@ -162,7 +174,7 @@ QListWidget::item:hover{
 </string>
           </property>
           <property name="verticalScrollBarPolicy">
-           <enum>Qt::ScrollBarAlwaysOn</enum>
+           <enum>Qt::ScrollBarAsNeeded</enum>
           </property>
           <property name="iconSize">
            <size>
@@ -171,7 +183,7 @@ QListWidget::item:hover{
            </size>
           </property>
           <property name="verticalScrollMode">
-           <enum>QAbstractItemView::ScrollPerItem</enum>
+           <enum>QAbstractItemView::ScrollPerPixel</enum>
           </property>
          </widget>
         </item>
@@ -239,6 +251,12 @@ QListWidget::item:hover{
         </item>
         <item>
          <widget class="QPushButton" name="pbSettings">
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="cursor">
            <cursorShape>PointingHandCursor</cursorShape>
           </property>
@@ -429,15 +447,15 @@ QPushButton:disabled{
               <height>150</height>
              </size>
             </property>
+            <property name="acceptDrops">
+             <bool>false</bool>
+            </property>
             <property name="styleSheet">
              <string notr="true">QTextEdit{
 	
 	background-color: #393e46;
 	color: #fff;
 }</string>
-            </property>
-            <property name="acceptDrops">
-             <bool>false</bool>
             </property>
            </widget>
           </item>
