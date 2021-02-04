@@ -45,6 +45,9 @@ signals:
     void sendMsg(string& ip, string& content);
     void edited(std::string ip, std::string name, int port);
 
+    void contactConnected();
+    void contactDisconnected();
+
     void fileChanged();
     void fileRemoved();
     void fileReady(std::string fileName, const std::string* fileContent);
