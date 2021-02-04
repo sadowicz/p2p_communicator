@@ -345,6 +345,7 @@ void MainWindow::on_pbSend_clicked() {
         Contact* contact = Storage::storage().getContact(activeContact);
         contactController->sendMessage(contact->getAddress(), ui->teSend->toPlainText().toStdString());
         ui->teSend->clear();    // clear msg text edit after sending
+        removeFile();
     }
 }
 
