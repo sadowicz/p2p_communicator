@@ -3,21 +3,22 @@
 using namespace contacts;
 
 Message* Message::createTextMessage(string* content, QObject* parent) {
-    return new Message(TEXT, "", content, Message::ME, parent);
+    return new Message(TEXT, "", content, Message::ME, parent, true);
 }
 
 Message* Message::createFileMessage(string filename, QObject* parent) {
-    return new Message(FILE, filename, nullptr, Message::ME, parent);
+    return new Message(FILE, filename, nullptr, Message::ME, parent, true);
 }
 
-Message::Message(Type type, string filename, string* content, Sender sender, QObject* parent)
+Message::Message(Type type, string filename, string* content, Sender sender, QObject* parent, bool saved)
     : QObject(parent),
       timestamp(QDateTime::currentDateTime()),
       type(type),
       sender(sender),
       content(content),
       filename(filename),
-      log(util::getLogger())
+      log(util::getLogger()),
+      saved(saved)
 {}
 
 Message::Message(TCPPacket packet, QObject* parent)
@@ -31,6 +32,7 @@ Message::Message(TCPPacket packet, QObject* parent)
     this->timestamp = QDateTime::currentDateTime();
     this->content = new string(packet.getContent());
     this->filename = packet.getFilename();
+    this->saved = false;
 }
 
 Message::Message(QJsonObject& object, QObject* parent)
@@ -47,6 +49,7 @@ Message::Message(QJsonObject& object, QObject* parent)
     this->filename = object["filename"].toString().toStdString();
     this->content = new string(object["content"].toString().toStdString());
     this->timestamp = QDateTime::fromString(object["timestamp"].toString());
+    this->saved = true;
 }
 
 QJsonObject Message::serialize() {
@@ -93,4 +96,12 @@ void Message::save() {
 
 string Message::getTimestamp() const {
     return timestamp.toString().toStdString();
+}
+
+void Message::setSavedState(bool saved) {
+    this->saved = saved;
+}
+
+bool Message::isSaved() {
+    return saved;
 }

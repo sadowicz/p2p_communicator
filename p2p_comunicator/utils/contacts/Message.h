@@ -37,6 +37,9 @@ public:
     void save();
     string getTimestamp() const;
 
+    void setSavedState(bool saved);
+    bool isSaved();
+
     string* getContent() const {
         return content;
     }
@@ -65,8 +68,9 @@ private:
     string* content;
     string filename;
     Logger log;
+    bool saved;
 
-    Message(Type type, string filename, string* content, Sender sender, QObject* parent = nullptr);
+    Message(Type type, string filename, string* content, Sender sender, QObject* parent = nullptr, bool saved = true);
 
 };
 

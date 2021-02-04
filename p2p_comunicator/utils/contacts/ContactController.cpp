@@ -68,7 +68,6 @@ void ContactController::sendMessage(const string& ip, const string& message) {
         if (fileIsReady) {
             contact->addToHistory(Message::createFileMessage(filename));
             connection->send(ip, TCPPacket::encode(TCPPacket::PacketType::FILE, filename, *fileContent));
-            // TODO: dont pass fileContent by value
         }
 
         Storage::storage().save();
