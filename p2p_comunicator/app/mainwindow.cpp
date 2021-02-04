@@ -290,8 +290,11 @@ void MainWindow::on_lwContacts_itemClicked(QListWidgetItem *item)
 
     // try connecting to contact if it's inactive
     if (!contact->isActive()) {
+        emit contactDisconnected();
         contactController->tryConnect(contact->getAddress());
     }
+    else
+        emit contactConnected();
 
     if(contact->hasUnreadMsg() == true) {
         emit msgRead(contact->getAddress());
