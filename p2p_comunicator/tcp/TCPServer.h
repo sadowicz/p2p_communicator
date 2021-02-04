@@ -6,8 +6,11 @@
 
 #include <TCPPacket.h>
 #include <Logger.h>
+#include <ClientBufferInfo.h>
 
 #include <unordered_map>
+#include <map>
+#include <algorithm>
 
 class TCPServer : public QObject {
     Q_OBJECT
@@ -17,8 +20,11 @@ public:
 
 private:
     QTcpServer* server;
-    unordered_map<QTcpSocket*, string> clientIPs;
+    unordered_map<QTcpSocket*, ClientBufferInfo> bufferInfos;
     Logger& log;
+
+    int getPacketSize(QTcpSocket* socket);
+    void onReadingError(ClientBufferInfo& buffer);
 
 private slots:
     void onAcceptConnection();

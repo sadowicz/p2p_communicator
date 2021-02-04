@@ -125,7 +125,7 @@ void ContactController::onSendError(const string ip, TCPException e) {
 }
 
 void ContactController::onRecieve(const string ip, TCPPacket packet) {
-    log.debug("Recieved message from: " + ip + ", content: " + packet.getContent());
+    log.debug("Recieved message from: " + ip);
 
     switch(packet.getType()) {
     case TCPPacket::PacketType::TEXT:           onTextAndFileMessage(ip, packet); break;
