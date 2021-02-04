@@ -72,5 +72,6 @@ void EditContactWindow::on_EditContactWindow_finished(int result)
 
 void EditContactWindow::on_bbAddContact_rejected()
 {
+    emit contactAddCancel();
     delete this;
 }

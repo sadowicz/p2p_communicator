@@ -26,10 +26,11 @@ signals:
     void contactAddFailure(QString errorMessage);
 
 private slots:
-    void on_bbAddContact_rejected();
     void on_bbAddContact_accepted();
 
     void on_SettingsWindow_finished(int result);
+
+    void on_bbAddContact_rejected();
 
 private:
     Ui::SettingsWindow *ui;

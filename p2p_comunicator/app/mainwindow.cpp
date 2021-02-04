@@ -72,6 +72,7 @@ void MainWindow::assignStatesProperties()
     Unlocked->assignProperty(ui->lbAttachFile, "enabled", true);
     Unlocked->assignProperty(ui->pbDeleteContact, "enabled", false);
     Unlocked->assignProperty(ui->pbEditContact, "enabled", false);
+    Unlocked->assignProperty(ui->pbSettings, "enabled", true);
 
     Disconnected->assignProperty(ui->pbNewContact, "enabled", true);
     Disconnected->assignProperty(ui->pbSend, "enabled", false);
@@ -108,12 +109,15 @@ void MainWindow::assignStatesProperties()
     Locked->assignProperty(ui->lbAttachFile, "enabled", false);
     Locked->assignProperty(ui->pbDeleteContact, "enabled", false);
     Locked->assignProperty(ui->pbEditContact, "enabled", false);
+    Locked->assignProperty(ui->pbSettings, "enabled", false);
 }
 
 void MainWindow::setStatesTransistions()
 {
     Unlocked->addTransition(ui->pbNewContact, SIGNAL(clicked()), Locked);
     Unlocked->addTransition(this, SIGNAL(error(QString)), Locked);
+    Unlocked->addTransition(ui->pbEditContact, SIGNAL(clicked()), Locked);
+    Unlocked->addTransition(ui->pbSettings, SIGNAL(clicked()), Locked);
 
     Disconnected->addTransition(this, SIGNAL(contactConnected()), Connected);
 

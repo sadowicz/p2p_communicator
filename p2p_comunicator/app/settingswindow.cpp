@@ -10,19 +10,14 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
 
     validator = new ContactValidator{};
 
-    QObject::connect(this, SIGNAL(contactAddCancel()), parent, SLOT(on_contactAddCancel()));
-    QObject::connect(this, SIGNAL(contactAddFailure(QString)), parent, SLOT(on_error(QString)));
+    connect(this, SIGNAL(contactAddCancel()), parent, SLOT(on_contactAddCancel()));
+    connect(this, SIGNAL(contactAddFailure(QString)), parent, SLOT(on_error(QString)));
 }
 
 SettingsWindow::~SettingsWindow()
 {
     delete ui;
     delete validator;
-}
-
-void SettingsWindow::on_bbAddContact_rejected()
-{
-    delete this;
 }
 
 void SettingsWindow::on_bbAddContact_accepted()
@@ -32,15 +27,21 @@ void SettingsWindow::on_bbAddContact_accepted()
     {
         Config::config("port") = ui->lePort->text().toStdString();
         Config::config().save();
-
         delete this;
     }
     else
         emit contactAddFailure("Unable to set port.\nInvalid port format.");
 }
 
+
 void SettingsWindow::on_SettingsWindow_finished(int result)
 {
     if(result == QDialog::Rejected)
         emit contactAddCancel();
+}
+
+void SettingsWindow::on_bbAddContact_rejected()
+{
+    emit contactAddCancel();
+    delete this;
 }
