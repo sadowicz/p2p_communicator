@@ -136,7 +136,7 @@ void MainWindow::setStatesTransistions()
     Sendable->addTransition(this, SIGNAL(fileChanged()), ValidateSendable);
     Sendable->addTransition(ui->teSend, SIGNAL(textChanged()), ValidateSendable);
 
-    Locked->addTransition(this, SIGNAL(contactAdded()), Connected);
+    Locked->addTransition(this, SIGNAL(contactAdded()), Unlocked);
     Locked->addTransition(this, SIGNAL(contactAdditionCanceled()), Unlocked);
     Locked->addTransition(this, SIGNAL(errorCatched()), Unlocked);
 }
@@ -313,7 +313,7 @@ void MainWindow::on_pbDeleteContact_clicked()
 void MainWindow::on_pbEditContact_clicked()
 {
     Contact* contact = Storage::storage().getContact(activeContact);
-    editContactWin = new EditContactWindow{contact->getAddress(), contact->getName(), contact->getPort(), this};
+    editContactWin = new EditContactWindow{contact->getAddress(), contact->getName(), static_cast<int>(contact->getPort()), this};
     editContactWin->show();
 }
 
