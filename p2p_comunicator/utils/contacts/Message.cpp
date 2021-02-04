@@ -91,6 +91,7 @@ void Message::save() {
         file.close();
 
         log.info("Saved file '" + filename.toStdString() + "'");
+        this->saved = true;
     }
 }
 
@@ -102,6 +103,6 @@ void Message::setSavedState(bool saved) {
     this->saved = saved;
 }
 
-bool Message::isSaved() {
+bool Message::isSaved() const{
     return saved;
 }

@@ -38,7 +38,7 @@ public:
     string getTimestamp() const;
 
     void setSavedState(bool saved);
-    bool isSaved();
+    bool isSaved() const;
 
     string* getContent() const {
         return content;

@@ -110,7 +110,17 @@ void MessageListDelegate::paintDownload(const Message* message, QPainter* painte
     int x = option.rect.left() + padding.width();
     int y = option.rect.bottom() - h - padding.height();
 
-    if(message->getSender() == Message::CONTACT){
+    QString fileName = QString::fromStdString(message->getFilename());
+    QRect fileNameLabel = QRect(x,y,option.rect.width(),h);
+
+
+    if(message->isSaved()){
+        painter->drawText(
+                    fileNameLabel,
+                    Qt::TextWrapAnywhere,
+                    fileName.append(" is saved.")
+                    );
+    }else if(message->getSender() == Message::CONTACT){
         btn.rect = QRect(x,y,w,h);
         btn.text = "Download";
         btn.state = btnState | QStyle::State_Enabled;
@@ -119,8 +129,6 @@ void MessageListDelegate::paintDownload(const Message* message, QPainter* painte
         painter->drawText(fileNameLabel,Qt::TextWrapAnywhere,QString::fromStdString(message->getFilename()));
         QApplication::style()->drawControl( QStyle::CE_PushButton, &btn, painter);
     }else{
-        QString fileName = QString::fromStdString(message->getFilename());
-        QRect fileNameLabel = QRect(x,y,option.rect.width(),h);
         painter->drawText(
                     fileNameLabel,
                     Qt::TextWrapAnywhere,
@@ -181,13 +189,17 @@ int MessageListDelegate::getDownloadHeight(const Message* message, const QStyleO
     }
 
     // Message from Contact
+    if(message->isSaved()){
+        fileName = fileName.prepend(" is saved.");
+    }
+
     QRect fileNameRect = option.fontMetrics.boundingRect(
                 QRect(0,0,option.rect.width() - 85 - 2*padding.width(), 75),
                 Qt::TextWrapAnywhere,
                 fileName
                 );
 
-    if(fileNameRect.size().height() < 25){
+    if(fileNameRect.size().height() < 25 && !message->isSaved()){
         height = 25;
     }else{
         height = fileNameRect.height();
@@ -212,7 +224,7 @@ bool MessageListDelegate::editorEvent(QEvent* event, QAbstractItemModel* model, 
 
     Message* message = qvariant_cast<Message*>(index.data());
 
-    if(message->getType() != Message::FILE || message->getSender() == Message::ME){
+    if(message->getType() != Message::FILE || message->getSender() == Message::ME || message->isSaved()){
         // ignore click
         return false;
     }
@@ -234,7 +246,6 @@ bool MessageListDelegate::editorEvent(QEvent* event, QAbstractItemModel* model, 
             if(event->type() == QEvent::MouseButtonRelease){
                 btnState = QStyle::State_Raised;
                 message->save();
-//                emit downloadClicked(message);
             }else{
                 // pressed change state
                 btnState = QStyle::State_Sunken;
