@@ -9,6 +9,9 @@
 #include <QFileDialog>
 #include <QDir>
 #include <QIcon>
+#include <QDragEnterEvent>
+#include <QDropEvent>
+#include <QMimeData>
 
 #include <MessageListDelegate.h>
 #include <add_contact_window.h>
@@ -110,8 +113,12 @@ private:
     void setListItemFrontend(Contact* contact, QListWidgetItem* loaded);
 
     void attachFile();
+    void attachFile(QString filePath);
     void removeFile();
     void reselectContact();
+
+    void dragEnterEvent(QDragEnterEvent *e) override;
+    void dropEvent(QDropEvent *e) override;
 
 };
 #endif // MAINWINDOW_H

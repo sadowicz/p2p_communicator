@@ -302,6 +302,9 @@
               <height>150</height>
              </size>
             </property>
+            <property name="acceptDrops">
+             <bool>false</bool>
+            </property>
            </widget>
           </item>
          </layout>

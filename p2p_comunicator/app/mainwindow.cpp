@@ -5,7 +5,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
+    setAcceptDrops(true);
     setUpStateMachine();
     stateMachine->start();
 
@@ -124,6 +124,23 @@ void MainWindow::setStatesTransistions()
     Locked->addTransition(this, SIGNAL(contactAdded()), Unlocked);
     Locked->addTransition(this, SIGNAL(contactAdditionCanceled()), Unlocked);
     Locked->addTransition(this, SIGNAL(errorCatched()), Unlocked);
+}
+
+void MainWindow::dragEnterEvent(QDragEnterEvent* e) {
+    if (e->mimeData()->hasUrls()) {
+        e->acceptProposedAction();
+    }
+}
+
+void MainWindow::dropEvent(QDropEvent* e) {
+    QList<QUrl> urls = e->mimeData()->urls();
+    if (urls.size() == 0) return;
+    QString filename = urls[0].toLocalFile();
+
+    if (ui->teSend->underMouse() && ui->pbAttachFile->isEnabled()) {
+        log.debug("dropped file: " + filename.toStdString());
+        attachFile(filename);
+    }
 }
 
 void MainWindow::loadContacts()
@@ -344,13 +361,15 @@ void MainWindow::on_pbAttachFile_clicked()
     }
 }
 
-void MainWindow::attachFile(){
+void MainWindow::attachFile() {
     QString filePath = QFileDialog::getOpenFileName(this, "Open file", QDir::homePath());
+    if(filePath == "") return;
+
+    attachFile(filePath);
+}
+
+void MainWindow::attachFile(QString filePath) {
     QFile file(filePath);
-
-    if(filePath == "")
-        return;
-
     if(!file.open(QIODevice::ReadOnly)){
         log.error(filePath.prepend("Failed to open File: ").toStdString());
         emit error(file.fileName().prepend("Failed to open: "));
