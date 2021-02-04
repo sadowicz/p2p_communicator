@@ -273,7 +273,7 @@ void MainWindow::on_validateSendable()
 
 void MainWindow::on_lwContacts_itemClicked(QListWidgetItem *item)
 {
-    if(!activeContact.empty()){
+    if(Storage::storage().contactExists(activeContact)){
         disconnect(Storage::storage().getContact(activeContact), &Contact::onHistoryChange,
                    this, &MainWindow::onMessageListChange);
     }
@@ -312,6 +312,8 @@ void MainWindow::on_pbDeleteContact_clicked()
 
     ui->pbDeleteContact->setEnabled(false);
     ui->pbEditContact->setEnabled(false);
+
+    emit contactDisconnected();
 }
 
 void MainWindow::on_pbEditContact_clicked()
