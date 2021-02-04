@@ -1,5 +1,7 @@
 #include <TCPClient.h>
 
+#define BLOCK_SIZE 4096
+
 TCPClient::TCPClient(Logger& log, string ip, unsigned int myPort, unsigned int port) : ip(ip), port(port), myPort(myPort), log(log) {
     socket = new QTcpSocket();
     QObject::connect(socket, &QTcpSocket::disconnected, this, &TCPClient::onDisconnect);
@@ -53,20 +55,36 @@ void TCPClient::send(const string& packet) {
         return;
     }
 
-    int writingResult = socket->write(packet.c_str());
+    int packetSize = packet.size();
+    int writingResult = socket->write((char*) &packetSize, sizeof(int));
 
-    if (writingResult == -1 || writingResult != packet.size()) {
+    int totalWritten = 0;
+    char* cstr = (char*) packet.c_str();
+    int remainingBytes = packet.size();
+    while (totalWritten < packetSize) {
+        int bytesToWrite = remainingBytes < BLOCK_SIZE
+                ? remainingBytes
+                : BLOCK_SIZE;
+
+        writingResult = socket->write(cstr, bytesToWrite);
+        if (!checkWritingErrors(writingResult, bytesToWrite)) return;
+
+        cstr += writingResult;
+        totalWritten += writingResult;
+        remainingBytes -= writingResult;
+        socket->flush();
+    }
+
+    log.debug("... message sent successfully");
+}
+
+bool TCPClient::checkWritingErrors(int writingResult, int totalSize) {
+    if (writingResult == -1 || writingResult != totalSize) {
         string error = "Client error: writing failed, "
-                 + to_string(writingResult) + " out of " + to_string(packet.size()) + " bytes written";
+                 + to_string(writingResult) + " out of " + to_string(totalSize) + " bytes written";
         emit failed(ip, TCPException(error));
-        return;
-     }
-
-     // remove this (?)
-     if (!socket->waitForBytesWritten()) {
-        emit failed(ip, TCPException("Client error: could not send packet (timeout)"));
-        return;
-     }
-     log.debug("... message sent successfully");
+        return false;
+    }
+    return true;
 }
 

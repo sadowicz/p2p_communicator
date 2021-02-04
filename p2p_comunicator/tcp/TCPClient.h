@@ -33,6 +33,8 @@ private:
     QTcpSocket* socket;
     Logger& log;
 
+    bool checkWritingErrors(int writingResult, int totalSize);
+
 private slots:
     void onDisconnect();
     void onConnect();

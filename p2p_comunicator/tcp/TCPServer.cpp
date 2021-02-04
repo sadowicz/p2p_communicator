@@ -1,5 +1,7 @@
 #include <TCPServer.h>
 
+#define BLOCK_SIZE 4096
+
 TCPServer::TCPServer(Logger& log, unsigned int port) : log(log) {
     this->server = new QTcpServer(this);
     this->server->listen(QHostAddress::Any, port);
@@ -16,7 +18,9 @@ void TCPServer::onAcceptConnection() {
 
         log.debug("Server accepting connection from: " + address + ":" + std::to_string(peerPort));
 
-        clientIPs[connection] = address;
+        if (bufferInfos.find(connection) == bufferInfos.end()) {
+            bufferInfos[connection] = ClientBufferInfo(address);
+        }
 
         connect(connection, SIGNAL(readyRead()), SLOT(onReadyRead()));
         connect(connection, SIGNAL(disconnected()), SLOT(onDisconnected()));
@@ -27,26 +31,59 @@ void TCPServer::onAcceptConnection() {
 
 void TCPServer::onDisconnected() {
     QTcpSocket* socket = (QTcpSocket*) sender();
-    string ip = clientIPs[socket];
+    ClientBufferInfo& bufferInfo = bufferInfos[socket];
+    string& ip = bufferInfo.getAddress();
     log.debug("Server disconnected from: " + ip);
+    bufferInfos.erase(socket);
 
     emit disconnected(ip);
 }
 
 void TCPServer::onReadyRead() {
-
     QTcpSocket* socket = (QTcpSocket*) sender();
-    std::string content{};
+    ClientBufferInfo& bufferInfo = bufferInfos[socket];
 
-    // read message content
-    while (socket->bytesAvailable() > 0) {
-        content.append(socket->readAll().toStdString());
+    // if first part of packet was sent
+    if (bufferInfo.getExpectedSize() == 0) {
+        int packetSize = getPacketSize(socket);
+        bufferInfo.setExpectedSize(packetSize);
     }
 
-    string ip = clientIPs[socket];
-    log.debug("Server recieved a message from: " + ip);
+    // read data
+    int bytesAvailable = socket->bytesAvailable();
+    int totalRead = 0;
+    char* buffer = (char*) calloc(BLOCK_SIZE, sizeof(char));
 
-    emit recieved(ip, TCPPacket::decode(content));
+    while (totalRead < bytesAvailable) {
+        int bytesRead = socket->read(buffer, BLOCK_SIZE);
+        if (-1 == bytesRead) onReadingError(bufferInfo);
+        bufferInfo.add(buffer);
+        memset(buffer, 0, BLOCK_SIZE);
+        totalRead += bytesRead;
+    }
+
+    free(buffer);
+
+    // if it's the last part of the packet
+    if (bufferInfo.isDone()) {
+        bufferInfo.setExpectedSize(0);
+        emit recieved(bufferInfo.getAddress(), TCPPacket::decode(*bufferInfo.getBuffer()));
+        bufferInfo.getBuffer()->clear();
+    }
+}
+
+void TCPServer::onReadingError(ClientBufferInfo& buffer) {
+    log.debug("Error while reading from socket");
+    buffer.setExpectedSize(0);
+    buffer.getBuffer()->clear();
+}
+
+int TCPServer::getPacketSize(QTcpSocket* socket) {
+    while (socket->bytesAvailable() < sizeof(int));
+    QByteArray header = socket->read(sizeof(int));
+    int packetSize = 0;
+    memcpy(&packetSize, header.toStdString().c_str(), sizeof(int));
+    return packetSize;
 }
 
 

@@ -26,13 +26,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += TCPClient.cpp \
 TCPConnection.cpp \
 TCPPacket.cpp \
-TCPServer.cpp
+TCPServer.cpp \
+ClientBufferInfo.cpp
 
 HEADERS += TCPClient.h \
 TCPConnection.h \
 TCPPacket.h \
 TCPServer.h \
-TCPException.h
+TCPException.h \
+ClientBufferInfo.h
 
 unix {
     target.path = /usr/lib
