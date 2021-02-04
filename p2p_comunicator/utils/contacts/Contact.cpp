@@ -20,8 +20,6 @@ void Contact::updateHistory(const QJsonObject &json) {
         Message* msg = new Message(contactMessage, this);
 
         bool found = false;
-        // no LinkedHashSet :(, have to do O(n) lookups n times, STL is literal garbage
-        // assume that indices are the same?
         for (Message* message : history) {
 
             // not sure how to identify messages, using timestamps for now
@@ -105,9 +103,6 @@ int Contact::rowCount(const QModelIndex &parent) const {
 }
 
 QVariant Contact::data(const QModelIndex &index, int role) const {
-
-   // if(index.isValid())
-     //   return QVariant();
 
     if(role != Qt::DisplayRole)
         return QVariant();

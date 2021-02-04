@@ -25,15 +25,6 @@ bool TCPConnection::isClientConnected(const string& ip) {
 }
 
 void TCPConnection::closeConnection(const string& ip) {
-    /* TODO: client gets disconnected but server is still connected,
-     *       the next message recieved from the contact will not be
-     *       registered as a new contact request, the message won't be
-     *       saved and the app will crash
-     *
-     * SOLUTION 1: send a "disconnect" request to the contact, which will make
-     *             them close their client -> server connection
-     * */
-
     TCPClient* client = clients[ip];
     client->forceDisconnect();
     client->deleteLater();

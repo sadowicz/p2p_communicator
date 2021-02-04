@@ -1,21 +1,5 @@
 #include "mainwindow.h"
 
-/*TODO:
-    - FILE_REQUEST package type
-    - state to locked after emieting error form constructor (loadContacts() method)
-    - improve TCPPacket encoding: [packetType:1][filenameLength:1][filename:filenameLength][contentLength:4][content:contentLength]
-    - implement sending files
-
-    - @Filip: sortowanie listy piotrek zrobił, wyłączanie czatu też naprawił, da się zrobić żeby się
-              kontakt nie pogrubiał jak mam otwarty z nim czat?
-    - [OK] @Tomasz: crash jak się usunie kontakt do którego jestem podłączony
-    - @Tomasz: jak się zmieni nazwę kontaktu to się rozłącza ale dalej można wysyłać wiadomości
-    - @Tomasz: kontakt niekatywny się odznacza jak kliknę na niego
-    - [OK] @Tomasz: kontakt niekatywny się odznacza jak kliknę na niego
-    - [OK] @Tomasz: nie da się przesyłać wiadomości długości więcej niż około 50k znaków (nie powinno się dać, dodać walidację)
-    - [OK] @Tomasz: nie powinno się dać pisać do kontaktu który jest nieaktywny
-*/
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)

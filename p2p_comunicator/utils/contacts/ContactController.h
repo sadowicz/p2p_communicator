@@ -30,7 +30,7 @@ public slots:
 
 signals:
     void refreshContactList();
-    void msgTooLong();  //TODO: connect this to an error handler
+    void msgTooLong();
 
 private:
     TCPConnection* connection;
