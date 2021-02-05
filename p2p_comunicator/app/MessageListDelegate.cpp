@@ -103,16 +103,15 @@ void MessageListDelegate::paintMessage(const Message* message, QPainter* painter
 
 void MessageListDelegate::paintDownload(const Message* message, QPainter* painter, const QStyleOptionViewItem &option) const {
 
-    QStyleOptionButton btn;
-
-    int w = 75;
+    int w = 25;
     int h = 25;
     int x = option.rect.left() + padding.width();
     int y = option.rect.bottom() - h - padding.height();
 
     QString fileName = QString::fromStdString(message->getFilename());
     QRect fileNameLabel = QRect(x,y,option.rect.width(),h);
-
+    QImage img(":/Icons/icons/download_btn.png");
+    QRect btnRect(x,y,w,h);
 
     if(message->isSaved()){
         QString text = "";
@@ -127,13 +126,10 @@ void MessageListDelegate::paintDownload(const Message* message, QPainter* painte
                     text
                     );
     }else if(message->getSender() == Message::CONTACT){
-        btn.rect = QRect(x,y,w,h);
-        btn.text = "Download";
-        btn.state = btnState | QStyle::State_Enabled;
-
         QRect fileNameLabel = QRect(x+w+10,y+5,option.rect.width()-w,h);
         painter->drawText(fileNameLabel,Qt::TextWrapAnywhere,QString::fromStdString(message->getFilename()));
-        QApplication::style()->drawControl( QStyle::CE_PushButton, &btn, painter);
+
+        painter->drawImage(btnRect,img,img.rect());
     }else{
         painter->drawText(
                     fileNameLabel,
@@ -200,7 +196,7 @@ int MessageListDelegate::getDownloadHeight(const Message* message, const QStyleO
     }
 
     QRect fileNameRect = option.fontMetrics.boundingRect(
-                QRect(0,0,option.rect.width() - 85 - 2*padding.width(), 75),
+                QRect(0,0,option.rect.width() - 35 - 2*padding.width(), 25),
                 Qt::TextWrapAnywhere,
                 fileName
                 );
@@ -229,37 +225,27 @@ bool MessageListDelegate::editorEvent(QEvent* event, QAbstractItemModel* model, 
         return false;
 
     Message* message = qvariant_cast<Message*>(index.data());
-
     if(message->getType() != Message::FILE || message->getSender() == Message::ME || message->isSaved()){
         // ignore click
         return false;
     }
 
+    int w = 25;
+    int h = 25;
+    int x = option.rect.left() + padding.width();
+    int y = option.rect.bottom() - h - padding.height();
+
+    QRect btnRect = QRect(x,y,w,h);
+
     if(event->type() == QEvent::MouseButtonRelease ||
-       event->type() == QEvent::MouseButtonPress){
+       event->type() == QEvent::MouseButtonPress)
+    {
         QMouseEvent* mouseEvent = dynamic_cast<QMouseEvent*>(event);
         QPoint clickPoint = mouseEvent->pos();
-
-        int w = 75;
-        int h = 25;
-        int x = option.rect.left() + padding.width();
-        int y = option.rect.bottom() - h - padding.height();
-
-        QRect btnRect = QRect(x,y,w,h);
-
         // button clicked
-        if(btnRect.contains(clickPoint)){
-            if(event->type() == QEvent::MouseButtonRelease){
-                btnState = QStyle::State_Raised;
-                message->save();
-            }else{
-                // pressed change state
-                btnState = QStyle::State_Sunken;
-            }
+        if(btnRect.contains(clickPoint)) message->save();
 
-        }
     }else{
-        btnState = QStyle::State_Raised;
         return false;
     }
 

@@ -2,5 +2,6 @@
     <qresource prefix="/Icons">
         <file>icons/active.png</file>
         <file>icons/disconnected.png</file>
+        <file>icons/download_btn.png</file>
     </qresource>
 </RCC>
