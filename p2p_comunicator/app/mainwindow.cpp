@@ -266,6 +266,9 @@ void MainWindow::updateChatLabel() {
         } else {
             ui->lwChat->item(0)->setIcon(QIcon(":/Icons/icons/disconnected.png"));
         }
+    } else {
+        ui->lwChat->clear();
+        ui->lwChat->insertItem(0, "Chat");
     }
 }
 
