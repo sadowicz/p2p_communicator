@@ -118,6 +118,7 @@ private:
     void attachFile(QString filePath);
     void removeFile();
     void reselectContact();
+    void updateChatLabel();
 
     void dragEnterEvent(QDragEnterEvent *e) override;
     void dropEvent(QDropEvent *e) override;

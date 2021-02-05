@@ -472,7 +472,7 @@ QPushButton:disabled{
              <bool>true</bool>
             </property>
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -480,13 +480,19 @@ QPushButton:disabled{
             <property name="minimumSize">
              <size>
               <width>0</width>
-              <height>50</height>
+              <height>30</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
               <width>16777215</width>
-              <height>150</height>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="baseSize">
+             <size>
+              <width>0</width>
+              <height>15</height>
              </size>
             </property>
             <property name="styleSheet">
@@ -507,9 +513,12 @@ QPushButton:disabled{
               <enum>QLayout::SetMinAndMaxSize</enum>
              </property>
              <item>
-              <widget class="QLabel" name="lbChat">
+              <widget class="QListWidget" name="lwChat">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -517,21 +526,63 @@ QPushButton:disabled{
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>50</height>
+                 <height>15</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="baseSize">
+                <size>
+                 <width>0</width>
+                 <height>15</height>
                 </size>
                </property>
                <property name="font">
                 <font>
-                 <pointsize>26</pointsize>
+                 <pointsize>20</pointsize>
                  <weight>75</weight>
                  <bold>true</bold>
                 </font>
                </property>
-               <property name="text">
-                <string>Chat</string>
+               <property name="styleSheet">
+                <string notr="true">
+QListWidget{
+	show-decoration-selected: 0;
+	outline: 0;
+	border: none;
+	margin-left: 20px;
+}
+
+QListWidget::item {
+	margin-left: 20px;
+}
+
+</string>
                </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
+               <property name="editTriggers">
+                <set>QAbstractItemView::NoEditTriggers</set>
+               </property>
+               <property name="showDropIndicator" stdset="0">
+                <bool>false</bool>
+               </property>
+               <property name="defaultDropAction">
+                <enum>Qt::IgnoreAction</enum>
+               </property>
+               <property name="selectionMode">
+                <enum>QAbstractItemView::NoSelection</enum>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
+               </property>
+               <property name="viewMode">
+                <enum>QListView::ListMode</enum>
                </property>
               </widget>
              </item>

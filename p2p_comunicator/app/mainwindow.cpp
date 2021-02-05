@@ -23,6 +23,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     this->messageListDelegate = new MessageListDelegate;
     ui->msgListView->setItemDelegate(this->messageListDelegate);
+    ui->lwChat->insertItem(0, "Chat");
+    ui->lwChat->setFocusPolicy(Qt::NoFocus);
 
     log = util::getLogger();
     log.info("------------ App started ------------");
@@ -246,6 +248,21 @@ void MainWindow::refreshContactsList() {
     loadListItems();
 
     reselectContact();
+    updateChatLabel();
+}
+
+void MainWindow::updateChatLabel() {
+    if (Storage::storage().contactExists(activeContact)) {
+        Contact* contact = Storage::storage().getContact(activeContact);
+        QString name = QString::fromStdString(contact->getName());
+        ui->lwChat->clear();
+        ui->lwChat->insertItem(0, name);
+        if (contact->isActive()) {
+            ui->lwChat->item(0)->setIcon(QIcon(":/Icons/icons/active.png"));
+        } else {
+            ui->lwChat->item(0)->setIcon(QIcon(":/Icons/icons/disconnected.png"));
+        }
+    }
 }
 
 void MainWindow::reselectContact() {
@@ -318,6 +335,8 @@ void MainWindow::on_lwContacts_itemClicked(QListWidgetItem *item)
     }
     else
         emit contactConnected();
+
+    updateChatLabel();
 
     if(contact->hasUnreadMsg() == true) {
         emit msgRead(contact->getAddress());
