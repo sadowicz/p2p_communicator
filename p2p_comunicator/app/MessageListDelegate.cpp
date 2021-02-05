@@ -115,10 +115,16 @@ void MessageListDelegate::paintDownload(const Message* message, QPainter* painte
 
 
     if(message->isSaved()){
+        QString text = "";
+        if (message->getSender() == Message::ME) {
+            text = "File '" + fileName + "' was sent.";
+        } else {
+            text = "File '" + fileName + "' was saved.";
+        }
         painter->drawText(
                     fileNameLabel,
                     Qt::TextWrapAnywhere,
-                    fileName.append(" is saved.")
+                    text
                     );
     }else if(message->getSender() == Message::CONTACT){
         btn.rect = QRect(x,y,w,h);
