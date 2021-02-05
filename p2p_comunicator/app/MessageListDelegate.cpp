@@ -113,29 +113,24 @@ void MessageListDelegate::paintDownload(const Message* message, QPainter* painte
     QImage img(":/Icons/icons/download_btn.png");
     QRect btnRect(x,y,w,h);
 
-    if(message->isSaved()){
-        QString text = "";
-        if (message->getSender() == Message::ME) {
-            text = "File '" + fileName + "' was sent.";
-        } else {
-            text = "File '" + fileName + "' was saved.";
-        }
+    if(message->getSender() == Message::ME){
         painter->drawText(
                     fileNameLabel,
                     Qt::TextWrapAnywhere,
-                    text
+                    "File '" + fileName + "' was sent."
                     );
-    }else if(message->getSender() == Message::CONTACT){
-        QRect fileNameLabel = QRect(x+w+10,y+5,option.rect.width()-w,h);
-        painter->drawText(fileNameLabel,Qt::TextWrapAnywhere,QString::fromStdString(message->getFilename()));
-
-        painter->drawImage(btnRect,img,img.rect());
     }else{
-        painter->drawText(
+        if (!message->isSaved()) {
+            QRect fileNameLabel = QRect(x+w+10,y+5,option.rect.width()-w,h);
+            painter->drawText(fileNameLabel,Qt::TextWrapAnywhere,QString::fromStdString(message->getFilename()));
+            painter->drawImage(btnRect,img,img.rect());
+        } else {
+            painter->drawText(
                     fileNameLabel,
                     Qt::TextWrapAnywhere,
-                    fileName.prepend("File sent: ")
+                    "File '" + fileName + "' was saved."
                     );
+        }
     }
 }
 
@@ -176,23 +171,20 @@ int MessageListDelegate::getMessageHeight(const Message* message, const QStyleOp
 }
 
 int MessageListDelegate::getDownloadHeight(const Message* message, const QStyleOptionViewItem &option) const{
-
-    int height = 0;
     QString fileName = QString::fromStdString(message->getFilename());
 
     if(message->getSender() == Message::ME){
         QRect fileNameRect = option.fontMetrics.boundingRect(
-                    QRect(0,0,option.rect.width() - 2*padding.width(), 75),
+                    QRect(0,0,option.rect.width() - 2*padding.width(), 25),
                     Qt::TextWrapAnywhere,
-                    fileName.prepend("File sent: ")
+                    "File '" + fileName + "' was sent."
                     );
-
-        return height + fileNameRect.height();
+        return fileNameRect.height();
     }
 
     // Message from Contact
     if(message->isSaved()){
-        fileName = fileName.prepend(" is saved.");
+        fileName = "File '" + fileName + "' was saved.";
     }
 
     QRect fileNameRect = option.fontMetrics.boundingRect(
@@ -202,12 +194,10 @@ int MessageListDelegate::getDownloadHeight(const Message* message, const QStyleO
                 );
 
     if(fileNameRect.size().height() < 25 && !message->isSaved()){
-        height = 25;
+        return 25;
     }else{
-        height = fileNameRect.height();
+        return fileNameRect.height();
     }
-
-    return height;
 }
 
 int MessageListDelegate::getSenderHeight(const QString& contactName, const QStyleOptionViewItem &option) const{
