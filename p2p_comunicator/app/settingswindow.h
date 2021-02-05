@@ -21,9 +21,9 @@ public:
     ~SettingsWindow();
 
 signals:
-    void contactAddSuccess(std::string ip);
-    void contactAddCancel();
-    void contactAddFailure(QString errorMessage);
+    void settingsSaveSuccess();
+    void settingsSaveCancel();
+    void settingsSaveFailure(QString errorMessage);
 
 private slots:
     void on_bbAddContact_accepted();

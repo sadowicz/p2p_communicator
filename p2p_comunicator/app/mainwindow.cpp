@@ -137,6 +137,7 @@ void MainWindow::setStatesTransistions()
     Locked->addTransition(this, SIGNAL(contactAdded()), Unlocked);
     Locked->addTransition(this, SIGNAL(contactAdditionCanceled()), Unlocked);
     Locked->addTransition(this, SIGNAL(errorCatched()), Unlocked);
+    Locked->addTransition(this, SIGNAL(settingsSaved()), Unlocked);
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent* e) {
@@ -209,7 +210,6 @@ void  MainWindow::setListItemFrontend(Contact* contact, QListWidgetItem* loaded)
               "\tunread : " + std::to_string(contact->hasUnreadMsg()));
 }
 
-
 void MainWindow::on_pbNewContact_clicked()
 {
     addContactWin = new AddContactWindow{this};
@@ -235,6 +235,10 @@ void MainWindow::on_contactAddSuccess(Contact* newContact) {
     refreshContactsList();
 
     emit contactAdded();
+}
+
+void MainWindow::on_settingsSaveSuccess() {
+    emit settingsSaved();
 }
 
 void MainWindow::on_refreshContactsList() {
@@ -310,11 +314,9 @@ void MainWindow::on_validateSendable()
 
 void MainWindow::on_lwContacts_itemClicked(QListWidgetItem *item)
 {
-    if(!activeContact.empty()){
-        if (Storage::storage().contactExists(activeContact)) {
-            disconnect(Storage::storage().getContact(activeContact), &Contact::onHistoryChange,
+    if(!activeContact.empty() && Storage::storage().contactExists(activeContact)){
+        disconnect(Storage::storage().getContact(activeContact), &Contact::onHistoryChange,
                    this, &MainWindow::onMessageListChange);
-        }
     }
 
     Contact* contact =  contacts[item->text().toStdString()];
